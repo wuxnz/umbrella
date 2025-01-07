@@ -1,18 +1,88 @@
 import * as React from "react";
-import { BottomNavigation, Text } from "react-native-paper";
+import { BottomNavigation, Drawer, Text } from "react-native-paper";
 import PluginsNavigator from "../features/plugins/PluginsNavigator";
-import { useColorScheme } from "react-native";
+import {
+  StyleSheet,
+  useColorScheme,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { DarkTheme, LightTheme } from "../core/theme/theme";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+} from "@react-navigation/drawer";
+import { isReadyRef, navigationRef } from "../../RootNavigation";
+import { useEffect } from "react";
 
-// const MusicRoute = () => <Text>Music</Text>;
+const DrawerNavigator = createDrawerNavigator();
 
-// const AlbumsRoute = () => <Text>Albums</Text>;
+const DrawerContent = ({ navigation }: any) => {
+  const colorScheme = useColorScheme();
 
-// const RecentsRoute = () => <Text>Recents</Text>;
+  const [lastCheck, setLastCheck] = React.useState(false);
 
-const SettingsRoute = () => <Text>Settings</Text>;
+  useEffect(() => {
+    if (navigation) {
+      isReadyRef.current = true;
+      setLastCheck(true);
+    } else {
+      isReadyRef.current = false;
+      setLastCheck(false);
+    }
+  }, [navigation]);
 
-const BottomNavigationBar = () => {
+  return (
+    <DrawerContentScrollView
+      contentContainerStyle={{
+        flex: 1,
+        width: 80,
+      }}
+    >
+      <Drawer.Section
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          paddingTop: 16,
+        }}
+      >
+        <View style={{ flex: 1 }} />
+        <Drawer.CollapsedItem
+          focusedIcon="power-plug"
+          unfocusedIcon={"power-plug-outline"}
+          label="Plugins"
+          active={
+            lastCheck &&
+            navigationRef.current?.getCurrentRoute().name === "Plugins"
+          }
+          onPress={() => navigation.navigate("Plugins")}
+          theme={colorScheme === "dark" ? DarkTheme : LightTheme}
+        />
+        <View style={{ flex: 1 }} />
+        <Drawer.CollapsedItem
+          focusedIcon="cog"
+          unfocusedIcon="cog-outline"
+          label="Settings"
+          active={
+            lastCheck &&
+            navigationRef.current?.getCurrentRoute().name === "Settings"
+          }
+          onPress={() => navigation.navigate("Settings")}
+        />
+        <View style={{ flex: 1 }} />
+      </Drawer.Section>
+    </DrawerContentScrollView>
+  );
+};
+
+const SettingsRoute = () => (
+  <View style={styles.container}>
+    <Text>Settings Screen</Text>
+  </View>
+);
+
+const BottomNavigationBar = (props: any) => {
   const colorScheme = useColorScheme();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -22,8 +92,6 @@ const BottomNavigationBar = () => {
       focusedIcon: "power-plug",
       unfocusedIcon: "power-plug-outline",
     },
-    // { key: "albums", title: "Albums", focusedIcon: "album" },
-    // { key: "recents", title: "Recents", focusedIcon: "history" },
     {
       key: "settings",
       title: "Settings",
@@ -34,10 +102,41 @@ const BottomNavigationBar = () => {
 
   const renderScene = BottomNavigation.SceneMap({
     plugins: PluginsNavigator,
-    // albums: AlbumsRoute,
-    // recents: RecentsRoute,
     settings: SettingsRoute,
   });
+
+  const { height, width } = useWindowDimensions();
+  const isLandScape = width > height;
+
+  if (isLandScape) {
+    return (
+      <DrawerNavigator.Navigator
+        drawerContent={(props) => <DrawerContent {...props} />}
+        initialRouteName="Plugins"
+        screenOptions={{
+          headerShown: false,
+          sceneStyle: {
+            backgroundColor:
+              colorScheme === "dark"
+                ? DarkTheme.colors.surface
+                : LightTheme.colors.surface,
+          },
+          drawerStyle: {
+            width: 80,
+            backgroundColor:
+              colorScheme === "dark"
+                ? DarkTheme.colors.surface
+                : LightTheme.colors.surface,
+          },
+          drawerType: "permanent",
+        }}
+        defaultStatus="open"
+      >
+        <DrawerNavigator.Screen name="Plugins" component={PluginsNavigator} />
+        <DrawerNavigator.Screen name="Settings" component={SettingsRoute} />
+      </DrawerNavigator.Navigator>
+    );
+  }
 
   return (
     <BottomNavigation
@@ -45,28 +144,22 @@ const BottomNavigationBar = () => {
       onIndexChange={setIndex}
       renderScene={renderScene}
       theme={colorScheme === "dark" ? DarkTheme : LightTheme}
-      activeColor={
-        colorScheme === "dark" ? DarkTheme.colors.text : LightTheme.colors.text
-      }
-      inactiveColor={
-        colorScheme === "dark"
-          ? DarkTheme.colors.disabled
-          : LightTheme.colors.disabled
-      }
       barStyle={{
         backgroundColor:
           colorScheme === "dark"
             ? DarkTheme.colors.surface
             : LightTheme.colors.surface,
       }}
-      activeIndicatorStyle={{
-        backgroundColor:
-          colorScheme === "dark"
-            ? DarkTheme.colors.primary + "80"
-            : LightTheme.colors.primary + "80",
-      }}
     />
   );
 };
 
 export default BottomNavigationBar;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});

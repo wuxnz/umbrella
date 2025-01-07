@@ -15,6 +15,10 @@ export const DarkTheme = {
     disabled: "rgba(225, 225, 225, 0.80)",
     placeholder: "rgba(255, 255, 255, 0.54)",
     backdrop: "rgba(0, 0, 0, 0.5)",
+    secondaryContainer: "#8c56f080",
+    onSurface: "#fff",
+    onSurfaceVariant: "#ffffff80",
+    onSecondaryContainer: "#fff",
   },
 };
 
@@ -30,5 +34,9 @@ export const LightTheme = {
     disabled: "rgba(25, 25, 25, 0.80)",
     placeholder: "rgba(0, 0, 0, 0.54)",
     backdrop: "rgba(0, 0, 0, 0.5)",
+    secondaryContainer: "#8c56f080",
+    onSurface: "#000",
+    onSurfaceVariant: "#00000080",
+    onSecondaryContainer: "#4060ff",
   },
 };
