@@ -5,7 +5,6 @@ import { PaperProvider, Text } from "react-native-paper";
 import { DarkTheme, LightTheme } from "./src/core/theme/theme";
 import { useEffect } from "react";
 import BottomNavigationBar from "./src/navigation/BottomNavigationBar";
-import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -13,29 +12,27 @@ export default function App() {
   useEffect(() => {}, [colorScheme]);
 
   return (
-    <NavigationContainer>
-      <PaperProvider theme={colorScheme === "dark" ? DarkTheme : LightTheme}>
-        <View
-          style={{
-            ...styles.container,
-            backgroundColor:
-              colorScheme === "dark"
-                ? DarkTheme.colors.background
-                : LightTheme.colors.background,
-          }}
-        >
-          <BottomNavigationBar />
-        </View>
-        <StatusBar style="auto" />
-      </PaperProvider>
-    </NavigationContainer>
+    // <NavigationContainer>
+    <PaperProvider theme={colorScheme === "dark" ? DarkTheme : LightTheme}>
+      <View
+        style={{
+          ...styles.container,
+          backgroundColor:
+            colorScheme === "dark"
+              ? DarkTheme.colors.background
+              : LightTheme.colors.background,
+        }}
+      >
+        <BottomNavigationBar />
+      </View>
+      <StatusBar style="auto" />
+    </PaperProvider>
+    // </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
   },
 });
