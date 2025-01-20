@@ -1,34 +1,4 @@
 {
-  "expo": {
-    "name": "Umbrella",
-    "slug": "umbrella",
-    "version": "0.0.2",
-    "orientation": "default",
-    "icon": "./assets/icon.png",
-    "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/splash-icon.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
-    "ios": {
-      "supportsTablet": true
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#000000"
-      },
-      "package": "app.kyushu.umbrella"
-    },
-    "web": {
-      "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "57e8372e-c04c-43b7-85f9-6002c6a892ca"
-      }
-    }
-  }
+  "name": "umbrella",
+  "displayName": "umbrella"
 }

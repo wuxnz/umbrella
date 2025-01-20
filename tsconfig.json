@@ -1,7 +1,3 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true,
-    "module": "ES2022"
-  }
+  "extends": "@react-native/typescript-config/tsconfig.json"
 }

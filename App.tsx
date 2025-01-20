@@ -1,12 +1,11 @@
-import { StatusBar } from "expo-status-bar";
-import { useColorScheme, StyleSheet, View } from "react-native";
-import { PaperProvider } from "react-native-paper";
+import {useColorScheme, StyleSheet, View, StatusBar} from 'react-native';
+import {PaperProvider} from 'react-native-paper';
 
-import { DarkTheme, LightTheme } from "./src/core/theme/theme";
-import { useEffect } from "react";
-import BottomNavigationBar from "./src/navigation/BottomNavigationBar";
-import { NavigationContainer } from "@react-navigation/native";
-import { navigationRef, isReadyRef } from "./RootNavigation";
+import {DarkTheme, LightTheme} from './src/core/theme/theme';
+import {useEffect} from 'react';
+import BottomNavigationBar from './src/navigation/BottomNavigationBar';
+import {NavigationContainer} from '@react-navigation/native';
+import {navigationRef, isReadyRef} from './RootNavigation';
 
 export default function App() {
   const colorScheme = useColorScheme();
@@ -20,25 +19,26 @@ export default function App() {
   }, []);
 
   return (
-    <PaperProvider theme={colorScheme === "dark" ? DarkTheme : LightTheme}>
+    <PaperProvider theme={colorScheme === 'dark' ? DarkTheme : LightTheme}>
       <NavigationContainer
         ref={navigationRef}
         onReady={() => {
           isReadyRef.current = true;
-        }}
-      >
+        }}>
         <View
           style={{
             ...styles.container,
             backgroundColor:
-              colorScheme === "dark"
+              colorScheme === 'dark'
                 ? DarkTheme.colors.background
                 : LightTheme.colors.background,
-          }}
-        >
+          }}>
           <BottomNavigationBar />
         </View>
-        <StatusBar style="auto" />
+        <StatusBar
+          backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}
+          barStyle={colorScheme === 'dark' ? 'light-content' : 'dark-content'}
+        />
       </NavigationContainer>
     </PaperProvider>
   );
