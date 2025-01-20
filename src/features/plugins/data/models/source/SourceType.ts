@@ -1,19 +1,23 @@
 enum SourceType {
-  Anime = 'Anime',
-  Audio = 'Audio',
-  Cartoon = 'Cartoon',
-  Comic = 'Comic',
-  Documentary = 'Documentary',
-  LightNovel = 'LightNovel',
-  Manga = 'Manga',
-  Manwa = 'Manwa',
-  Music = 'Music',
-  Novel = 'Novel',
-  Movie = 'Movie',
-  TvShow = 'TvShow',
-  WebNovel = 'WebNovel',
-  Webtoon = 'Webtoon',
-  Other = 'Other',
+  Anime,
+  Audio,
+  Cartoon,
+  Comic,
+  Documentary,
+  LightNovel,
+  Manga,
+  Manwa,
+  Music,
+  Novel,
+  Movie,
+  TvShow,
+  WebNovel,
+  Webtoon,
+  Other,
+}
+
+export function toSourceType(type: string): string {
+  return SourceType[SourceType[type as keyof typeof SourceType]];
 }
 
 export default SourceType;

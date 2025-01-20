@@ -1,23 +1,23 @@
-import * as React from "react";
-import { BottomNavigation, Drawer, Text } from "react-native-paper";
-import PluginsNavigator from "../features/plugins/PluginsNavigator";
+import * as React from 'react';
+import {BottomNavigation, Drawer, Text} from 'react-native-paper';
+import PluginsNavigator from '../features/plugins/PluginsNavigator';
 import {
   StyleSheet,
   useColorScheme,
   useWindowDimensions,
   View,
-} from "react-native";
-import { DarkTheme, LightTheme } from "../core/theme/theme";
+} from 'react-native';
+import {DarkTheme, LightTheme} from '../core/theme/theme';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
-} from "@react-navigation/drawer";
-import { isReadyRef, navigationRef } from "../../RootNavigation";
-import { useEffect } from "react";
+} from '@react-navigation/drawer';
+import {isReadyRef, navigationRef} from '../../RootNavigation';
+import {useEffect} from 'react';
 
 const DrawerNavigator = createDrawerNavigator();
 
-const DrawerContent = ({ navigation }: any) => {
+const DrawerContent = ({navigation}: any) => {
   const colorScheme = useColorScheme();
 
   const [lastCheck, setLastCheck] = React.useState(false);
@@ -37,40 +37,38 @@ const DrawerContent = ({ navigation }: any) => {
       contentContainerStyle={{
         flex: 1,
         width: 80,
-      }}
-    >
+      }}>
       <Drawer.Section
         style={{
           flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
+          justifyContent: 'center',
+          alignItems: 'center',
           paddingTop: 16,
-        }}
-      >
-        <View style={{ flex: 1 }} />
+        }}>
+        <View style={{flex: 1}} />
         <Drawer.CollapsedItem
           focusedIcon="power-plug"
-          unfocusedIcon={"power-plug-outline"}
+          unfocusedIcon={'power-plug-outline'}
           label="Plugins"
           active={
             lastCheck &&
-            navigationRef.current?.getCurrentRoute().name === "Plugins"
+            navigationRef.current?.getCurrentRoute().name === 'Plugins'
           }
-          onPress={() => navigation.navigate("Plugins")}
-          theme={colorScheme === "dark" ? DarkTheme : LightTheme}
+          onPress={() => navigation.navigate('Plugins')}
+          theme={colorScheme === 'dark' ? DarkTheme : LightTheme}
         />
-        <View style={{ flex: 1 }} />
+        <View style={{flex: 1}} />
         <Drawer.CollapsedItem
           focusedIcon="cog"
           unfocusedIcon="cog-outline"
           label="Settings"
           active={
             lastCheck &&
-            navigationRef.current?.getCurrentRoute().name === "Settings"
+            navigationRef.current?.getCurrentRoute().name === 'Settings'
           }
-          onPress={() => navigation.navigate("Settings")}
+          onPress={() => navigation.navigate('Settings')}
         />
-        <View style={{ flex: 1 }} />
+        <View style={{flex: 1}} />
       </Drawer.Section>
     </DrawerContentScrollView>
   );
@@ -87,16 +85,16 @@ const BottomNavigationBar = (props: any) => {
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {
-      key: "plugins",
-      title: "Plugins",
-      focusedIcon: "power-plug",
-      unfocusedIcon: "power-plug-outline",
+      key: 'plugins',
+      title: 'Plugins',
+      focusedIcon: 'power-plug',
+      unfocusedIcon: 'power-plug-outline',
     },
     {
-      key: "settings",
-      title: "Settings",
-      focusedIcon: "cog",
-      unfocusedIcon: "cog-outline",
+      key: 'settings',
+      title: 'Settings',
+      focusedIcon: 'cog',
+      unfocusedIcon: 'cog-outline',
     },
   ]);
 
@@ -105,48 +103,47 @@ const BottomNavigationBar = (props: any) => {
     settings: SettingsRoute,
   });
 
-  const { height, width } = useWindowDimensions();
+  const {height, width} = useWindowDimensions();
   const isLandScape = width > height;
 
   if (isLandScape) {
     return (
       <DrawerNavigator.Navigator
-        drawerContent={(props) => <DrawerContent {...props} />}
+        drawerContent={props => <DrawerContent {...props} />}
         initialRouteName="Plugins"
         screenOptions={{
           headerShown: false,
           sceneStyle: {
             backgroundColor:
-              colorScheme === "dark"
+              colorScheme === 'dark'
                 ? DarkTheme.colors.surface
                 : LightTheme.colors.surface,
           },
           drawerStyle: {
             width: 80,
             backgroundColor:
-              colorScheme === "dark"
+              colorScheme === 'dark'
                 ? DarkTheme.colors.surface
                 : LightTheme.colors.surface,
           },
-          drawerType: "permanent",
+          drawerType: 'permanent',
         }}
-        defaultStatus="open"
-      >
-        <DrawerNavigator.Screen name="Plugins" component={PluginsNavigator} />
-        <DrawerNavigator.Screen name="Settings" component={SettingsRoute} />
+        defaultStatus="open">
+        <DrawerNavigator.Screen name="plugins" component={PluginsNavigator} />
+        <DrawerNavigator.Screen name="settings" component={SettingsRoute} />
       </DrawerNavigator.Navigator>
     );
   }
 
   return (
     <BottomNavigation
-      navigationState={{ index, routes }}
+      navigationState={{index, routes}}
       onIndexChange={setIndex}
       renderScene={renderScene}
-      theme={colorScheme === "dark" ? DarkTheme : LightTheme}
+      theme={colorScheme === 'dark' ? DarkTheme : LightTheme}
       barStyle={{
         backgroundColor:
-          colorScheme === "dark"
+          colorScheme === 'dark'
             ? DarkTheme.colors.surface
             : LightTheme.colors.surface,
       }}
@@ -159,7 +156,7 @@ export default BottomNavigationBar;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
