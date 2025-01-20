@@ -14,7 +14,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {navigationRef, isReadyRef} from './RootNavigation';
 import {Dialog, Portal, Text} from 'react-native-paper';
 import {Plugin} from './src/features/plugins/domain/entities/Plugin';
-import sleep from './src/core/utils/Sleep';
+import sleep from './src/core/utils/sleep';
 
 const supportedURL = 'umbrella://';
 
@@ -23,41 +23,61 @@ function InstallPluginDialog({
   hideDialog,
   fetchPluginManifest,
   loadPlugin,
+  colorScheme,
   plugin,
 }: any) {
-  const [loading, setLoading] = useState(true);
+  const [waitingForPlugins, setWaitingForPlugins] = useState(false);
+  const [cancelLoading, setCancelLoading] = useState(false);
+
+  // useEffect(() => {
+  //   setCancelLoading(false);
+  // }, [visible]);
 
   useEffect(() => {
+    setWaitingForPlugins(true);
+    setCancelLoading(false);
     const fetchPluginManifest = async () => {
+      console.log('fetching plugin manifest');
       await sleep(5000).then(() => {
-        console.log('fetching plugin manifest');
         // fetchPluginManifest();
-        setLoading(false);
+        // setWaitingForPlugins(false);
+        // setCancelLoading(false);
       });
     };
 
-    if (!loading) {
+    if (!visible) {
       return;
     }
     fetchPluginManifest();
-  }, []);
+  }, [visible]);
 
-  console.log(loading);
+  console.log('waitingForPlugins', waitingForPlugins);
+  console.log('cancelLoading', cancelLoading);
+  console.log('visible', visible);
 
-  if (loading) {
+  if (visible && waitingForPlugins) {
     return (
       <Snackbar
-        visible={visible && loading}
-        onDismiss={() => setLoading(false)}
+        visible={waitingForPlugins}
+        onDismiss={() => {
+          setWaitingForPlugins(false);
+        }}
         action={{
           label: 'Cancel',
           onPress: () => {
             // Do something
+            setCancelLoading(true);
+            setWaitingForPlugins(false);
+            hideDialog();
           },
         }}>
         Fetching plugin manifest...
       </Snackbar>
     );
+  }
+
+  if (cancelLoading) {
+    return null;
   }
 
   return (
@@ -68,27 +88,34 @@ function InstallPluginDialog({
           Install {plugin.name}?
         </Dialog.Title>
         <Dialog.Content>
+          <Text variant="titleMedium">Author: {plugin.author}</Text>
+          <Text variant="titleMedium">Version: {plugin.version}</Text>
+          <Text variant="titleMedium">Description: {plugin.description}</Text>
+          <View style={{height: 8}} />
           <Text variant="bodyMedium">
-            Are you sure you want to install {plugin.name}?
+            Are you sure you want to install '{plugin.name}'? This will open '
+            {plugin.homePageUrl}'.
           </Text>
-          <Text variant="bodyMedium">This will open {plugin.homePageUrl}</Text>
-          <Text variant="bodyMedium">{plugin.description}</Text>
         </Dialog.Content>
         <Dialog.Actions>
           <Button
             onPress={() => {
               hideDialog();
-              setLoading(true);
+              // setWaitingForPlugins(true);
             }}
-            textColor="#fff">
+            textColor={`${
+              colorScheme === 'dark'
+                ? DarkTheme.colors.disabled
+                : LightTheme.colors.disabled
+            }`}>
             Cancel
           </Button>
           <Button
             onPress={() => {
               // Linking.openURL(plugin.homePageUrl);
-              // hideDialog();
+              hideDialog();
               console.log('installing');
-              setLoading(true);
+              // setWaitingForPlugins(true);
             }}>
             Install
           </Button>
@@ -119,7 +146,18 @@ export default function App() {
   useEffect(() => {
     Linking.addEventListener('url', ({url}) => {
       console.log(url);
+      // console.log('supportedURL', supportedURL);
+      // console.log(url.startsWith(supportedURL));
       if (url.startsWith(supportedURL)) {
+        console.log('here');
+        console.log(getBaseUrlFromString(url.replace(supportedURL, '')));
+        setPlugin({
+          author: 'invader',
+          version: 1,
+          name: 'Example Plugin',
+          description: 'This is an example plugin',
+          homePageUrl: url.replace(supportedURL, 'http://'),
+        } as Plugin);
         setVisible(true);
       }
     });
@@ -146,6 +184,7 @@ export default function App() {
           visible={visible}
           hideDialog={hideDialog}
           fetchPluginManifest={() => {}}
+          colorScheme={colorScheme}
           loadPlugin={() => {}}
           plugin={plugin}
         />
