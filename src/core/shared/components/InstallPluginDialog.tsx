@@ -16,10 +16,6 @@ function InstallPluginDialog({
   const [cancelLoading, setCancelLoading] = useState(false);
   const [loadingPlugins, setLoadingPlugins] = useState(false);
 
-  console.log('waitingForPlugins', waitingForPlugins);
-  console.log('cancelLoading', cancelLoading);
-  console.log('loadingPlugins', loadingPlugins);
-
   useEffect(() => {
     setWaitingForPlugins(true);
     setCancelLoading(false);
@@ -28,7 +24,6 @@ function InstallPluginDialog({
       return;
     }
 
-    console.log('fetchPluginManifest');
     sleep(5000).then(() => {
       fetchPluginManifest();
     });

@@ -43,9 +43,7 @@ export default function App() {
 
   useEffect(() => {
     Linking.addEventListener('url', ({url}) => {
-      console.log('url', url);
       if (url.startsWith(supportedURL)) {
-        console.log('url', url);
         setPlugin({
           author: 'invader',
           version: 1,
@@ -54,7 +52,6 @@ export default function App() {
           homePageUrl: url.replace(supportedURL, ''),
         } as Plugin);
         setVisible(true);
-        console.log('visible', visible);
       }
     });
   }, []);
