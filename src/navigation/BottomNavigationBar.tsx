@@ -14,62 +14,47 @@ import {
 } from '@react-navigation/drawer';
 import {isReadyRef, navigationRef} from '../../RootNavigation';
 import {useEffect} from 'react';
+import {useNavigation} from '@react-navigation/native';
 
 const DrawerNavigator = createDrawerNavigator();
 
-const DrawerContent = ({navigation}: any) => {
+const DrawerContent = ({props, setIndex}: any) => {
+  const navigation = useNavigation();
   const colorScheme = useColorScheme();
-
-  const [lastCheck, setLastCheck] = React.useState(false);
-
-  useEffect(() => {
-    if (navigation) {
-      isReadyRef.current = true;
-      setLastCheck(true);
-    } else {
-      isReadyRef.current = false;
-      setLastCheck(false);
-    }
-  }, [navigation]);
 
   return (
     <DrawerContentScrollView
+      {...props}
       contentContainerStyle={{
         flex: 1,
         width: 80,
+        alignItems: 'center',
       }}>
-      <Drawer.Section
-        style={{
-          flex: 1,
-          justifyContent: 'center',
-          alignItems: 'center',
-          paddingTop: 16,
-        }}>
-        <View style={{flex: 1}} />
-        <Drawer.CollapsedItem
-          focusedIcon="power-plug"
-          unfocusedIcon={'power-plug-outline'}
-          label="Plugins"
-          active={
-            lastCheck &&
-            navigationRef.current?.getCurrentRoute().name === 'Plugins'
-          }
-          onPress={() => navigation.navigate('Plugins')}
-          theme={colorScheme === 'dark' ? DarkTheme : LightTheme}
-        />
-        <View style={{flex: 1}} />
-        <Drawer.CollapsedItem
-          focusedIcon="cog"
-          unfocusedIcon="cog-outline"
-          label="Settings"
-          active={
-            lastCheck &&
-            navigationRef.current?.getCurrentRoute().name === 'Settings'
-          }
-          onPress={() => navigation.navigate('Settings')}
-        />
-        <View style={{flex: 1}} />
-      </Drawer.Section>
+      <View style={{flex: 1}} />
+      <Drawer.CollapsedItem
+        focusedIcon="power-plug"
+        unfocusedIcon={'power-plug-outline'}
+        label="Plugins"
+        active={props.navigation.getState().index === 0}
+        onPress={() => {
+          props.navigation.navigate('plugins');
+          setIndex(0);
+        }}
+        theme={colorScheme === 'dark' ? DarkTheme : LightTheme}
+      />
+      <View style={{flex: 1}} />
+      <Drawer.CollapsedItem
+        focusedIcon="cog"
+        unfocusedIcon="cog-outline"
+        label="Settings"
+        active={props.navigation.getState().index === 1}
+        onPress={() => {
+          props.navigation.navigate('settings');
+          setIndex(1);
+        }}
+        theme={colorScheme === 'dark' ? DarkTheme : LightTheme}
+      />
+      <View style={{flex: 1}} />
     </DrawerContentScrollView>
   );
 };
@@ -80,7 +65,7 @@ const SettingsRoute = () => (
   </View>
 );
 
-const BottomNavigationBar = (props: any) => {
+const BottomNavigationBar = () => {
   const colorScheme = useColorScheme();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
@@ -109,8 +94,12 @@ const BottomNavigationBar = (props: any) => {
   if (isLandScape) {
     return (
       <DrawerNavigator.Navigator
-        drawerContent={props => <DrawerContent {...props} />}
-        initialRouteName="Plugins"
+        drawerContent={props => (
+          <DrawerContent props={props} setIndex={setIndex} />
+        )}
+        initialRouteName={
+          index === 0 ? 'plugins' : index === 1 ? 'settings' : 'plugins'
+        }
         screenOptions={{
           headerShown: false,
           sceneStyle: {
