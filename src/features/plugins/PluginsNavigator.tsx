@@ -1,21 +1,17 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {
-  AppState,
-  Linking,
-  PermissionsAndroid,
-  Platform,
-  StyleSheet,
-  View,
-  useColorScheme,
-} from 'react-native';
-import {Button, Text} from 'react-native-paper';
+import {AppState, Linking, Platform, StyleSheet, View} from 'react-native';
+import {Text} from 'react-native-paper';
 import {usePluginStore} from './presentation/stores/usePluginStore';
 import constants from '../../core/utils/constants';
-import {Plugin} from './domain/entities/Plugin';
-import InstallPluginDialog from '../../core/shared/components/InstallPluginDialog';
-import {useDialogStore} from './presentation/stores/useDialogStore';
+import {useInstallPluginDialogStore} from './presentation/stores/useInstallPluginDialogStore';
 import {PluginViewModel} from './presentation/viewmodels/PluginViewModel';
+import {
+  checkManagePermission,
+  requestManagePermission,
+} from 'manage-external-storage';
+import GrantPermissionDialog from '../../core/shared/components/GrantPermissionDialog';
+import {useGrantPermissionDialogStore} from './presentation/stores/useGrantPermissionDialogStore';
 
 const PluginsNavigator = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,30 +37,29 @@ const PluginsNavigator = () => {
     };
   });
 
-  const {permissionsGranted, onPermissionsGranted, onPermissionsDenied} =
-    usePluginStore();
+  const {permissionsGranted, onPermissionsGranted} = usePluginStore();
+
+  const {
+    setTitle,
+    setReason,
+    setOnConfirm,
+    setVisible: setGrantVisible,
+  } = useGrantPermissionDialogStore(state => state);
 
   useEffect(() => {
     const requestPermission = async () => {
-      // Permissions to request:
-      // android.permission.READ_EXTERNAL_STORAGE
-      // android.permission.WRITE_EXTERNAL_STORAGE
-
       try {
-        await PermissionsAndroid.requestMultiple([
-          PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        ])
-          .then(() => {
-            if (PermissionsAndroid.RESULTS.GRANTED) {
-              onPermissionsGranted();
-            } else {
-              onPermissionsDenied();
-            }
-          })
-          .catch(err => {
-            console.warn(err);
-          });
+        const granted = await checkManagePermission();
+        if (granted) {
+          onPermissionsGranted();
+        } else {
+          setTitle('Manage External Storage');
+          setReason(
+            'To install plugins and save data from this app to your device.',
+          );
+          setOnConfirm(() => setGrantVisible(false));
+          setGrantVisible(true);
+        }
       } catch (err) {
         console.warn(err);
       }
@@ -82,12 +77,22 @@ const PluginsNavigator = () => {
     }
   }, [isVisible]);
 
-  const {setVisible, setSource} = useDialogStore(state => state);
+  const {
+    setVisible: setInstallVisible,
+    setSource,
+    loading,
+    setLoading,
+  } = useInstallPluginDialogStore(state => state);
   const pluginViewModel = new PluginViewModel();
 
   useEffect(() => {
     Linking.addEventListener('url', async ({url}) => {
+      if (loading) {
+        return;
+      }
       if (url.startsWith(constants.PLUGIN_SCHEME)) {
+        setLoading(true);
+
         const manifestUrl = url.replace(constants.PLUGIN_SCHEME, '');
 
         await pluginViewModel.fetchManifest(manifestUrl).then(result => {
@@ -104,7 +109,8 @@ const PluginsNavigator = () => {
               break;
           }
         });
-        setVisible(true);
+        setInstallVisible(true);
+        setLoading(false);
       }
     });
   }, []);
@@ -115,6 +121,7 @@ const PluginsNavigator = () => {
       <View style={{height: 8}} />
       <Text>¯\_( ͡° ͜ʖ ͡°)_/¯</Text>
       <View style={{height: 16}} />
+      <GrantPermissionDialog />
     </View>
   );
 };

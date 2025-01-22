@@ -1,33 +1,29 @@
-import {View} from 'react-native';
+import {useColorScheme, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import sleep from '../../utils/sleep';
 import {Button, Dialog, Portal, Snackbar, Text} from 'react-native-paper';
 import {DarkTheme, LightTheme} from '../../theme/theme';
+import {useInstallPluginDialogStore} from '../../../features/plugins/presentation/stores/useInstallPluginDialogStore';
 
-function InstallPluginDialog({
-  colorScheme,
-  fetchPluginManifest,
-  hideDialog,
-  loadPlugin,
-  source,
-  visible,
-}: any) {
+function InstallPluginDialog() {
+  const colorScheme = useColorScheme();
   const [waitingForPlugins, setWaitingForPlugins] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [loadingPlugins, setLoadingPlugins] = useState(false);
 
+  const {deleteManifestFile, source, visible, setVisible} =
+    useInstallPluginDialogStore(state => state);
+
   useEffect(() => {
     setWaitingForPlugins(true);
     setCancelLoading(false);
-
-    if (!visible) {
-      return;
-    }
-
-    sleep(5000).then(() => {
-      fetchPluginManifest();
-    });
   }, [visible]);
+
+  const cancel = () => {
+    setCancelLoading(true);
+    setWaitingForPlugins(false);
+    deleteManifestFile();
+    setVisible(false);
+  };
 
   if (visible && waitingForPlugins) {
     return (
@@ -38,11 +34,7 @@ function InstallPluginDialog({
         }}
         action={{
           label: 'Cancel',
-          onPress: () => {
-            setCancelLoading(true);
-            setWaitingForPlugins(false);
-            hideDialog();
-          },
+          onPress: () => cancel(),
         }}>
         Fetching plugin manifest...
       </Snackbar>
@@ -67,7 +59,7 @@ function InstallPluginDialog({
 
   return (
     <Portal>
-      <Dialog visible={visible} onDismiss={hideDialog}>
+      <Dialog visible={visible} onDismiss={() => setVisible(false)}>
         <Dialog.Icon icon="power-plug" />
         <Dialog.Title style={{textAlign: 'center'}}>
           Install {source.name}?
@@ -85,7 +77,7 @@ function InstallPluginDialog({
         <Dialog.Actions>
           <Button
             onPress={() => {
-              hideDialog();
+              cancel();
             }}
             textColor={`${
               colorScheme === 'dark'
@@ -96,9 +88,8 @@ function InstallPluginDialog({
           </Button>
           <Button
             onPress={() => {
-              hideDialog();
+              setVisible(false);
               setLoadingPlugins(true);
-              loadPlugin();
             }}>
             Install
           </Button>

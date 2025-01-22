@@ -5,6 +5,7 @@ import {Plugin} from '../entities/Plugin';
 export interface PluginRepository {
   plugins: Plugin[];
   fetchManifest(manifestUrl: string): Promise<Status<Source>>;
+  deleteManifestFile(manifest: Source): Promise<Status<void>>;
   fetchPlugin(manifest: Source): Promise<Status<Plugin>>;
   getPlugins(): Plugin[];
   loadPlugin(path: string): Promise<Status<string>>;

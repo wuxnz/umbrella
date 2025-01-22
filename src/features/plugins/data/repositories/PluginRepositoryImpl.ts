@@ -11,6 +11,10 @@ export class PluginRepositoryImpl implements PluginRepository {
     return PluginService.fetchManifest(manifestUrl);
   }
 
+  async deleteManifestFile(manifest: Source): Promise<Status<void>> {
+    return PluginService.deleteManifestFile(manifest);
+  }
+
   async fetchPlugin(manifest: Source): Promise<Status<Plugin>> {
     return PluginService.fetchPlugin(manifest);
   }

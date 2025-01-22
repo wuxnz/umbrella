@@ -20,15 +20,23 @@ export const PluginService = {
     }
 
     const manifestFilePath =
-      RNFS.DocumentDirectoryPath +
-      `${constants.PLUGIN_FOLDER_NAME}/${manifestJson.author}_${manifestJson.name}.json`;
+      RNFS.ExternalStorageDirectoryPath +
+      `/${constants.APP_NAME}/` +
+      `${constants.PLUGIN_FOLDER_NAME}/${
+        manifestJson.author
+      }_${manifestJson.name.split(' ').join('_')}.json`;
+
+    if (
+      !(await RNFS.exists(manifestFilePath.split('/').slice(0, -1).join('/')))
+    ) {
+      await RNFS.mkdir(manifestFilePath.split('/').slice(0, -1).join('/'));
+    }
 
     await RNFS.downloadFile({
       fromUrl: manifestUrl,
       toFile: manifestFilePath,
     });
 
-    // const plugin = await response.json();
     return {
       status: 'success',
       data: {
@@ -37,6 +45,19 @@ export const PluginService = {
         mainifestFilePath: manifestFilePath,
         manifestUrl: manifestUrl,
       },
+    };
+  },
+  async deleteManifestFile(manifest: Source): Promise<Status<void>> {
+    if (!manifest.manifestFilePath) {
+      return {
+        status: 'error',
+        error: 'No manifest file path',
+      };
+    }
+
+    return {
+      status: 'success',
+      data: await RNFS.unlink(manifest.manifestFilePath),
     };
   },
   async fetchPlugin(manifest: Source): Promise<Status<Plugin>> {
@@ -57,8 +78,17 @@ export const PluginService = {
     }
 
     const pluginFilePath =
-      RNFS.DocumentDirectoryPath +
-      `${constants.PLUGIN_FOLDER_NAME}/${manifest.author}_${manifest.name}.js`;
+      RNFS.ExternalStorageDirectoryPath +
+      `/${constants.APP_NAME}/` +
+      `${constants.PLUGIN_FOLDER_NAME}/${manifest.author}_${manifest.name
+        .split(' ')
+        .join('_')}.js`;
+
+    if (
+      !(await RNFS.exists(pluginFilePath.split('/').slice(0, -1).join('/')))
+    ) {
+      await RNFS.mkdir(pluginFilePath.split('/').slice(0, -1).join('/'));
+    }
 
     await RNFS.downloadFile({
       fromUrl: manifest.pluginUrl,
