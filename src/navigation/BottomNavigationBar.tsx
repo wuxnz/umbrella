@@ -6,6 +6,7 @@ import {
   useColorScheme,
   useWindowDimensions,
   View,
+  PermissionsAndroid,
 } from 'react-native';
 import {DarkTheme, LightTheme} from '../core/theme/theme';
 import {

@@ -10,6 +10,7 @@ export interface Plugin {
   // dispose?: () => void; // Cleanup logic for removing the plugin
   homePageUrl?: string; // Optional URL to the home page for the plugin
   iconUrl?: string; // Optional URL to an icon for the plugin
+  pluginFileUrl: string; // Optional URL to the plugin file
   banner?: React.ComponentType; // Optional banner to show in plugin page
-  contentService: ContentService; // Content service provided by the plugin to get content
+  contentService?: ContentService; // Content service provided by the plugin to get content
 }

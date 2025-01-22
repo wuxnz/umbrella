@@ -1,13 +1,13 @@
 export class PluginViewModel {
-  private actions: Record<string, () => void> = {};
+  private plugins: Record<string, () => void> = {};
 
-  registerAction(name: string, action: () => void) {
-    this.actions[name] = action;
+  registerPlugins(name: string, plugins: () => void) {
+    this.plugins[name] = plugins;
   }
 
-  executeAction(name: string) {
-    if (this.actions[name]) {
-      this.actions[name]();
+  executePlugins(name: string) {
+    if (this.plugins[name]) {
+      this.plugins[name]();
     }
   }
 }

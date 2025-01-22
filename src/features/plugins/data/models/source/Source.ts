@@ -1,12 +1,14 @@
 import SourceType from './SourceType';
 
 interface Source {
+  sourceType: SourceType;
+  author?: string;
   name: string;
-  description: string;
-  image: string;
   version: number;
-  url: string;
-  type: SourceType;
+  description?: string;
+  homePageUrl?: string;
+  iconUrl?: string;
+  pluginFileUrl?: string;
 }
 
 export default Source;

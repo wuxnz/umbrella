@@ -6,6 +6,7 @@ import {
   StatusBar,
   Linking,
 } from 'react-native';
+// import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import {Button, PaperProvider, Snackbar} from 'react-native-paper';
 
 import {DarkTheme, LightTheme} from './src/core/theme/theme';
@@ -18,6 +19,7 @@ import {Plugin} from './src/features/plugins/domain/entities/Plugin';
 import sleep from './src/core/utils/sleep';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InstallPluginDialog from './src/core/shared/components/InstallPluginDialog';
+// import * as RNFS from '@dr.pogodin/react-native-fs';
 
 const supportedURL = 'umbrella://';
 
@@ -57,24 +59,28 @@ export default function App() {
   }, []);
 
   return (
+    // <SafeAreaProvider>
+    //   <SafeAreaView
+    // >
+
+    // {/* <View */}
+    // style={{
+    //   flex: 1,
+    //   backgroundColor:
+    //     colorScheme === 'dark'
+    //       ? DarkTheme.colors.background
+    //       : LightTheme.colors.background,
+    // }}>
     <PaperProvider theme={colorScheme === 'dark' ? DarkTheme : LightTheme}>
       <NavigationContainer
         ref={navigationRef}
         onReady={() => {
           isReadyRef.current = true;
         }}>
-        <View
-          style={{
-            flex: 1,
-            backgroundColor:
-              colorScheme === 'dark'
-                ? DarkTheme.colors.background
-                : LightTheme.colors.background,
-          }}>
-          <Stack.Navigator screenOptions={{headerShown: false}}>
-            <Stack.Screen name="Root" component={BottomNavigationBar} />
-          </Stack.Navigator>
-        </View>
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+          <Stack.Screen name="Root" component={BottomNavigationBar} />
+        </Stack.Navigator>
+        {/* </View> */}
         <InstallPluginDialog
           colorScheme={colorScheme}
           fetchPluginManifest={() => {}}
@@ -89,5 +95,7 @@ export default function App() {
         />
       </NavigationContainer>
     </PaperProvider>
+    //   {/* </SafeAreaView>
+    // </SafeAreaProvider> */}
   );
 }
