@@ -8,7 +8,10 @@ interface Source {
   description?: string;
   homePageUrl?: string;
   iconUrl?: string;
-  pluginFileUrl?: string;
+  manifestFilePath?: string;
+  manifestUrl?: string;
+  pluginFilePath?: string;
+  pluginUrl?: string;
 }
 
 export default Source;

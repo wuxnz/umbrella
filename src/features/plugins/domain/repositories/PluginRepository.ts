@@ -1,8 +1,12 @@
-import { Plugin } from "../entities/Plugin";
+import Status from '../../../../core/shared/types/Status';
+import Source from '../../data/models/source/Source';
+import {Plugin} from '../entities/Plugin';
 
 export interface PluginRepository {
   plugins: Plugin[];
-  loadPlugin(url: string): Promise<string>;
-  registerPlugin(plugin: Plugin): void;
+  fetchManifest(manifestUrl: string): Promise<Status<Source>>;
+  fetchPlugin(manifest: Source): Promise<Status<Plugin>>;
   getPlugins(): Plugin[];
+  loadPlugin(path: string): Promise<Status<string>>;
+  registerPlugin(plugin: Plugin): void;
 }

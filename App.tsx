@@ -16,12 +16,10 @@ import {NavigationContainer} from '@react-navigation/native';
 import {navigationRef, isReadyRef} from './RootNavigation';
 import {Dialog, Portal, Text} from 'react-native-paper';
 import {Plugin} from './src/features/plugins/domain/entities/Plugin';
-import sleep from './src/core/utils/sleep';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InstallPluginDialog from './src/core/shared/components/InstallPluginDialog';
+import {useDialogStore} from './src/features/plugins/presentation/stores/useDialogStore';
 // import * as RNFS from '@dr.pogodin/react-native-fs';
-
-const supportedURL = 'umbrella://';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,27 +34,7 @@ export default function App() {
     };
   }, []);
 
-  const [visible, setVisible] = useState<boolean>(false);
-  const [plugin, setPlugin] = useState<Plugin>({} as Plugin);
-
-  const hideDialog = () => {
-    setVisible(false);
-  };
-
-  useEffect(() => {
-    Linking.addEventListener('url', ({url}) => {
-      if (url.startsWith(supportedURL)) {
-        setPlugin({
-          author: 'invader',
-          version: 1,
-          name: 'Example Plugin',
-          description: 'This is an example plugin',
-          homePageUrl: url.replace(supportedURL, ''),
-        } as Plugin);
-        setVisible(true);
-      }
-    });
-  }, []);
+  const {visible, setVisible, source} = useDialogStore(state => state);
 
   return (
     // <SafeAreaProvider>
@@ -84,9 +62,9 @@ export default function App() {
         <InstallPluginDialog
           colorScheme={colorScheme}
           fetchPluginManifest={() => {}}
-          hideDialog={hideDialog}
+          hideDialog={() => setVisible(false)}
           loadPlugin={() => {}}
-          plugin={plugin}
+          source={source}
           visible={visible}
         />
         <StatusBar

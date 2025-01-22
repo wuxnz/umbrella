@@ -1,13 +1,20 @@
-export class PluginViewModel {
-  private plugins: Record<string, () => void> = {};
+import Status from '../../../../core/shared/types/Status';
+import Source from '../../data/models/source/Source';
+import {PluginRepositoryImpl} from '../../data/repositories/PluginRepositoryImpl';
+import {Plugin} from '../../domain/entities/Plugin';
+import {PluginRepository} from '../../domain/repositories/PluginRepository';
+import {FetchManifestUsecase} from '../../domain/usecases/FetchManifestUsecase';
+import {FetchPluginUsecase} from '../../domain/usecases/FetchPluginUsecase';
 
-  registerPlugins(name: string, plugins: () => void) {
-    this.plugins[name] = plugins;
+const fetchManifest = new FetchManifestUsecase(new PluginRepositoryImpl());
+const fetchPlugin = new FetchPluginUsecase(new PluginRepositoryImpl());
+
+export class PluginViewModel {
+  async fetchManifest(url: string): Promise<Status<Source>> {
+    return fetchManifest.execute(url);
   }
 
-  executePlugins(name: string) {
-    if (this.plugins[name]) {
-      this.plugins[name]();
-    }
+  async fetchPlugin(manifest: Source): Promise<Status<Plugin>> {
+    return fetchPlugin.execute(manifest);
   }
 }

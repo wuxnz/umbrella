@@ -3,13 +3,20 @@ import {Plugin} from '../../domain/entities/Plugin';
 import {create} from 'zustand';
 
 interface PluginStoreState {
+  permissionsGranted: boolean;
+  onPermissionsGranted: () => void;
+  onPermissionsDenied: () => void;
   plugins: Plugin[];
   registerPlugin: (plugin: Plugin) => void;
   unregisterPlugin: (pluginName: string) => void;
   getPlugin: (pluginName: string) => Plugin | undefined;
+  getPlugins: () => Plugin[];
 }
 
 export const usePluginStore = create<PluginStoreState>((set, get) => ({
+  permissionsGranted: false,
+  onPermissionsGranted: () => set({permissionsGranted: true}),
+  onPermissionsDenied: () => set({permissionsGranted: false}),
   plugins: [],
   registerPlugin: plugin =>
     set(state => ({
@@ -21,4 +28,5 @@ export const usePluginStore = create<PluginStoreState>((set, get) => ({
     })),
   getPlugin: pluginName =>
     get().plugins.find(plugin => plugin.name === pluginName),
+  getPlugins: () => get().plugins,
 }));
