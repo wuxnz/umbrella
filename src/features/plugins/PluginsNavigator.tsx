@@ -42,7 +42,7 @@ const PluginsNavigator = () => {
   const {
     setTitle,
     setReason,
-    setOnConfirm,
+    setOnConfirm: setGrantOnConfirm,
     setVisible: setGrantVisible,
   } = useGrantPermissionDialogStore(state => state);
 
@@ -57,7 +57,7 @@ const PluginsNavigator = () => {
           setReason(
             'To install plugins and save data from this app to your device.',
           );
-          setOnConfirm(() => setGrantVisible(false));
+          setGrantOnConfirm(() => setGrantVisible(false));
           setGrantVisible(true);
         }
       } catch (err) {
@@ -78,10 +78,12 @@ const PluginsNavigator = () => {
   }, [isVisible]);
 
   const {
+    source,
     setVisible: setInstallVisible,
     setSource,
     loading,
     setLoading,
+    setOnConfirm: setInstallOnConfirm,
   } = useInstallPluginDialogStore(state => state);
   const pluginViewModel = new PluginViewModel();
 
@@ -99,6 +101,26 @@ const PluginsNavigator = () => {
           switch (result.status) {
             case 'success': {
               setSource(result.data);
+              console.log(result.data);
+              setInstallOnConfirm(async () => {
+                await pluginViewModel.fetchPlugin(result.data).then(result => {
+                  console.log(result);
+                  switch (result.status) {
+                    case 'success': {
+                      pluginViewModel.registerPlugin(result.data).then(() => {
+                        setInstallVisible(false);
+                      });
+                      break;
+                    }
+                    case 'error': {
+                      console.error(result.error);
+                      break;
+                    }
+                    default:
+                      break;
+                  }
+                });
+              });
               break;
             }
             case 'error': {

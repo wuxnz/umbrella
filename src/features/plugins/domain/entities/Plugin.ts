@@ -15,6 +15,7 @@ export interface Plugin {
   manifestUrl?: string; // Optional URL to the manifest file
   pluginFilePath?: string; // Optional path to the plugin file
   pluginUrl: string; // Optional URL to the plugin file
-  banner?: React.ComponentType; // Optional banner to show in plugin page
-  contentService?: ContentService; // Content service provided by the plugin to get content
+  // banner?: React.ComponentType; // Optional banner to show in plugin page
+  contentServiceSource?: string; // Content service provided by the plugin to get content
+  contentService?: ContentService;
 }

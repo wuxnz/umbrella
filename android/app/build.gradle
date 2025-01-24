@@ -84,6 +84,9 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "0.0.2"
+        ndk {
+            abiFilters = ["arm64-v8a", "armeabi-v7a", "x86_64"]
+        }
         externalNativeBuild {
             cmake {
                     arguments "-DCMAKE_MAKE_PROGRAM=C:\\ninja\\ninja.exe", "-DCMAKE_OBJECT_PATH_MAX=1024"

@@ -8,6 +8,5 @@ export interface PluginRepository {
   deleteManifestFile(manifest: Source): Promise<Status<void>>;
   fetchPlugin(manifest: Source): Promise<Status<Plugin>>;
   getPlugins(): Plugin[];
-  loadPlugin(path: string): Promise<Status<string>>;
-  registerPlugin(plugin: Plugin): void;
+  registerPlugin(plugin: Plugin): Promise<Status<void>>;
 }

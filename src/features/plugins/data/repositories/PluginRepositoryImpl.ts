@@ -19,16 +19,19 @@ export class PluginRepositoryImpl implements PluginRepository {
     return PluginService.fetchPlugin(manifest);
   }
 
-  async loadPlugin(path: string): Promise<Status<string>> {
-    // TODO: load plugin
-    return {status: 'success', data: ''};
-  }
+  // async loadPlugin(path: string): Promise<Status<string>> {
+  //   // TODO: load plugin
+  //   return {status: 'success', data: ''};
+  // }
 
-  registerPlugin(plugin: Plugin): void {
+  async registerPlugin(plugin: Plugin): Promise<Status<void>> {
     // if (!plugin.name || typeof plugin.initialize !== "function") {
     //   throw new Error("Invalid plugin");
     // }
+
     this.plugins.push(plugin);
+
+    return {status: 'success', data: undefined};
   }
 
   getPlugins(): Plugin[] {

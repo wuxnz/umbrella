@@ -5,6 +5,7 @@ import {
   View,
   StatusBar,
   Linking,
+  Alert,
 } from 'react-native';
 // import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import {Button, PaperProvider, Snackbar} from 'react-native-paper';
@@ -18,11 +19,19 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import InstallPluginDialog from './src/core/shared/components/InstallPluginDialog';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import GrantPermissionDialog from './src/core/shared/components/GrantPermissionDialog';
-// import * as RNFS from '@dr.pogodin/react-native-fs';
+
+import nodejs from 'nodejs-mobile-react-native';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  useEffect(() => {
+    nodejs.start('main.js');
+    nodejs.channel.addListener('message', message => {
+      Alert.alert('From NodeJS', message);
+    });
+  });
+
   const colorScheme = useColorScheme();
 
   useEffect(() => {}, [colorScheme]);

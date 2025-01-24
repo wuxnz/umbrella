@@ -7,8 +7,17 @@ import * as RNFS from '@dr.pogodin/react-native-fs';
 import ContentService from '../models/ContentService';
 import {get} from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
+import axios from 'axios';
+import BeautifulSoup from 'beautiful-soup-js';
+import CryptoJS from 'crypto-js';
+import Category from '../models/item/Category';
+import DetailedItem from '../models/item/DetailedItem';
+import * as crypto from 'react-native-crypto-js';
+
 export const PluginService = {
   async fetchManifest(manifestUrl: string): Promise<Status<Source>> {
+    // console.log(crypto);
+
     const manifest = await fetch(manifestUrl);
     const manifestJson = await manifest.json();
 
@@ -43,7 +52,6 @@ export const PluginService = {
         ...manifestJson,
         sourceType: toSourceType(manifestJson.sourceType),
         mainifestFilePath: manifestFilePath,
-        manifestUrl: manifestUrl,
       },
     };
   },
@@ -68,7 +76,15 @@ export const PluginService = {
       };
     }
 
+    if (manifest.pluginUrl === undefined) {
+      return {
+        status: 'error',
+        error: 'No plugin url',
+      };
+    }
+
     const pluginResponse = await fetch(manifest.pluginUrl);
+    const pluginJS = await pluginResponse.text();
 
     if (!pluginResponse.ok) {
       return {
@@ -76,6 +92,8 @@ export const PluginService = {
         error: pluginResponse.statusText,
       };
     }
+
+    // console.log(pluginResponse.body);
 
     const pluginFilePath =
       RNFS.ExternalStorageDirectoryPath +
@@ -90,46 +108,105 @@ export const PluginService = {
       await RNFS.mkdir(pluginFilePath.split('/').slice(0, -1).join('/'));
     }
 
-    await RNFS.downloadFile({
-      fromUrl: manifest.pluginUrl,
-      toFile: pluginFilePath,
-    });
+    await RNFS.writeFile(pluginFilePath, await pluginJS, 'utf8');
 
     const pluginContent = await RNFS.readFile(pluginFilePath, 'utf8');
-    const module = await eval(pluginContent);
-    // const module = await import('./pa);
-    const classNames = Object.keys(module).filter(
-      key => typeof module[key] === 'function' && module[key].prototype,
-    );
-    const contentServiceClass = classNames.find(className => {
-      const classMethods = Object.getOwnPropertyNames(
-        module[className].prototype,
-      );
-      const contentServiceMethods = Object.keys(ContentService.prototype);
-      return contentServiceMethods.every(method =>
-        classMethods.includes(method),
-      );
-    });
-    if (contentServiceClass) {
-      const contentService = new module[
-        contentServiceClass
-      ]() as ContentService;
-      const plugin = {
-        ...manifest,
-        pluginFilePath: pluginFilePath,
-        pluginUrl: manifest.pluginUrl,
-      };
+    console.log(pluginContent);
+    try {
+      const contentServiceFunctions = eval(pluginContent);
+
+      console.log(contentServiceFunctions);
+
+      const contentService = {
+        search(query: string, page?: number): Promise<Category> {
+          return contentServiceFunctions.search(
+            query,
+            page,
+          ) as Promise<Category>;
+        },
+        getCategory(category: string, page?: number): Promise<Category> {
+          return contentServiceFunctions.getCategory(category, page);
+        },
+        getHomeCategories(): Promise<Category[]> {
+          return contentServiceFunctions.getHomeCategories() as Promise<
+            Category[]
+          >;
+        },
+        getItemDetails(id: string): Promise<DetailedItem> {
+          return contentServiceFunctions.getItemDetails(id);
+        },
+      } as ContentService;
+
+      // ************************
+      // const axios = await import('axios');
+      // const BeautifulSoup = await import('beautiful-soup-js');
+      // const searchResult = await (async () => {
+      //   const CryptoJS = await import('react-native-crypto-js');
+      //   console.log('CryptoJS:', CryptoJS);
+
+      //   const func = new Function('CryptoJS', contentServiceFunctions.search);
+      //   return func(CryptoJS);
+      // })();
+
+      // console.log('searchResult', searchResult);
+      // ************************
+
+      // const contentService = new EvaluatedContentService();
+
+      // console.log(contentService);
+      // console.log(typeof contentService);
+
+      // const result = await (async () => {
+      //   const axios = await import('axios');
+      //   const BeautifulSoup = await import('beautiful-soup-js');
+      //   // const CryptoJS= await import('crypto-js');
+
+      //   const func = new Function(
+      //     'axios',
+      //     'BeautifulSoup',
+
+      //   );
+      //   return func(axios, BeautifulSoup);
+      // })();
+
+      // const searchResult = await (async () => {
+      //   const axios = await import('axios');
+      //   const BeautifulSoup = await import('beautiful-soup-js');
+      //   // const CryptoJS= await import('crypto-js');
+
+      //   const func = new Function(
+      //     'axios',
+      //     'BeautifulSoup',
+      //     contentServiceFunctions.getHomeCategories,
+      //   );
+      //   return func(axios, BeautifulSoup);
+      // })();
+
+      console.log(contentService);
+      // const CryptoJS = await import('crypto-js');
+      // console.log('CryptoJS from app', CryptoJS);
+      const result = await contentService.search('', 1);
+      console.log('result', result);
+
       return {
         status: 'success',
         data: {
           ...manifest,
           pluginFilePath: pluginFilePath,
           pluginUrl: manifest.pluginUrl,
+          // contentService: contentService,
           contentService: contentService,
         },
       };
-    } else {
-      throw new Error('No class implements the ContentService interface');
+    } catch (err) {
+      console.log(err);
     }
+
+    console.log('past eval');
+
+    return {
+      status: 'error',
+      error: 'Could not evaluate plugin',
+    };
   },
 };

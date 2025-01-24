@@ -10,7 +10,16 @@ const {
  *
  * @type {import('metro-config').MetroConfig}
  */
-const config = {};
+const blacklist = require('metro-config/src/defaults/exclusionList');
+const config = {
+  resolver: {
+    blacklistRE: blacklist([
+      /\/nodejs-assets\/.*/,
+      /\/android\/.*/,
+      /\/ios\/.*/,
+    ]),
+  },
+};
 
 module.exports = wrapWithReanimatedMetroConfig(
   mergeConfig(getDefaultConfig(__dirname), config),

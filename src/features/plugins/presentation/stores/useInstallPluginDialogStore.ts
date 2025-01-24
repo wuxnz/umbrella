@@ -15,6 +15,8 @@ interface InstallPluginDialogStoreState {
   source: Source;
   setSource: (source: Source) => void;
   deleteManifestFile: () => void;
+  onConfirm: () => Promise<void>;
+  setOnConfirm: (onConfirm: () => void) => void;
 }
 
 export const useInstallPluginDialogStore =
@@ -30,4 +32,13 @@ export const useInstallPluginDialogStore =
       set({visible: false});
       set({source: {} as Source});
     },
+    onConfirm: async () => {
+      return Promise.resolve();
+    },
+    setOnConfirm: onConfirm =>
+      set({
+        async onConfirm() {
+          await onConfirm();
+        },
+      }),
   }));

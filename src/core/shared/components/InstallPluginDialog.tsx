@@ -10,7 +10,7 @@ function InstallPluginDialog() {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [loadingPlugins, setLoadingPlugins] = useState(false);
 
-  const {deleteManifestFile, source, visible, setVisible} =
+  const {deleteManifestFile, source, visible, setVisible, onConfirm} =
     useInstallPluginDialogStore(state => state);
 
   useEffect(() => {
@@ -90,6 +90,7 @@ function InstallPluginDialog() {
             onPress={() => {
               setVisible(false);
               setLoadingPlugins(true);
+              onConfirm().then(() => setLoadingPlugins(false));
             }}>
             Install
           </Button>
