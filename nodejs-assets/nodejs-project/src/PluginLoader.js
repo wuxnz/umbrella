@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PluginLoader = void 0;
 const vm_1 = __importDefault(require("vm"));
 const fs_1 = __importDefault(require("fs"));
-const rn_bridge = require('rn-bridge');
 class PluginLoader {
     constructor(pluginPath) {
         this.pluginPath = pluginPath;
@@ -14,11 +13,11 @@ class PluginLoader {
     loadPlugin() {
         // Create a new sandbox
         const sandbox = {
-            require,
             console,
-            BeautifulSoup: require('beautiful-soup-js'),
-            // CryptoJS: require('crypto-js'),
             fetch,
+            require,
+            external: true,
+            builtin: ['*'],
             exports: {},
             module: { exports: {} },
         };

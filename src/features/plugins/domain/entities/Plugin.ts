@@ -20,5 +20,5 @@ export interface Plugin {
   pluginUrl: string; // Optional URL to the plugin file
   // banner?: React.ComponentType; // Optional banner to show in plugin page
   // contentServiceSource?: string; // Content service provided by the plugin to get content
-  contentService?: ContentService;
+  // contentService?: ContentService;
 }

@@ -11,7 +11,7 @@ rn_bridge.channel.on('message', async (message: any) => {
     rn_bridge.channel.send(message);
     return;
   }
-  console.log(messageJson);
+
   const {pluginPath, methodToRun, args} = messageJson;
 
   // Run the method

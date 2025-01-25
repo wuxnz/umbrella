@@ -4,8 +4,6 @@ import DetailedItem from './models/item/DetailedItem';
 import vm from 'vm';
 import fs from 'fs';
 
-const rn_bridge = require('rn-bridge');
-
 export class PluginLoader {
   private pluginPath: string;
 
@@ -16,11 +14,11 @@ export class PluginLoader {
   loadPlugin(): ContentService {
     // Create a new sandbox
     const sandbox = {
-      require,
       console,
-      BeautifulSoup: require('beautiful-soup-js'),
-      // CryptoJS: require('crypto-js'),
       fetch,
+      require,
+      external: true,
+      builtin: ['*'],
       exports: {},
       module: {exports: {}},
     };

@@ -1,38 +1,8 @@
-// @ts-nocheck
-// ^ Delete this line when writing your own plugin and add it back when compiling
+// Include ts-nocheck here if using modules that arent builtin to node
+// Also delete any imports from this file. Use require() instead
 
 class ExamplePlugin {
   async search(query: string, page?: number): Promise<object> {
-    try {
-      const plainText = 'my message';
-      const key = 'secret key 123';
-      const encoder = new TextEncoder();
-      const data = encoder.encode(plainText);
-      const encodedKey = encoder.encode(key);
-
-      // Derive a 256-bit key from the provided key
-      const cryptoKey = await crypto.subtle.importKey(
-        'raw',
-        encodedKey,
-        {name: 'AES-CBC'},
-        false,
-        ['encrypt'],
-      );
-
-      // Generate a random Initialization Vector (IV)
-      const iv = crypto.getRandomValues(new Uint8Array(16));
-
-      // Encrypt the data
-      const encryptedData = await crypto.subtle.encrypt(
-        {name: 'AES-CBC', iv},
-        cryptoKey,
-        data,
-      );
-
-      console.log('encryptedData', encryptedData);
-    } catch (e) {
-      console.error(e);
-    }
     const url = 'https://example.com';
 
     const response = await fetch(url)
@@ -40,23 +10,15 @@ class ExamplePlugin {
       .catch(error => console.error(error));
 
     if (!response) {
-      console.log('No response');
       return {};
     }
 
-    const soup = new BeautifulSoup(response, false);
+    const titleRegex = /<title>(.*?)<\/title>/;
+    const title = response.match(titleRegex)[1];
 
-    console.log(response);
-    // const titleRegex = /<title>(.*?)<\/title>/;
-
-    // const title = response.match(titleRegex)[1];
-
-    const title = soup.find({name: 'title'});
-
-    console.log(title.text.trim());
     return {
-      name: title.text.trim(),
-      description: 'description',
+      name: title,
+      description: `description for ${title}`,
       url: url,
       isPaginated: false,
       getNextPage: (page: number) => Promise.resolve([]),

@@ -14,16 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const runPluginMethodInSandbox_1 = __importDefault(require("./src/runPluginMethodInSandbox"));
 var rn_bridge = require('rn-bridge');
-// Echo every message received from react-native.
-// rn_bridge.channel.on('message', (msg: any) => {
-//   rn_bridge.channel.send(msg);
-// });
-// if (typeof runPluginMethodInSandbox !== 'function') {
-//   rn_bridge.channel.send('Invalid runPluginMethodInSandbox');
-// } else {
-//   rn_bridge.channel.send('runPluginMethodInSandbox', runPluginMethodInSandbox);
-// }
-// Run plugin sandbox
+// Run plugin sandbox if the message is a plugin message, and if not, echo the message.
 rn_bridge.channel.on('message', (message) => __awaiter(void 0, void 0, void 0, function* () {
     // Check if message is a regular message or a plugin message
     var messageJson;
@@ -32,7 +23,6 @@ rn_bridge.channel.on('message', (message) => __awaiter(void 0, void 0, void 0, f
         rn_bridge.channel.send(message);
         return;
     }
-    console.log(messageJson);
     const { pluginPath, methodToRun, args } = messageJson;
     // Run the method
     try {

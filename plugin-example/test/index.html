@@ -6,8 +6,16 @@
     <title>Document</title>
   </head>
   <body>
-    <a href="umbrella://http://10.0.2.2:5500/plugin-example/test/manifest.json">
+    <a
+      id="example-plugin"
+      href="umbrella://{}/plugin-example/test/manifest.json">
       <h1>Example Plugin</h1>
     </a>
   </body>
+
+  <script>
+    document.getElementById('example-plugin').href = document
+      .getElementById('example-plugin')
+      .href.replace('{}', location.origin);
+  </script>
 </html>

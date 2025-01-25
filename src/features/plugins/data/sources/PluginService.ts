@@ -86,8 +86,6 @@ export const PluginService = {
       };
     }
 
-    // console.log(pluginResponse.body);
-
     const pluginPath =
       RNFS.ExternalStorageDirectoryPath +
       `/${constants.APP_NAME}/` +
@@ -101,108 +99,20 @@ export const PluginService = {
 
     await RNFS.writeFile(pluginPath, await pluginJS, 'utf8');
 
-    const pluginContent = await RNFS.readFile(pluginPath, 'utf8');
-    console.log(pluginContent);
-    // try {
-    // const contentServiceFunctions = eval(pluginContent);
-
-    //   console.log(contentServiceFunctions);
-
-    // const contentService = {
-    //   search(query: string, page?: number): Promise<Category> {
-    //     return contentServiceFunctions.search(
-    //       query,
-    //       page,
-    //     ) as Promise<Category>;
-    //   },
-    //   getCategory(category: string, page?: number): Promise<Category> {
-    //     return contentServiceFunctions.getCategory(category, page);
-    //   },
-    //   getHomeCategories(): Promise<Category[]> {
-    //     return contentServiceFunctions.getHomeCategories() as Promise<
-    //       Category[]
-    //     >;
-    //   },
-    //   getItemDetails(id: string): Promise<DetailedItem> {
-    //     return contentServiceFunctions.getItemDetails(id);
-    //   },
-    // } as ContentService;
-
-    //   // ************************
-    //   // const axios = await import('axios');
-    //   // const BeautifulSoup = await import('beautiful-soup-js');
-    //   // const searchResult = await (async () => {
-    //   //   const CryptoJS = await import('react-native-crypto-js');
-    //   //   console.log('CryptoJS:', CryptoJS);
-
-    //   //   const func = new Function('CryptoJS', contentServiceFunctions.search);
-    //   //   return func(CryptoJS);
-    //   // })();
-
-    //   // console.log('searchResult', searchResult);
-    //   // ************************
-
-    //   // const contentService = new EvaluatedContentService();
-
-    //   // console.log(contentService);
-    //   // console.log(typeof contentService);
-
-    //   // const result = await (async () => {
-    //   //   const axios = await import('axios');
-    //   //   const BeautifulSoup = await import('beautiful-soup-js');
-    //   //   // const CryptoJS= await import('crypto-js');
-
-    //   //   const func = new Function(
-    //   //     'axios',
-    //   //     'BeautifulSoup',
-
-    //   //   );
-    //   //   return func(axios, BeautifulSoup);
-    //   // })();
-
-    //   // const searchResult = await (async () => {
-    //   //   const axios = await import('axios');
-    //   //   const BeautifulSoup = await import('beautiful-soup-js');
-    //   //   // const CryptoJS= await import('crypto-js');
-
-    //   //   const func = new Function(
-    //   //     'axios',
-    //   //     'BeautifulSoup',
-    //   //     contentServiceFunctions.getHomeCategories,
-    //   //   );
-    //   //   return func(axios, BeautifulSoup);
-    //   // })();
-
-    //   console.log(contentService);
-    //   // const CryptoJS = await import('crypto-js');
-    //   // console.log('CryptoJS from app', CryptoJS);
-    //   const result = await contentService.search('', 1);
-    //   console.log('result', result);
-
     const plugin: Plugin = {
       ...manifest,
       pluginPath: pluginPath,
       pluginUrl: manifest.pluginUrl,
-      // contentService: contentService,
-      // contentServiceSource: pluginContent,
     };
 
-    await this.runPluginMethodInSandbox(pluginPath, 'search', ['test']);
+    const result = await this.runPluginMethodInSandbox(pluginPath, 'search', [
+      'test',
+    ]);
 
     return {
       status: 'success',
       data: plugin,
     };
-    // } catch (err) {
-    //   console.log(err);
-    // }
-
-    // console.log('past eval');
-
-    // return {
-    //   status: 'error',
-    //   error: 'Could not evaluate plugin',
-    // };
   },
   async runPluginMethodInSandbox(
     pluginPath: string,
@@ -212,7 +122,6 @@ export const PluginService = {
     return new Promise(async (resolve, reject) => {
       nodejs.channel.send(JSON.stringify({pluginPath, methodToRun, args}));
       nodejs.channel.addListener('message', async (response: any) => {
-        var data: Category | Category[] | DetailedItem | null = null;
         var responseJson;
         try {
           responseJson = JSON.parse(response);
@@ -223,51 +132,24 @@ export const PluginService = {
           console.warn('Invalid message' + response);
           return;
         }
-        console.log('response', response);
-        switch (methodToRun) {
-          case 'search':
-            data = response.data as Category;
-            break;
-          case 'getCategory':
-            data = response.data as Category;
-            break;
-          case 'getCategories':
-            data = response.data as Category[];
-            break;
-          case 'getItemDetails':
-            data = response.data as Category;
-            break;
-          default:
-            break;
-        }
-        // while (!data) {
-        //   await new Promise(resolve =>
-        //     setTimeout(() => {
-        //       resolve(true);
-        //     }, 5000),
-        //   );
-        //   console.warn('Waiting for response...');
-        // }
-        // if (!data) {
-        // console.error(`Couldn't parse response: ${response}`);
-        // reject(new Error(`Couldn't parse response: ${response}`));
-        // return;
-        // }
-        // console.log(data);
-        // Alert.alert('From NodeJS', JSON.stringify(data));
-        // resolve({status: 'success', data: data});
-        resolve({status: responseJson.status, data: data});
+        resolve({status: responseJson.status, data: responseJson.data});
       });
-      // while (!data) {
-      //   await new Promise(resolve => {
-      //     setTimeout(() => {
-      //       Alert.alert('From NodeJS', 'Waiting for response...');
-      //       console.log('data', data);
-      //       resolve(true);
-      //     }, 1000);
-      //   });
-      // }
-      // resolve({status: 'success', data: data});
+    }).then(value => {
+      switch (methodToRun) {
+        case 'search':
+          return value as Status<Category>;
+        case 'getCategory':
+          return value as Status<Category>;
+        case 'getCategories':
+          return value as Status<Category[]>;
+        case 'getItemDetails':
+          return value as Status<DetailedItem>;
+        default:
+          return {
+            status: 'error',
+            error: 'Invalid method to run',
+          };
+      }
     });
   },
 };

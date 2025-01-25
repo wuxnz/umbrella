@@ -102,10 +102,8 @@ const PluginsNavigator = () => {
           switch (result.status) {
             case 'success': {
               setSource(result.data);
-              console.log(result.data);
               setInstallOnConfirm(async () => {
                 await pluginViewModel.fetchPlugin(result.data).then(result => {
-                  console.log(result);
                   switch (result.status) {
                     case 'success': {
                       pluginViewModel.registerPlugin(result.data).then(() => {
