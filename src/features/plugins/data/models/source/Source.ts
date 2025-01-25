@@ -8,9 +8,9 @@ interface Source {
   description?: string;
   homePageUrl?: string;
   iconUrl?: string;
-  manifestFilePath?: string;
+  manifestPath?: string;
   manifestUrl?: string;
-  pluginFilePath?: string;
+  pluginPath?: string;
   pluginUrl?: string;
 }
 

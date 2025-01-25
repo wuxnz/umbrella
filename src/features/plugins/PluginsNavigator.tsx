@@ -12,6 +12,7 @@ import {
 } from 'manage-external-storage';
 import GrantPermissionDialog from '../../core/shared/components/GrantPermissionDialog';
 import {useGrantPermissionDialogStore} from './presentation/stores/useGrantPermissionDialogStore';
+import InstallPluginDialog from '../../core/shared/components/InstallPluginDialog';
 
 const PluginsNavigator = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -144,6 +145,7 @@ const PluginsNavigator = () => {
       <Text>¯\_( ͡° ͜ʖ ͡°)_/¯</Text>
       <View style={{height: 16}} />
       <GrantPermissionDialog />
+      <InstallPluginDialog />
     </View>
   );
 };

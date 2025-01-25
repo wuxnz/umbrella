@@ -28,6 +28,7 @@ export default function App() {
   useEffect(() => {
     nodejs.start('main.js');
     nodejs.channel.addListener('message', message => {
+      // console.log('message', message);
       Alert.alert('From NodeJS', message);
     });
   });
@@ -61,7 +62,6 @@ export default function App() {
             <Stack.Navigator screenOptions={{headerShown: false}}>
               <Stack.Screen name="Root" component={BottomNavigationBar} />
             </Stack.Navigator>
-            <InstallPluginDialog />
             <GrantPermissionDialog />
             <StatusBar
               backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}

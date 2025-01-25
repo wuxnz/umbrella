@@ -1,6 +1,8 @@
 import Status from '../../../../core/shared/types/Status';
 import {Plugin} from '../../domain/entities/Plugin';
 import {PluginRepository} from '../../domain/repositories/PluginRepository';
+import Category from '../models/item/Category';
+import DetailedItem from '../models/item/DetailedItem';
 import Source from '../models/source/Source';
 import {PluginService} from '../sources/PluginService';
 
@@ -19,10 +21,9 @@ export class PluginRepositoryImpl implements PluginRepository {
     return PluginService.fetchPlugin(manifest);
   }
 
-  // async loadPlugin(path: string): Promise<Status<string>> {
-  //   // TODO: load plugin
-  //   return {status: 'success', data: ''};
-  // }
+  getPlugins(): Plugin[] {
+    return this.plugins;
+  }
 
   async registerPlugin(plugin: Plugin): Promise<Status<void>> {
     // if (!plugin.name || typeof plugin.initialize !== "function") {
@@ -34,7 +35,15 @@ export class PluginRepositoryImpl implements PluginRepository {
     return {status: 'success', data: undefined};
   }
 
-  getPlugins(): Plugin[] {
-    return this.plugins;
+  async runPluginMethodInSandbox(
+    pluginPath: string,
+    methodToRun: string,
+    args: any[],
+  ): Promise<Status<Category | Category[] | DetailedItem | null>> {
+    return PluginService.runPluginMethodInSandbox(
+      pluginPath,
+      methodToRun,
+      args,
+    );
   }
 }
