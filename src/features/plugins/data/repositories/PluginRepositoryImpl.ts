@@ -6,6 +6,10 @@ import DetailedItem from '../models/item/DetailedItem';
 import Source from '../models/source/Source';
 import {PluginService} from '../sources/PluginService';
 
+// Plugin repository implementation
+// This is the implementation of the plugin repository
+// that uses the plugin service.
+// Will be used by the plugin usecases in the viewmodels
 export class PluginRepositoryImpl implements PluginRepository {
   plugins: Plugin[] = [];
 
@@ -13,7 +17,7 @@ export class PluginRepositoryImpl implements PluginRepository {
     return PluginService.fetchManifest(manifestUrl);
   }
 
-  async deleteManifestFile(manifest: Source): Promise<Status<void>> {
+  async deletePlugin(manifest: Source): Promise<Status<void>> {
     return PluginService.deleteManifestFile(manifest);
   }
 
@@ -26,12 +30,7 @@ export class PluginRepositoryImpl implements PluginRepository {
   }
 
   async registerPlugin(plugin: Plugin): Promise<Status<void>> {
-    // if (!plugin.name || typeof plugin.initialize !== "function") {
-    //   throw new Error("Invalid plugin");
-    // }
-
     this.plugins.push(plugin);
-
     return {status: 'success', data: undefined};
   }
 

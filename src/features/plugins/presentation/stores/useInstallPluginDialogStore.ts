@@ -1,12 +1,12 @@
 import {create} from 'zustand';
 import Source from '../../data/models/source/Source';
 import {PluginRepositoryImpl} from '../../data/repositories/PluginRepositoryImpl';
-import {DeleteManifestFileUsecase} from '../../domain/usecases/DeleteManifestFileUsecase';
+import {DeletePluginUsecase} from '../../domain/usecases/DeletePluginUsecase';
 
-const deleteManifestFileUsecase = new DeleteManifestFileUsecase(
-  new PluginRepositoryImpl(),
-);
+const deletePlugin = new DeletePluginUsecase(new PluginRepositoryImpl());
 
+// Install plugin dialog store
+// This store is used to display a dialog that asks the user to install a plugin
 interface InstallPluginDialogStoreState {
   loading: boolean;
   setLoading: (loading: boolean) => void;
@@ -28,7 +28,7 @@ export const useInstallPluginDialogStore =
     source: {} as Source,
     setSource: source => set({source}),
     deleteManifestFile: () => {
-      deleteManifestFileUsecase.execute(get().source);
+      deletePlugin.execute(get().source);
       set({visible: false});
       set({source: {} as Source});
     },

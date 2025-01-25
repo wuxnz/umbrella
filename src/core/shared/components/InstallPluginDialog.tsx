@@ -4,6 +4,10 @@ import {Button, Dialog, Portal, Snackbar, Text} from 'react-native-paper';
 import {DarkTheme, LightTheme} from '../../theme/theme';
 import {useInstallPluginDialogStore} from '../../../features/plugins/presentation/stores/useInstallPluginDialogStore';
 
+// InstallPluginDialog
+// This component is used to display a dialog that asks the user to install a plugin
+// Shown on the Plugins screen (src/features/plugins/PluginNavigator.tsx)
+
 function InstallPluginDialog() {
   const colorScheme = useColorScheme();
   const [waitingForPlugins, setWaitingForPlugins] = useState(false);

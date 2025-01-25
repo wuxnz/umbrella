@@ -1,6 +1,7 @@
 import {create} from 'zustand';
-import {requestManagePermission} from 'manage-external-storage';
 
+// Grant Permission Dialog Store
+// This store is used to display a dialog that asks the user to grant a permission
 interface GrantPermissionDialogStoreState {
   title: string;
   setTitle: (title: string) => void;

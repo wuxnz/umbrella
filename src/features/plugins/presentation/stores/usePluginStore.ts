@@ -2,6 +2,12 @@ import {Plugin} from '../../domain/entities/Plugin';
 
 import {create} from 'zustand';
 
+// Plugin store
+// This store is used to store the plugins.
+// Will be used by the plugin viewmodels.
+// Also has CRUD methods for plugins.
+// TODO: implement usecases
+// TODO: persist plugins
 interface PluginStoreState {
   permissionsGranted: boolean;
   onPermissionsGranted: () => void;

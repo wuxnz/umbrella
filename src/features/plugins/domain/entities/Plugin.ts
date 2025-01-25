@@ -1,6 +1,9 @@
 import ContentService from '../../data/models/ContentService';
 import SourceType from '../../data/models/source/SourceType';
 
+// Plugin
+// This is the interface for a plugin
+// It is used to register the plugin with the app
 export interface Plugin {
   sourceType: SourceType;
   author?: string;

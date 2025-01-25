@@ -1,0 +1,22 @@
+{
+  "name": "umbrella-plugin-example",
+  "version": "1.0.0",
+  "description": "example-plugin for Umbrella by invader",
+  "main": "invader-example-plugin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "invader",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/node": "^22.10.7",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "beautiful-soup-js": "^0.0.4",
+    "crypto-js": "^4.2.0"
+  },
+  "type": "module"
+}

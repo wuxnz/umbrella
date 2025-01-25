@@ -5,6 +5,11 @@ import {DarkTheme, LightTheme} from '../../theme/theme';
 import {useGrantPermissionDialogStore} from '../../../features/plugins/presentation/stores/useGrantPermissionDialogStore';
 import {requestManagePermission} from 'manage-external-storage';
 
+// GrantPermissionDialog
+// This component is used to display a dialog that asks the user to grant a permission
+// Permissions required: manageExternalStorage
+// Shown on app launch
+
 function GrantPermissionDialog() {
   const colorScheme = useColorScheme();
 

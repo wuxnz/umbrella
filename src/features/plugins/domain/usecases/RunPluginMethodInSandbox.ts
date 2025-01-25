@@ -4,7 +4,9 @@ import DetailedItem from '../../data/models/item/DetailedItem';
 import {Plugin} from '../entities/Plugin';
 import {PluginRepository} from '../repositories/PluginRepository';
 
-class RunPluginMethodInSandbox {
+// Run plugin method in sandbox usecase
+// This is the usecase for running a plugin method in a sandbox
+export class RunPluginMethodInSandbox {
   constructor(private pluginRepository: PluginRepository) {}
 
   async execute(

@@ -6,14 +6,15 @@ import {usePluginStore} from './presentation/stores/usePluginStore';
 import constants from '../../core/utils/constants';
 import {useInstallPluginDialogStore} from './presentation/stores/useInstallPluginDialogStore';
 import {PluginViewModel} from './presentation/viewmodels/PluginViewModel';
-import {
-  checkManagePermission,
-  requestManagePermission,
-} from 'manage-external-storage';
+import {checkManagePermission} from 'manage-external-storage';
 import GrantPermissionDialog from '../../core/shared/components/GrantPermissionDialog';
 import {useGrantPermissionDialogStore} from './presentation/stores/useGrantPermissionDialogStore';
 import InstallPluginDialog from '../../core/shared/components/InstallPluginDialog';
 
+// PluginsNavigator
+// This is the navigator for the plugins screen
+// Used to display the list of plugins and install plugins
+// Triggers the plugin usecases through the viewmodels
 const PluginsNavigator = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [requested, setRequested] = useState(false);
@@ -79,7 +80,6 @@ const PluginsNavigator = () => {
   }, [isVisible]);
 
   const {
-    source,
     setVisible: setInstallVisible,
     setSource,
     loading,

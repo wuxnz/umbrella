@@ -6,16 +6,18 @@ import {
   useColorScheme,
   useWindowDimensions,
   View,
-  PermissionsAndroid,
 } from 'react-native';
 import {DarkTheme, LightTheme} from '../core/theme/theme';
 import {
   createDrawerNavigator,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import {isReadyRef, navigationRef} from '../../RootNavigation';
-import {useEffect} from 'react';
 import {useNavigation} from '@react-navigation/native';
+
+// BottomNavigationBar
+// This component is used to display the bottom navigation bar
+// Shown on all top level screens
+// Shows a Rail when in landscape mode
 
 const DrawerNavigator = createDrawerNavigator();
 

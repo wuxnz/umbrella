@@ -4,18 +4,15 @@ import {Plugin} from '../../domain/entities/Plugin';
 import Source from '../models/source/Source';
 import {toSourceType} from '../models/source/SourceType';
 import * as RNFS from '@dr.pogodin/react-native-fs';
-import ContentService from '../models/ContentService';
-
 import Category from '../models/item/Category';
 import DetailedItem from '../models/item/DetailedItem';
 import nodejs from 'nodejs-mobile-react-native';
-import {Alert} from 'react-native';
-import sleep from '../../../../core/utils/sleep';
 
+// Plugin service
+// This is the service that gets the data for the plugin
+// Will be used by the plugin repository implementation
 export const PluginService = {
   async fetchManifest(manifestUrl: string): Promise<Status<Source>> {
-    // console.log(crypto);
-
     const manifest = await fetch(manifestUrl);
     const manifestJson = await manifest.json();
 
