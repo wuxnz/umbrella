@@ -16,6 +16,6 @@
   <script>
     document.getElementById('example-plugin').href = document
       .getElementById('example-plugin')
-      .href.replace('{}', location.origin);
+      .href.replace('{}', location.origin.split('://')[1]);
   </script>
 </html>

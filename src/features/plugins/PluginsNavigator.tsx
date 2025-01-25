@@ -96,7 +96,7 @@ const PluginsNavigator = () => {
       if (url.startsWith(constants.PLUGIN_SCHEME)) {
         setLoading(true);
 
-        const manifestUrl = url.replace(constants.PLUGIN_SCHEME, '');
+        const manifestUrl = url.replace(constants.PLUGIN_SCHEME, 'http://');
 
         await pluginViewModel.fetchManifest(manifestUrl).then(result => {
           switch (result.status) {

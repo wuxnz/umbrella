@@ -4,8 +4,8 @@
   "name": "Example Plugin",
   "version": 1,
   "description": "example-plugin for Umbrella by invader",
-  "homePageUrl": "http://10.0.2.2:5500",
+  "homePageUrl": "http://192.168.1.157:5500",
   "iconUrl": "https://avatars.githubusercontent.com/u/84649528?v=4",
-  "manifestUrl": "http://10.0.2.2:5500/plugin-example/test/manifest.json",
-  "pluginUrl": "http://10.0.2.2:5500/plugin-example/test/plugins/example-plugin.js"
+  "manifestUrl": "http://192.168.1.157:5500/plugin-example/test/manifest.json",
+  "pluginUrl": "http://192.168.1.157:5500/plugin-example/test/plugins/example-plugin.js"
 }
