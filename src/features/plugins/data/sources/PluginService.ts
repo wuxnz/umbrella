@@ -44,7 +44,7 @@ export const PluginService = {
       data: {
         ...manifestJson,
         sourceType: toSourceType(manifestJson.sourceType),
-        mainifestPath: manifestPath,
+        manifestPath: manifestPath,
       },
     };
   },

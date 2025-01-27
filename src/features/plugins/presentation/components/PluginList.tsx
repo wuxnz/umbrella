@@ -10,7 +10,8 @@ const PluginList = ({plugins}: {plugins: Plugin[]}) => {
   return (
     <List.Section
       title="Plugins"
-      titleStyle={{color: theme.colors.onBackground}}>
+      titleStyle={{color: theme.colors.onBackground}}
+      style={{flex: 1}}>
       {plugins.map(plugin => (
         <PluginListItem key={plugin.name} plugin={plugin} />
       ))}

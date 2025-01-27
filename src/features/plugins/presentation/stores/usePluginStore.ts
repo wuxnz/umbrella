@@ -20,7 +20,9 @@ interface PluginStoreState {
   onPermissionsGranted: () => void;
   onPermissionsDenied: () => void;
   registerPlugin: (plugin: Plugin) => void;
-  deletePlugin: (plugin: Plugin) => void;
+  pluginToDelete: Plugin | null;
+  setPluginToDelete: (plugin: Plugin | null) => void;
+  deletePlugin: (plugin: Plugin) => Promise<void>;
   getPlugin: (path: string) => Plugin | undefined;
   getPlugins: () => Plugin[];
 }
@@ -37,8 +39,13 @@ export const usePluginStore = create(
         set(state => ({
           plugins: [...state.plugins, plugin],
         })),
-      deletePlugin: plugin => {
-        deletePlugin.execute(plugin);
+      pluginToDelete: null,
+      setPluginToDelete: plugin => set({pluginToDelete: plugin}),
+      deletePlugin: async (plugin: Plugin) => {
+        if (!plugin) {
+          throw new Error('Plugin not found');
+        }
+        await deletePlugin.execute(plugin);
         set(state => ({
           plugins: state.plugins.filter(p => Object.is(p, plugin)),
         }));
