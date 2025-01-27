@@ -2,7 +2,7 @@ import ContentService from './ContentService';
 import SourceType from './source/SourceType';
 
 export interface Plugin {
-  sourceType: SourceType;
+  sourceType: PluginType;
   author?: string;
   name: string; // Unique identifier for the plugin
   version: number; // Plugin version

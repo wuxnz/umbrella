@@ -10,12 +10,29 @@ import {checkManagePermission} from 'manage-external-storage';
 import GrantPermissionDialog from '../../core/shared/components/GrantPermissionDialog';
 import {useGrantPermissionDialogStore} from './presentation/stores/useGrantPermissionDialogStore';
 import InstallPluginDialog from '../../core/shared/components/InstallPluginDialog';
+import PluginList from './presentation/components/PluginList';
 
 // PluginsNavigator
 // This is the navigator for the plugins screen
 // Used to display the list of plugins and install plugins
 // Triggers the plugin usecases through the viewmodels
 const PluginsNavigator = () => {
+  const {plugins, setPlugins} = usePluginStore(state => state);
+
+  useEffect(() => {
+    const loadPluginsOnMount = async () => {
+      const plugins = await new PluginViewModel().loadAllPluginsFromStorage();
+
+      if (plugins.status === 'success') {
+        setPlugins(plugins.data!);
+      }
+    };
+
+    if (plugins.length === 0) {
+      loadPluginsOnMount();
+    }
+  }, [plugins]);
+
   const [isVisible, setIsVisible] = useState(false);
   const [requested, setRequested] = useState(false);
 
@@ -39,7 +56,9 @@ const PluginsNavigator = () => {
     };
   });
 
-  const {permissionsGranted, onPermissionsGranted} = usePluginStore();
+  const {permissionsGranted, onPermissionsGranted} = usePluginStore(
+    state => state,
+  );
 
   const {
     setTitle,
@@ -81,7 +100,7 @@ const PluginsNavigator = () => {
 
   const {
     setVisible: setInstallVisible,
-    setSource,
+    setPlugin,
     loading,
     setLoading,
     setOnConfirm: setInstallOnConfirm,
@@ -101,7 +120,7 @@ const PluginsNavigator = () => {
         await pluginViewModel.fetchManifest(manifestUrl).then(result => {
           switch (result.status) {
             case 'success': {
-              setSource(result.data);
+              setPlugin(result.data);
               setInstallOnConfirm(async () => {
                 await pluginViewModel.fetchPlugin(result.data).then(result => {
                   switch (result.status) {
@@ -138,10 +157,16 @@ const PluginsNavigator = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Waiting for plugins to load</Text>
-      <View style={{height: 8}} />
-      <Text>¯\_( ͡° ͜ʖ ͡°)_/¯</Text>
-      <View style={{height: 16}} />
+      {plugins.length === 0 ? (
+        <>
+          <Text>Waiting for plugins to load</Text>
+          <View style={{height: 8}} />
+          <Text>¯\_( ͡° ͜ʖ ͡°)_/¯</Text>
+          <View style={{height: 16}} />
+        </>
+      ) : (
+        <PluginList plugins={plugins} />
+      )}
       <GrantPermissionDialog />
       <InstallPluginDialog />
     </View>
@@ -153,7 +178,6 @@ export default PluginsNavigator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
 });

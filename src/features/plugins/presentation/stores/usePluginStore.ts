@@ -1,6 +1,11 @@
 import {Plugin} from '../../domain/entities/Plugin';
-
 import {create} from 'zustand';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {persist, createJSONStorage} from 'zustand/middleware';
+import {DeletePluginUsecase} from '../../domain/usecases/DeletePluginUsecase';
+import {PluginRepositoryImpl} from '../../data/repositories/PluginRepositoryImpl';
+
+const deletePlugin = new DeletePluginUsecase(new PluginRepositoryImpl());
 
 // Plugin store
 // This store is used to store the plugins.
@@ -9,30 +14,43 @@ import {create} from 'zustand';
 // TODO: implement usecases
 // TODO: persist plugins
 interface PluginStoreState {
+  plugins: Plugin[];
+  setPlugins: (plugins: Plugin[]) => void;
   permissionsGranted: boolean;
   onPermissionsGranted: () => void;
   onPermissionsDenied: () => void;
-  plugins: Plugin[];
   registerPlugin: (plugin: Plugin) => void;
-  unregisterPlugin: (pluginName: string) => void;
-  getPlugin: (pluginName: string) => Plugin | undefined;
+  deletePlugin: (plugin: Plugin) => void;
+  getPlugin: (path: string) => Plugin | undefined;
   getPlugins: () => Plugin[];
 }
 
-export const usePluginStore = create<PluginStoreState>((set, get) => ({
-  permissionsGranted: false,
-  onPermissionsGranted: () => set({permissionsGranted: true}),
-  onPermissionsDenied: () => set({permissionsGranted: false}),
-  plugins: [],
-  registerPlugin: plugin =>
-    set(state => ({
-      plugins: [...state.plugins, plugin],
-    })),
-  unregisterPlugin: pluginName =>
-    set(state => ({
-      plugins: state.plugins.filter(p => p.name !== pluginName),
-    })),
-  getPlugin: pluginName =>
-    get().plugins.find(plugin => plugin.name === pluginName),
-  getPlugins: () => get().plugins,
-}));
+export const usePluginStore = create(
+  persist<PluginStoreState>(
+    (set, get) => ({
+      permissionsGranted: false,
+      onPermissionsGranted: () => set({permissionsGranted: true}),
+      onPermissionsDenied: () => set({permissionsGranted: false}),
+      plugins: [],
+      setPlugins: plugins => set({plugins}),
+      registerPlugin: plugin =>
+        set(state => ({
+          plugins: [...state.plugins, plugin],
+        })),
+      deletePlugin: plugin => {
+        deletePlugin.execute(plugin);
+        set(state => ({
+          plugins: state.plugins.filter(p => Object.is(p, plugin)),
+        }));
+      },
+      getPlugin: path =>
+        get().plugins.find(plugin => plugin.pluginPath === path),
+      getPlugins: () => get().plugins,
+    }),
+    {
+      name: 'plugins',
+      storage: createJSONStorage(() => AsyncStorage),
+      version: 0,
+    },
+  ),
+);

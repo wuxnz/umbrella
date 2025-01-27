@@ -14,7 +14,7 @@ function InstallPluginDialog() {
   const [cancelLoading, setCancelLoading] = useState(false);
   const [loadingPlugins, setLoadingPlugins] = useState(false);
 
-  const {deleteManifestFile, source, visible, setVisible, onConfirm} =
+  const {deleteManifestFile, plugin, visible, setVisible, onConfirm} =
     useInstallPluginDialogStore(state => state);
 
   useEffect(() => {
@@ -66,16 +66,16 @@ function InstallPluginDialog() {
       <Dialog visible={visible} onDismiss={() => setVisible(false)}>
         <Dialog.Icon icon="power-plug" />
         <Dialog.Title style={{textAlign: 'center'}}>
-          Install {source.name}?
+          Install {plugin.name}?
         </Dialog.Title>
         <Dialog.Content>
-          <Text variant="titleMedium">Author: {source.author}</Text>
-          <Text variant="titleMedium">Version: {source.version}</Text>
-          <Text variant="titleMedium">Description: {source.description}</Text>
+          <Text variant="titleMedium">Author: {plugin.author}</Text>
+          <Text variant="titleMedium">Version: {plugin.version}</Text>
+          <Text variant="titleMedium">Description: {plugin.description}</Text>
           <View style={{height: 8}} />
           <Text variant="bodyMedium">
-            Are you sure you want to install '{source.name}'? This will open '
-            {source.homePageUrl}'.
+            Are you sure you want to install '{plugin.name}'? This will open '
+            {plugin.homePageUrl}'.
           </Text>
         </Dialog.Content>
         <Dialog.Actions>

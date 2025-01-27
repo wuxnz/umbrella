@@ -31,4 +31,4 @@ rn_bridge.channel.on('message', async (message: any) => {
 });
 
 // Inform react-native node is initialized.
-rn_bridge.channel.send('Node was initialized and changed.');
+rn_bridge.channel.send('Node was initialized.');

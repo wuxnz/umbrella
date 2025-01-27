@@ -1,7 +1,7 @@
 import {create} from 'zustand';
-import Source from '../../data/models/source/Source';
 import {PluginRepositoryImpl} from '../../data/repositories/PluginRepositoryImpl';
 import {DeletePluginUsecase} from '../../domain/usecases/DeletePluginUsecase';
+import {Plugin} from '../../domain/entities/Plugin';
 
 const deletePlugin = new DeletePluginUsecase(new PluginRepositoryImpl());
 
@@ -12,8 +12,8 @@ interface InstallPluginDialogStoreState {
   setLoading: (loading: boolean) => void;
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  source: Source;
-  setSource: (source: Source) => void;
+  plugin: Plugin;
+  setPlugin: (plugin: Plugin) => void;
   deleteManifestFile: () => void;
   onConfirm: () => Promise<void>;
   setOnConfirm: (onConfirm: () => void) => void;
@@ -25,12 +25,12 @@ export const useInstallPluginDialogStore =
     setLoading: loading => set({loading}),
     visible: false,
     setVisible: visible => set({visible}),
-    source: {} as Source,
-    setSource: source => set({source}),
+    plugin: {} as Plugin,
+    setPlugin: plugin => set({plugin: plugin}),
     deleteManifestFile: () => {
-      deletePlugin.execute(get().source);
+      deletePlugin.execute(get().plugin);
       set({visible: false});
-      set({source: {} as Source});
+      set({plugin: {} as Plugin});
     },
     onConfirm: async () => {
       return Promise.resolve();

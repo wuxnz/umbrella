@@ -7,7 +7,7 @@ import {PluginRepository} from '../repositories/PluginRepository';
 export class DeletePluginUsecase {
   constructor(private pluginRepository: PluginRepository) {}
 
-  execute(manifest: Source): Promise<Status<void>> {
+  execute(manifest: Plugin): Promise<Status<void>> {
     return this.pluginRepository.deletePlugin(manifest);
   }
 }

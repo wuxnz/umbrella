@@ -1,18 +1,18 @@
 import Status from '../../../../core/shared/types/Status';
 import constants from '../../../../core/utils/constants';
 import {Plugin} from '../../domain/entities/Plugin';
-import Source from '../models/source/Source';
 import {toSourceType} from '../models/source/SourceType';
 import * as RNFS from '@dr.pogodin/react-native-fs';
 import Category from '../models/item/Category';
 import DetailedItem from '../models/item/DetailedItem';
 import nodejs from 'nodejs-mobile-react-native';
+import {usePluginStore} from '../../presentation/stores/usePluginStore';
 
 // Plugin service
 // This is the service that gets the data for the plugin
 // Will be used by the plugin repository implementation
 export const PluginService = {
-  async fetchManifest(manifestUrl: string): Promise<Status<Source>> {
+  async fetchManifest(manifestUrl: string): Promise<Status<Plugin>> {
     const manifest = await fetch(manifestUrl);
     const manifestJson = await manifest.json();
 
@@ -48,20 +48,23 @@ export const PluginService = {
       },
     };
   },
-  async deleteManifestFile(manifest: Source): Promise<Status<void>> {
-    if (!manifest.manifestPath) {
+  async deletePlugin(manifest: Plugin): Promise<Status<void>> {
+    if (!manifest.manifestPath || !manifest.pluginPath) {
       return {
         status: 'error',
-        error: 'No manifest file path',
+        error: 'No manifest file path or plugin file path',
       };
     }
 
+    await RNFS.unlink(manifest.manifestPath);
+    await RNFS.unlink(manifest.pluginPath);
+
     return {
       status: 'success',
-      data: await RNFS.unlink(manifest.manifestPath),
+      data: undefined,
     };
   },
-  async fetchPlugin(manifest: Source): Promise<Status<Plugin>> {
+  async fetchPlugin(manifest: Plugin): Promise<Status<Plugin>> {
     if (!manifest.pluginUrl) {
       return {
         status: 'error',
@@ -112,6 +115,50 @@ export const PluginService = {
     return {
       status: 'success',
       data: plugin,
+    };
+  },
+  async loadAllPluginsFromStorage(): Promise<Status<Plugin[]>> {
+    var plugins: Plugin[] = [];
+
+    const pluginFolderPath =
+      RNFS.ExternalStorageDirectoryPath +
+      `/${constants.APP_NAME}/` +
+      `${constants.PLUGIN_FOLDER_NAME}`;
+
+    if (!(await RNFS.exists(pluginFolderPath))) {
+      return {
+        status: 'error',
+        error: 'No plugin folder found',
+      };
+    }
+
+    const pluginsFolderFiles = await RNFS.readDir(pluginFolderPath);
+
+    const manifestFiles = pluginsFolderFiles.filter(plugin =>
+      plugin.name.endsWith('.json'),
+    );
+
+    for (const manifestFile of manifestFiles) {
+      const manifest = await RNFS.readFile(manifestFile.path, 'utf8');
+      const manifestJson = JSON.parse(manifest) as Plugin;
+
+      if (!manifestJson.pluginPath) {
+        return {
+          status: 'error',
+          error: 'No plugin path found',
+        };
+      }
+
+      const {registerPlugin} = usePluginStore.getState();
+
+      registerPlugin(manifestJson);
+
+      plugins.push(manifestJson);
+    }
+
+    return {
+      status: 'success',
+      data: plugins,
     };
   },
   async runPluginMethodInSandbox(

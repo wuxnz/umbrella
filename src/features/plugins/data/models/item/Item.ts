@@ -6,7 +6,7 @@ interface Item {
   description?: string;
   imageUrl: string;
   url: string;
-  source: Source;
+  source: Plugin;
 }
 
 export default Item;

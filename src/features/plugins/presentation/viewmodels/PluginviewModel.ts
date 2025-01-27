@@ -1,21 +1,26 @@
 import Status from '../../../../core/shared/types/Status';
 import Category from '../../data/models/item/Category';
 import DetailedItem from '../../data/models/item/DetailedItem';
-import Source from '../../data/models/source/Source';
 import {PluginRepositoryImpl} from '../../data/repositories/PluginRepositoryImpl';
 import {Plugin} from '../../domain/entities/Plugin';
 import {PluginRepository} from '../../domain/repositories/PluginRepository';
 import {DeletePluginUsecase} from '../../domain/usecases/DeletePluginUsecase';
 import {FetchManifestUsecase} from '../../domain/usecases/FetchManifestUsecase';
 import {FetchPluginUsecase} from '../../domain/usecases/FetchPluginUsecase';
+import {GetPluginUsecase} from '../../domain/usecases/GetPluginUsecase';
 import {GetPluginsUsecase} from '../../domain/usecases/GetPluginsUsecase';
+import {LoadAllPluginsFromStorageUsecase} from '../../domain/usecases/LoadAllPluginsFromStorage';
 import {RegisterPluginUsecase} from '../../domain/usecases/RegisterPluginUsecase';
 import {RunPluginMethodInSandbox} from '../../domain/usecases/RunPluginMethodInSandbox';
 
 const fetchManifest = new FetchManifestUsecase(new PluginRepositoryImpl());
 const deleteManifestFile = new DeletePluginUsecase(new PluginRepositoryImpl());
 const fetchPlugin = new FetchPluginUsecase(new PluginRepositoryImpl());
+const getPlugin = new GetPluginUsecase(new PluginRepositoryImpl());
 const getPlugins = new GetPluginsUsecase(new PluginRepositoryImpl());
+const loadAllPluginsFromStorage = new LoadAllPluginsFromStorageUsecase(
+  new PluginRepositoryImpl(),
+);
 const registerPlugin = new RegisterPluginUsecase(new PluginRepositoryImpl());
 
 // Plugin viewmodel
@@ -23,22 +28,28 @@ const registerPlugin = new RegisterPluginUsecase(new PluginRepositoryImpl());
 // Will be used by the plugin view
 // Triggers the plugin usecases
 export class PluginViewModel implements PluginRepository {
-  plugins: Plugin[] = [];
-
-  async fetchManifest(url: string): Promise<Status<Source>> {
+  async fetchManifest(url: string): Promise<Status<Plugin>> {
     return fetchManifest.execute(url);
   }
 
-  async deletePlugin(manifest: Source): Promise<Status<void>> {
+  async deletePlugin(manifest: Plugin): Promise<Status<void>> {
     return deleteManifestFile.execute(manifest);
   }
 
-  async fetchPlugin(manifest: Source): Promise<Status<Plugin>> {
+  async fetchPlugin(manifest: Plugin): Promise<Status<Plugin>> {
     return fetchPlugin.execute(manifest);
+  }
+
+  getPlugin(pluginPath: string): Plugin {
+    return getPlugin.execute(pluginPath);
   }
 
   getPlugins(): Plugin[] {
     return getPlugins.execute();
+  }
+
+  async loadAllPluginsFromStorage(): Promise<Status<Plugin[]>> {
+    return loadAllPluginsFromStorage.execute();
   }
 
   async registerPlugin(plugin: Plugin): Promise<Status<void>> {

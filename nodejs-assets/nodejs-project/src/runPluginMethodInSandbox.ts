@@ -3,12 +3,12 @@ import {Plugin} from './models/Plugin';
 import PluginLoader from './PluginLoader';
 
 async function runPluginMethodInSandbox(
-  contentService: string,
+  pluginPath: string,
   methodToRun: string,
   args: any[],
 ): Promise<any> {
   // Dynamically load the plugin
-  const pluginLoader = new PluginLoader(contentService);
+  const pluginLoader = new PluginLoader(pluginPath);
   const contentServiceClass: ContentService = pluginLoader.loadPlugin();
 
   // Get list of methods in content service

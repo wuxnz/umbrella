@@ -1,7 +1,7 @@
 import SourceType from './SourceType';
 
 interface Source {
-  sourceType: SourceType;
+  sourceType: PluginType;
   author?: string;
   name: string;
   version: number;
