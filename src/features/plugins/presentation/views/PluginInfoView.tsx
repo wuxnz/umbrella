@@ -87,26 +87,23 @@ const PluginInfoView = ({route}: {route: any}) => {
               <Chip
                 closeIcon={'open-in-new'}
                 style={styles.chip}
-                onClose={() => {
-                  Linking.openURL(plugin.homePageUrl);
-                }}>
-                Open Source
+                onClose={() => {}}
+                onPress={() => Linking.openURL(plugin.homePageUrl)}>
+                Home Page
               </Chip>
             ) : null}
             <Chip
               closeIcon={'open-in-new'}
               style={styles.chip}
-              onClose={() => {
-                Linking.openURL(plugin.manifestUrl);
-              }}>
+              onClose={() => {}}
+              onPress={() => Linking.openURL(plugin.manifestUrl)}>
               Manifest
             </Chip>
             <Chip
               closeIcon={'open-in-new'}
               style={styles.chip}
-              onClose={() => {
-                Linking.openURL(plugin.pluginUrl);
-              }}>
+              onClose={() => {}}
+              onPress={() => Linking.openURL(plugin.pluginUrl)}>
               Plugin
             </Chip>
           </View>
