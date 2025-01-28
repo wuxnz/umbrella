@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 8,
+    marginBottom: 8,
   },
   authorAvatarImage: {
     width: 100,
