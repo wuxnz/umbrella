@@ -4,6 +4,7 @@ enum SourceType {
   Cartoon,
   Comic,
   Documentary,
+  Image,
   LightNovel,
   Manga,
   Manwa,

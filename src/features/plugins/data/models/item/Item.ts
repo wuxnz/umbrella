@@ -1,4 +1,4 @@
-import Source from '../source/Source';
+import SourceType from '../source/SourceType';
 
 interface Item {
   id: string;
@@ -6,7 +6,7 @@ interface Item {
   description?: string;
   imageUrl: string;
   url: string;
-  source: Plugin;
+  type: SourceType;
 }
 
 export default Item;

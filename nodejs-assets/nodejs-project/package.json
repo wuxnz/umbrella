@@ -11,11 +11,9 @@
   "license": "",
   "dependencies": {
     "@types/node": "^22.10.10",
-    "crypto-js": "^4.2.0",
+    "beautiful-soup-js": "^0.0.4",
     "typescript": "^5.7.3",
     "vm2": "^3.9.19"
   },
-  "devDependencies": {
-    "@types/crypto-js": "^4.2.2"
-  }
+  "devDependencies": {}
 }

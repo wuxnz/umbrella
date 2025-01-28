@@ -2,11 +2,6 @@
 # yarn lockfile v1
 
 
-"@types/crypto-js@^4.2.2":
-  version "4.2.2"
-  resolved "https://registry.yarnpkg.com/@types/crypto-js/-/crypto-js-4.2.2.tgz#771c4a768d94eb5922cc202a3009558204df0cea"
-  integrity sha512-sDOLlVbHhXpAUAL0YHDUUwDZf3iN4Bwi4W6a0W0b+QcAezUbRtH4FVb+9J4h+XFPW7l/gQ9F8qC7P+Ec4k8QVQ==
-
 "@types/node@^22.10.10":
   version "22.10.10"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-22.10.10.tgz#85fe89f8bf459dc57dfef1689bd5b52ad1af07e6"
@@ -26,10 +21,17 @@ acorn@^8.11.0, acorn@^8.7.0:
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-8.14.0.tgz#063e2c70cac5fb4f6467f0b11152e04c682795b0"
   integrity sha512-cl669nCJTZBsL97OF4kUQm5g5hC2uihk0NxY3WENAC0TYdILVkAyHymAntgxGkl7K+t0cXIrH5siy5S4XkFycA==
 
-crypto-js@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
-  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
+beautiful-soup-js@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/beautiful-soup-js/-/beautiful-soup-js-0.0.4.tgz#df2dfc3c76428f0c446847238d695522a23c2eea"
+  integrity sha512-OBigy3V9QnLxNeNFsCIJF0X9QYUX1Q891fm6+RoGjjxNB8AWII4iBqUaFVpUEzfVIUgvr8IOrKtEIHLupzDAZg==
+  dependencies:
+    htmlparser "^1.7.7"
+
+htmlparser@^1.7.7:
+  version "1.7.7"
+  resolved "https://registry.yarnpkg.com/htmlparser/-/htmlparser-1.7.7.tgz#19e7b3997ff6fbac99ae5a7d2766489efe7e2d0e"
+  integrity sha512-zpK66ifkT0fauyFh2Mulrq4AqGTucxGtOhZ8OjkbSfcCpkqQEI8qRkY0tSQSJNAQ4HUZkgWaU4fK4EH6SVH9PQ==
 
 typescript@^5.7.3:
   version "5.7.3"

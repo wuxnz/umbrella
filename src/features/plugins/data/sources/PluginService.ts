@@ -109,7 +109,7 @@ export const PluginService = {
     };
 
     const result = await this.runPluginMethodInSandbox(pluginPath, 'search', [
-      'test',
+      'naruto',
     ]);
 
     return {

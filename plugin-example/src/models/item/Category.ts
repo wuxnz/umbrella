@@ -5,7 +5,8 @@ interface Category {
   description?: string;
   url: string;
   isPaginated: boolean;
-  getNextPage?: (page: number) => Promise<Item[]>;
+  nextPageNumber?: number;
+  previousPageNumber?: number;
   items: Item[];
 }
 

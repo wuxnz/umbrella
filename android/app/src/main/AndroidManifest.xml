@@ -19,5 +19,23 @@
         <data android:scheme="umbrella"/>
       </intent-filter>
     </activity>
+    <provider
+      android:name="com.vinzscam.reactnativefileviewer.FileProvider"
+      android:authorities="${applicationId}.provider"
+      android:exported="false"
+      android:grantUriPermissions="true">
+      <meta-data
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_viewer_provider_paths"
+      />
+	</provider>
   </application>
+  
++ <queries>
++   <intent>
++     <action android:name="android.intent.action.VIEW" />
++     <!-- If you don't know the MIME type in advance, set "mimeType" to "*/*". -->
++     <data android:mimeType="application/*/*" />
++   </intent>
++ </queries>
 </manifest>

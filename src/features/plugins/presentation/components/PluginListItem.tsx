@@ -2,12 +2,20 @@ import {StyleSheet, Image, View} from 'react-native';
 import React from 'react';
 import {Plugin} from '../../domain/entities/Plugin';
 import {Icon, IconButton, List} from 'react-native-paper';
-import Status from '../../../../core/shared/types/Status';
 import {usePluginStore} from '../stores/usePluginStore';
-import ConfirmOrDenyDialog from '../../../../core/shared/components/ConfirmOrDenyDialog';
+import {useNavigation} from '@react-navigation/core';
+import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+
+type RootStackParamList = {
+  pluginInfoView: {
+    plugin: Plugin;
+  };
+};
 
 const PluginListItem = ({plugin}: {plugin: Plugin}) => {
   const {setPluginToDelete} = usePluginStore.getState();
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
   return (
     <>
@@ -37,7 +45,9 @@ const PluginListItem = ({plugin}: {plugin: Plugin}) => {
             }}
           />
         )}
-        onPress={() => {}}
+        onPress={() => {
+          navigation.navigate('pluginInfoView', {plugin: plugin});
+        }}
       />
     </>
   );

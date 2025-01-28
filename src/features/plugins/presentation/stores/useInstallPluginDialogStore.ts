@@ -12,7 +12,7 @@ interface InstallPluginDialogStoreState {
   setLoading: (loading: boolean) => void;
   visible: boolean;
   setVisible: (visible: boolean) => void;
-  plugin: Plugin;
+  plugin?: Plugin;
   setPlugin: (plugin: Plugin) => void;
   deleteManifestFile: () => void;
   onConfirm: () => Promise<void>;
@@ -25,12 +25,13 @@ export const useInstallPluginDialogStore =
     setLoading: loading => set({loading}),
     visible: false,
     setVisible: visible => set({visible}),
-    plugin: {} as Plugin,
+    plugin: undefined,
     setPlugin: plugin => set({plugin: plugin}),
     deleteManifestFile: () => {
-      deletePlugin.execute(get().plugin);
+      if (!get().plugin) return;
+      deletePlugin.execute(get().plugin as Plugin);
       set({visible: false});
-      set({plugin: {} as Plugin});
+      set({plugin: undefined});
     },
     onConfirm: async () => {
       return Promise.resolve();
@@ -39,6 +40,7 @@ export const useInstallPluginDialogStore =
       set({
         async onConfirm() {
           await onConfirm();
+          set({visible: false, plugin: undefined, loading: false});
         },
       }),
   }));

@@ -1,4 +1,4 @@
-import ContentService from '../../data/models/ContentService';
+// import ContentService from '../../data/models/ContentService';
 import SourceType from '../../data/models/source/SourceType';
 
 // Plugin
@@ -18,7 +18,10 @@ export interface Plugin {
   manifestUrl?: string; // Optional URL to the manifest file
   pluginPath?: string; // Optional path to the plugin file
   pluginUrl: string; // Optional URL to the plugin file
-  // banner?: React.ComponentType; // Optional banner to show in plugin page
+  bannerImageUrl?: string; // Optional banner to show in plugin page
+  changelog?: string;
+  readme?: string;
+  licese?: string;
   // contentServiceSource?: string; // Content service provided by the plugin to get content
   // contentService?: ContentService;
 }
