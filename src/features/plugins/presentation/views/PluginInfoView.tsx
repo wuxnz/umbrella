@@ -72,7 +72,6 @@ const PluginInfoView = ({route}: {route: any}) => {
             }}
           />
           <Appbar.Content title={plugin.name} />
-          {/* <Appbar.Action icon="star" onPress={() => {}} /> */}
           <Appbar.Action
             icon="earth"
             onPress={() => {
@@ -136,7 +135,6 @@ const PluginInfoView = ({route}: {route: any}) => {
               <Text variant="bodyLarge">{plugin.author}</Text>
               <Text variant="bodyMedium">{plugin.description}</Text>
             </View>
-            <View style={{flex: 1}} />
           </View>
           <View style={styles.pluginMetaDataContainer}>
             <Chip style={styles.chip}>Version: {plugin.version}</Chip>
@@ -230,6 +228,7 @@ const styles = StyleSheet.create({
   },
   pluginInfoView: {
     marginTop: -50,
+    width: '100%',
   },
   banner: {
     width: '100%',
@@ -245,6 +244,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 8,
     marginBottom: 8,
+    flex: 1,
   },
   authorAvatarImage: {
     width: 100,
@@ -258,7 +258,8 @@ const styles = StyleSheet.create({
   pluginNameAndDescription: {
     flexDirection: 'column',
     marginLeft: 10,
-    flexWrap: 'wrap',
+    flex: 1,
+    marginRight: 8,
   },
   pluginMetaDataContainer: {
     flex: 1,
