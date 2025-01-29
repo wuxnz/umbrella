@@ -33,6 +33,7 @@ const DrawerNavigator = createDrawerNavigator();
 
 const DrawerContent = ({props, setIndex}: any) => {
   const colorScheme = useColorScheme();
+  const theme = useTheme();
 
   return (
     <DrawerContentScrollView
@@ -44,27 +45,63 @@ const DrawerContent = ({props, setIndex}: any) => {
       }}>
       <View style={{flex: 1}} />
       <Drawer.CollapsedItem
+        focusedIcon="home"
+        unfocusedIcon="home-outline"
+        label="Home"
+        active={props.navigation.getState().index === 0}
+        onPress={() => {
+          props.navigation.navigate('home');
+          setIndex(0);
+        }}
+        theme={theme}
+      />
+      <View style={{flex: 1}} />
+      <Drawer.CollapsedItem
+        focusedIcon="magnify"
+        unfocusedIcon="magnify"
+        label="Search"
+        active={props.navigation.getState().index === 1}
+        onPress={() => {
+          props.navigation.navigate('search');
+          setIndex(1);
+        }}
+        theme={theme}
+      />
+      <View style={{flex: 1}} />
+      <Drawer.CollapsedItem
+        focusedIcon="library"
+        unfocusedIcon="library"
+        label="Library"
+        active={props.navigation.getState().index === 2}
+        onPress={() => {
+          props.navigation.navigate('library');
+          setIndex(2);
+        }}
+        theme={theme}
+      />
+      <View style={{flex: 1}} />
+      <Drawer.CollapsedItem
         focusedIcon="power-plug"
         unfocusedIcon={'power-plug-outline'}
         label="Plugins"
-        active={props.navigation.getState().index === 0}
+        active={props.navigation.getState().index === 3}
         onPress={() => {
           props.navigation.navigate('plugins');
-          setIndex(0);
+          setIndex(3);
         }}
-        theme={colorScheme === 'dark' ? DarkTheme : LightTheme}
+        theme={theme}
       />
       <View style={{flex: 1}} />
       <Drawer.CollapsedItem
         focusedIcon="cog"
         unfocusedIcon="cog-outline"
         label="Settings"
-        active={props.navigation.getState().index === 1}
+        active={props.navigation.getState().index === 4}
         onPress={() => {
           props.navigation.navigate('settings');
-          setIndex(1);
+          setIndex(4);
         }}
-        theme={colorScheme === 'dark' ? DarkTheme : LightTheme}
+        theme={theme}
       />
       <View style={{flex: 1}} />
     </DrawerContentScrollView>
@@ -217,7 +254,15 @@ const BottomNavigationBar = () => {
           <DrawerContent props={props} setIndex={setIndex} />
         )}
         initialRouteName={
-          index === 0 ? 'plugins' : index === 1 ? 'settings' : 'plugins'
+          index === 0
+            ? 'home'
+            : index === 1
+            ? 'search'
+            : index === 2
+            ? 'library'
+            : index === 3
+            ? 'plugins'
+            : 'settings'
         }
         screenOptions={{
           headerShown: false,

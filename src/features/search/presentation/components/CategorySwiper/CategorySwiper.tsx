@@ -33,9 +33,7 @@ const CategorySwiper = ({
             if (!category.source) return;
             setBottomSheetActivePlugin(category.source);
             setBottomSheetVisible(true);
-            // bottomSheetRef.current.close();
-            // bottomSheetRef.current?.expand();
-            bottomSheetRef.current?.snapToIndex(0);
+            bottomSheetRef.current?.snapToIndex(1);
           }}
         />
       </View>
@@ -62,8 +60,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width: Dimensions.get('screen').width,
-    paddingRight: 16,
+    flex: 1,
   },
   scrollView: {
     marginRight: -16,

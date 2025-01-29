@@ -1,5 +1,5 @@
 import {View, Text, ScrollView, StyleSheet} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import SearchBar from './presentation/components/SearchBar';
 import SearchFiltersSelector from './presentation/components/SearchFiltersSelector';
 import {useTheme} from 'react-native-paper';
@@ -24,9 +24,15 @@ const SearchNavigator = () => {
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
+  const [scrollOffset, setScrollOffset] = useState(0);
+
+  const handleScroll = (event: any) => {
+    setScrollOffset(event.nativeEvent.contentOffset.y);
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}}>
+      <ScrollView contentContainerStyle={{flexGrow: 1}} onScroll={handleScroll}>
         <View
           style={{
             ...styles.searchBarAndFilters,
@@ -50,6 +56,7 @@ const SearchNavigator = () => {
             }
             page={1}
             bottomSheetRef={bottomSheetRef}
+            scrollOffset={scrollOffset}
           />
         )}
       </ScrollView>

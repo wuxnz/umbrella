@@ -12,10 +12,12 @@ const PaginationBottomSheet = ({
   getNextPage,
   page,
   bottomSheetRef,
+  scrollOffset,
 }: {
   getNextPage: (page: number, plugin: Plugin) => Promise<void>;
   page: number;
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
+  scrollOffset: number;
 }) => {
   const {
     bottomSheetActivePlugin,
@@ -61,29 +63,38 @@ const PaginationBottomSheet = ({
 
   const theme = useTheme();
 
+  console.log(scrollOffset);
   return (
     <GestureHandlerRootView
       style={{
         flex: 1,
         backgroundColor: 'transparent',
         position: 'absolute',
-        top: 0,
+        top:
+          Dimensions.get('window').height < Dimensions.get('window').width
+            ? scrollOffset
+            : 0,
         left: 0,
         right: 0,
-        bottom: 0,
+        bottom:
+          Dimensions.get('window').height < Dimensions.get('window').width
+            ? Dimensions.get('window').height - scrollOffset - 250
+            : 0,
         zIndex: 10,
       }}>
       <BottomSheet
         ref={bottomSheetRef}
         index={0}
-        snapPoints={['25%', '50%', '75%', '100%']}
+        snapPoints={['25%', '50%', '75%']}
         handleStyle={{backgroundColor: theme.colors.surface}}
         enablePanDownToClose={true}
         enableDynamicSizing={true}
-        onClose={() => setBottomSheetVisible(false)}>
+        onClose={() => {
+          setBottomSheetVisible(false);
+        }}>
         <BottomSheetScrollView
-          onMomentumScrollEnd={onMomentumScrollEnd}
           onScroll={onScrollToBottom}
+          // onMomentumScrollBegin={handleScroll}
           showsVerticalScrollIndicator={false}
           style={{
             backgroundColor: theme.colors.background,
@@ -109,6 +120,9 @@ const PaginationBottomSheet = ({
 export default PaginationBottomSheet;
 
 const styles = StyleSheet.create({
+  bottomSheetWrapper: {
+    height: Dimensions.get('window').height,
+  },
   container: {
     flex: 1,
     display: 'flex',
