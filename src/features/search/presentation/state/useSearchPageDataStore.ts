@@ -2,6 +2,7 @@ import {create} from 'zustand';
 import SourceType from '../../../plugins/data/models/source/SourceType';
 import {Plugin} from '../../../plugins/domain/entities/Plugin';
 import Category from '../../../plugins/data/models/item/Category';
+import Item from '../../../plugins/data/models/item/Item';
 
 interface SearchPageDataStoreState {
   query: string;
@@ -15,6 +16,12 @@ interface SearchPageDataStoreState {
   getResults: () => Category[];
   alreadyStarted: boolean;
   setAlreadyStarted: (alreadyStarted: boolean) => void;
+  bottomSheetActivePlugin?: Plugin;
+  setBottomSheetActivePlugin: (plugin: Plugin) => void;
+  bottomSheetItems: Item[];
+  setBottomSheetItems: (bottomSheetItems: Item[]) => void;
+  bottomSheetVisible: boolean;
+  setBottomSheetVisible: (bottomSheetVisible: boolean) => void;
 }
 
 export const useSearchPageDataStore = create<SearchPageDataStoreState>()(
@@ -33,5 +40,14 @@ export const useSearchPageDataStore = create<SearchPageDataStoreState>()(
     alreadyStarted: false,
     setAlreadyStarted: (alreadyStarted: boolean) =>
       set({alreadyStarted: alreadyStarted}),
+    bottomSheetActivePlugin: undefined,
+    setBottomSheetActivePlugin: (plugin: Plugin) =>
+      set({bottomSheetActivePlugin: plugin}),
+    bottomSheetItems: [],
+    setBottomSheetItems: (bottomSheetItems: Item[]) =>
+      set({bottomSheetItems: bottomSheetItems}),
+    bottomSheetVisible: false,
+    setBottomSheetVisible: (bottomSheetVisible: boolean) =>
+      set({bottomSheetVisible: bottomSheetVisible}),
   }),
 );

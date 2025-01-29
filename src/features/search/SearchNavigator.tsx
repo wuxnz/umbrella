@@ -6,21 +6,23 @@ import {useTheme} from 'react-native-paper';
 import {useSearchPageDataStore} from './presentation/state/useSearchPageDataStore';
 import CategorySwiper from './presentation/components/CategorySwiper/CategorySwiper';
 import {SearchViewModel} from './presentation/viewmodels/SearchViewModel';
+import PaginationBottomSheet from './presentation/components/CategorySwiper/PaginationBottomSheet';
+import {Plugin} from '../plugins/domain/entities/Plugin';
+import BottomSheet from '@gorhom/bottom-sheet';
 
 const SearchNavigator = () => {
   const theme = useTheme();
 
   const {
     results,
-    setQuery,
-    pluginsToSearch,
-    alreadyStarted,
-    setAlreadyStarted,
-    sourceTypesToSearch,
-    setSourceTypesToSearch,
+    bottomSheetActivePlugin,
+    bottomSheetVisible,
+    setBottomSheetVisible,
   } = useSearchPageDataStore(state => state);
 
   const searchViewModel = new SearchViewModel();
+
+  const bottomSheetRef = React.useRef<BottomSheet>(null);
 
   return (
     <View style={styles.container}>
@@ -35,9 +37,21 @@ const SearchNavigator = () => {
         </View>
         {results.map((category, index) => (
           <View key={index} style={{margin: 16}}>
-            <CategorySwiper category={category} />
+            <CategorySwiper
+              category={category}
+              bottomSheetRef={bottomSheetRef}
+            />
           </View>
         ))}
+        {bottomSheetVisible && bottomSheetActivePlugin && (
+          <PaginationBottomSheet
+            getNextPage={(page: number, plugin: Plugin) =>
+              searchViewModel.getNextPage(page, plugin)
+            }
+            page={1}
+            bottomSheetRef={bottomSheetRef}
+          />
+        )}
       </ScrollView>
     </View>
   );

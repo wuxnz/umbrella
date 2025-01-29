@@ -31,6 +31,8 @@ export const SearchService = {
           [query],
         ).then(res => res.data)) as Category;
 
+        category.source = plugin;
+
         setResults([...results, category]);
       });
     }
@@ -71,5 +73,25 @@ export const SearchService = {
         }
       }, 1000);
     });
+  },
+  async getNextPage(page: number, plugin: Plugin): Promise<void> {
+    const {query, bottomSheetItems, setBottomSheetItems} =
+      useSearchPageDataStore.getState();
+
+    if (plugin.pluginPath === undefined) {
+      return;
+    }
+
+    const category = (await PluginService.runPluginMethodInSandbox(
+      plugin.pluginPath,
+      'search',
+      [query, page],
+    ).then(res => res.data)) as Category;
+
+    category.source = plugin;
+
+    if (bottomSheetItems.every(item => item.id !== category.items[0].id)) {
+      setBottomSheetItems([...bottomSheetItems, ...category.items]);
+    }
   },
 };

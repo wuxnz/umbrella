@@ -24,18 +24,6 @@ import {DarkTheme, LightTheme} from '../../../../core/theme/theme';
 const PluginListView = () => {
   const {plugins, setPlugins} = usePluginStore(state => state);
 
-  useEffect(() => {
-    const loadPluginsOnMount = async () => {
-      const plugins = await new PluginViewModel().loadAllPluginsFromStorage();
-
-      if (plugins.status === 'success') {
-        setPlugins(plugins.data!);
-      }
-    };
-
-    loadPluginsOnMount();
-  }, [plugins]);
-
   const [isVisible, setIsVisible] = useState(false);
   const [requested, setRequested] = useState(false);
 

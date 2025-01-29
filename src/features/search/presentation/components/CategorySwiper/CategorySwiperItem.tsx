@@ -5,28 +5,27 @@ import Item from '../../../../plugins/data/models/item/Item';
 
 const CategorySwiperItem = ({item}: {item: Item}) => {
   return (
-    <View style={styles.container}>
-      <Card style={styles.card}>
-        <Card.Cover source={{uri: item.imageUrl}} />
-        <Card.Title
-          title={item.name}
-          titleStyle={{textAlign: 'center'}}
-          titleNumberOfLines={2}
-        />
-        <Card.Content>
-          <Text>{item.description}</Text>
-        </Card.Content>
-      </Card>
-    </View>
+    <Card style={styles.card}>
+      <Card.Cover source={{uri: item.imageUrl}} />
+      <Card.Title
+        title={item.name}
+        titleStyle={{textAlign: 'center'}}
+        titleNumberOfLines={2}
+      />
+      <Card.Content>
+        <Text variant="bodyMedium" style={{textAlign: 'center'}}>
+          {item.description}
+        </Text>
+      </Card.Content>
+    </Card>
   );
 };
 
 export default CategorySwiperItem;
 
 const styles = StyleSheet.create({
-  container: {},
   card: {
-    width: 135,
+    width: '100%',
     marginRight: 8,
   },
 });
