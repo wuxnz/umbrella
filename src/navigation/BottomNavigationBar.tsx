@@ -2,6 +2,8 @@ import * as React from 'react';
 import {BottomNavigation, Drawer, Text, useTheme} from 'react-native-paper';
 import PluginsNavigator from '../features/plugins/PluginsNavigator';
 import {
+  AppState,
+  Platform,
   StyleSheet,
   useColorScheme,
   useWindowDimensions,
@@ -12,9 +14,15 @@ import {
   createDrawerNavigator,
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
-import {useNavigation} from '@react-navigation/native';
+import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import SearchNavigator from '../features/search/SearchNavigator';
 import {useBottomNavigationBarState} from './useBottomNavigationBarState';
+import {useInstallPluginDialogStore} from '../features/plugins/presentation/state/useInstallPluginDialogStore';
+import {useEffect, useState} from 'react';
+import {checkManagePermission} from 'manage-external-storage';
+import {usePluginStore} from '../features/plugins/presentation/state/usePluginStore';
+import {useGrantPermissionDialogStore} from '../features/plugins/presentation/state/useGrantPermissionDialogStore';
+import GrantPermissionDialog from '../core/shared/components/GrantPermissionDialog';
 
 // BottomNavigationBar
 // This component is used to display the bottom navigation bar
@@ -88,7 +96,6 @@ const SettingsRoute = () => (
 );
 
 const BottomNavigationBar = () => {
-  const colorScheme = useColorScheme();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     {
@@ -135,7 +142,73 @@ const BottomNavigationBar = () => {
   const isLandScape = width > height;
 
   const theme = useTheme();
-  const navigation = useNavigation();
+
+  const {
+    setTitle,
+    setReason,
+    setOnConfirm: setGrantOnConfirm,
+    setVisible: setGrantVisible,
+  } = useGrantPermissionDialogStore(state => state);
+
+  const {permissionsGranted, onPermissionsGranted} = usePluginStore(
+    state => state,
+  );
+
+  const [isVisible, setIsVisible] = useState(false);
+  const [requested, setRequested] = useState(false);
+
+  useFocusEffect(() => {
+    let appStateSubscription;
+
+    const checkVisibility = (nextAppState: string) => {
+      if (nextAppState === 'active') {
+        setIsVisible(true);
+      } else {
+        setIsVisible(false);
+      }
+    };
+
+    appStateSubscription = AppState.addEventListener('change', checkVisibility);
+
+    checkVisibility(AppState.currentState);
+
+    return () => {
+      appStateSubscription.remove();
+    };
+  });
+
+  useEffect(() => {
+    const requestPermission = async () => {
+      try {
+        const granted = await checkManagePermission();
+        if (granted) {
+          onPermissionsGranted();
+        } else {
+          setTitle('Manage External Storage');
+          setReason(
+            'To install plugins and save data from this app to your device.',
+          );
+          setGrantOnConfirm(() => setGrantVisible(false));
+          setGrantVisible(true);
+          setIsVisible(true);
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    };
+    if (
+      Platform.OS === 'android' &&
+      isVisible &&
+      !requested &&
+      !permissionsGranted
+    ) {
+      requestPermission().then(() => {
+        setRequested(true);
+      });
+    }
+  }, [isVisible]);
+
+  const {visible} = useBottomNavigationBarState();
 
   if (isLandScape) {
     return (
@@ -166,8 +239,6 @@ const BottomNavigationBar = () => {
       </DrawerNavigator.Navigator>
     );
   }
-
-  const {visible} = useBottomNavigationBarState();
 
   return (
     <BottomNavigation

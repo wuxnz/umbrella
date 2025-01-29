@@ -10,7 +10,7 @@ import {
   Share,
   BackHandler,
 } from 'react-native';
-import React, {useCallback, useEffect} from 'react';
+import React, {useEffect} from 'react';
 import {
   Appbar,
   Chip,
@@ -20,13 +20,10 @@ import {
   Text,
   useTheme,
 } from 'react-native-paper';
-import {DarkTheme, LightTheme} from '../../../../core/theme/theme';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import FileViewer from 'react-native-file-viewer';
 import {Plugin} from '../../domain/entities/Plugin';
-import constants from '../../../../core/utils/constants';
-import getBaseUrlFromString from '../../../../core/utils/getBaseUrlFromString';
 import {useBottomNavigationBarState} from '../../../../navigation/useBottomNavigationBarState';
 
 const PluginInfoView = ({route}: {route: any}) => {

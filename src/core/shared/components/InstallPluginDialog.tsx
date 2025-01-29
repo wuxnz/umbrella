@@ -40,14 +40,14 @@ function InstallPluginDialog() {
           label: 'Cancel',
           onPress: () => cancel(),
         }}
-        style={{marginBottom: 80}}>
+        style={{position: 'absolute', bottom: 80, left: 0, right: 0}}>
         Fetching plugin manifest...
       </Snackbar>
     );
   }
 
   if (cancelLoading) {
-    return null;
+    return <></>;
   }
 
   if (loadingPlugins) {
@@ -57,7 +57,7 @@ function InstallPluginDialog() {
         onDismiss={() => {
           setLoadingPlugins(false);
         }}
-        style={{marginBottom: 80}}>
+        style={{position: 'absolute', bottom: 80, left: 0, right: 0}}>
         Loading plugin...
       </Snackbar>
     );

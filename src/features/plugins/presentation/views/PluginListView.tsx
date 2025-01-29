@@ -20,33 +20,12 @@ import InstallPluginDialog from '../../../../core/shared/components/InstallPlugi
 import PluginList from '../components/PluginList';
 import ConfirmOrDenyDialog from '../../../../core/shared/components/ConfirmOrDenyDialog';
 import {DarkTheme, LightTheme} from '../../../../core/theme/theme';
-import {LoadAllPluginsFromStorageUsecase} from '../../domain/usecases/LoadAllPluginsFromStorage';
 
 const PluginListView = () => {
   const {plugins, setPlugins} = usePluginStore(state => state);
 
   const [isVisible, setIsVisible] = useState(false);
   const [requested, setRequested] = useState(false);
-
-  useFocusEffect(() => {
-    let appStateSubscription;
-
-    const checkVisibility = (nextAppState: string) => {
-      if (nextAppState === 'active') {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    appStateSubscription = AppState.addEventListener('change', checkVisibility);
-
-    checkVisibility(AppState.currentState);
-
-    return () => {
-      appStateSubscription.remove();
-    };
-  });
 
   const {permissionsGranted, onPermissionsGranted} = usePluginStore(
     state => state,
@@ -59,48 +38,13 @@ const PluginListView = () => {
     setVisible: setGrantVisible,
   } = useGrantPermissionDialogStore(state => state);
 
-  useEffect(() => {
-    const requestPermission = async () => {
-      try {
-        const granted = await checkManagePermission();
-        if (granted) {
-          onPermissionsGranted();
-        } else {
-          setTitle('Manage External Storage');
-          setReason(
-            'To install plugins and save data from this app to your device.',
-          );
-          setGrantOnConfirm(() => setGrantVisible(false));
-          setGrantVisible(true);
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    };
-
-    if (
-      Platform.OS === 'android' &&
-      isVisible &&
-      !requested &&
-      !permissionsGranted
-    ) {
-      requestPermission().then(() => {
-        setRequested(true);
-      });
-    }
-  }, [isVisible]);
-
-  const {pluginToDelete} = usePluginStore(state => state);
-
   const pluginViewModel = new PluginViewModel();
 
-  useEffect(() => {
-    pluginViewModel.loadAllPluginsFromStorage().then(result => {
-      if (result.status === 'success') {
-        setPlugins(result.data!);
-      }
-    });
-  }, [plugins]);
+  const {deletePlugin, pluginToDelete, setPluginToDelete} = usePluginStore(
+    state => state,
+  );
+
+  useEffect(() => {}, [pluginToDelete]);
 
   const colorScheme = useColorScheme();
   const theme = useTheme();
@@ -122,6 +66,20 @@ const PluginListView = () => {
         <View style={styles.pluginList}>
           <PluginList plugins={plugins} />
         </View>
+      )}
+      {/* <GrantPermissionDialog />
+      <InstallPluginDialog /> */}
+      {pluginToDelete && (
+        <ConfirmOrDenyDialog
+          visible={Boolean(pluginToDelete)}
+          onConfirm={async () => {
+            await deletePlugin(pluginToDelete);
+            return setPluginToDelete(null);
+          }}
+          onCancel={() => setPluginToDelete(null)}
+          title={`Delete ${pluginToDelete.name}?`}
+          reason="Are you sure you want to delete this plugin?"
+        />
       )}
     </View>
   );
