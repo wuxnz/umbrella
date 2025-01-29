@@ -17,10 +17,15 @@ const PaginationBottomSheet = ({
   page: number;
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
 }) => {
-  const {bottomSheetActivePlugin, bottomSheetItems, setBottomSheetVisible} =
-    useSearchPageDataStore();
+  const {
+    bottomSheetActivePlugin,
+    bottomSheetItems,
+    setBottomSheetItems,
+    setBottomSheetVisible,
+  } = useSearchPageDataStore();
 
   useEffect(() => {
+    setBottomSheetItems([]);
     (async () => {
       if (!bottomSheetActivePlugin) return;
       await getNextPage(page, bottomSheetActivePlugin);
