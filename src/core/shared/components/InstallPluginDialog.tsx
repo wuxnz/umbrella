@@ -39,7 +39,8 @@ function InstallPluginDialog() {
         action={{
           label: 'Cancel',
           onPress: () => cancel(),
-        }}>
+        }}
+        style={{marginBottom: 80}}>
         Fetching plugin manifest...
       </Snackbar>
     );
@@ -55,7 +56,8 @@ function InstallPluginDialog() {
         visible={loadingPlugins}
         onDismiss={() => {
           setLoadingPlugins(false);
-        }}>
+        }}
+        style={{marginBottom: 80}}>
         Loading plugin...
       </Snackbar>
     );

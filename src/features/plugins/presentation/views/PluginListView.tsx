@@ -20,6 +20,7 @@ import InstallPluginDialog from '../../../../core/shared/components/InstallPlugi
 import PluginList from '../components/PluginList';
 import ConfirmOrDenyDialog from '../../../../core/shared/components/ConfirmOrDenyDialog';
 import {DarkTheme, LightTheme} from '../../../../core/theme/theme';
+import {LoadAllPluginsFromStorageUsecase} from '../../domain/usecases/LoadAllPluginsFromStorage';
 
 const PluginListView = () => {
   const {plugins, setPlugins} = usePluginStore(state => state);
@@ -89,68 +90,17 @@ const PluginListView = () => {
     }
   }, [isVisible]);
 
-  const {
-    setVisible: setInstallVisible,
-    setPlugin,
-    loading,
-    setLoading,
-    setOnConfirm: setInstallOnConfirm,
-  } = useInstallPluginDialogStore(state => state);
+  const {pluginToDelete} = usePluginStore(state => state);
+
   const pluginViewModel = new PluginViewModel();
 
   useEffect(() => {
-    Linking.addEventListener('url', async ({url}) => {
-      if (loading) {
-        return;
-      }
-      if (url.startsWith(constants.PLUGIN_SCHEME)) {
-        setLoading(true);
-
-        const manifestUrl = url.replace(constants.PLUGIN_SCHEME, 'http://');
-
-        await pluginViewModel.fetchManifest(manifestUrl).then(result => {
-          switch (result.status) {
-            case 'success': {
-              setPlugin(result.data);
-              setInstallOnConfirm(async () => {
-                await pluginViewModel.fetchPlugin(result.data).then(result => {
-                  switch (result.status) {
-                    case 'success': {
-                      pluginViewModel.registerPlugin(result.data).then(() => {
-                        setInstallVisible(false);
-                      });
-                      break;
-                    }
-                    case 'error': {
-                      console.error(result.error);
-                      break;
-                    }
-                    default:
-                      break;
-                  }
-                });
-              });
-              break;
-            }
-            case 'error': {
-              console.error(result.error);
-              break;
-            }
-            default:
-              break;
-          }
-        });
-        setInstallVisible(true);
-        setLoading(false);
+    pluginViewModel.loadAllPluginsFromStorage().then(result => {
+      if (result.status === 'success') {
+        setPlugins(result.data!);
       }
     });
-  }, []);
-
-  const {deletePlugin, pluginToDelete, setPluginToDelete} = usePluginStore(
-    state => state,
-  );
-
-  useEffect(() => {}, [pluginToDelete]);
+  }, [plugins]);
 
   const colorScheme = useColorScheme();
   const theme = useTheme();
@@ -172,20 +122,6 @@ const PluginListView = () => {
         <View style={styles.pluginList}>
           <PluginList plugins={plugins} />
         </View>
-      )}
-      <GrantPermissionDialog />
-      <InstallPluginDialog />
-      {pluginToDelete && (
-        <ConfirmOrDenyDialog
-          visible={Boolean(pluginToDelete)}
-          onConfirm={async () => {
-            await deletePlugin(pluginToDelete);
-            return setPluginToDelete(null);
-          }}
-          onCancel={() => setPluginToDelete(null)}
-          title={`Delete ${pluginToDelete.name}?`}
-          reason="Are you sure you want to delete this plugin?"
-        />
       )}
     </View>
   );
