@@ -63,7 +63,6 @@ const PaginationBottomSheet = ({
 
   const theme = useTheme();
 
-  console.log(scrollOffset);
   return (
     <GestureHandlerRootView
       style={{
@@ -94,7 +93,7 @@ const PaginationBottomSheet = ({
         }}>
         <BottomSheetScrollView
           onScroll={onScrollToBottom}
-          // onMomentumScrollBegin={handleScroll}
+          onMomentumScrollEnd={onMomentumScrollEnd}
           showsVerticalScrollIndicator={false}
           style={{
             backgroundColor: theme.colors.background,
