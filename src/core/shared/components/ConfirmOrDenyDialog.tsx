@@ -1,6 +1,6 @@
 import {View, useColorScheme} from 'react-native';
 import React, {useState} from 'react';
-import {Portal, Dialog, Button, Text} from 'react-native-paper';
+import {Portal, Dialog, Button, Text, useTheme} from 'react-native-paper';
 import {DarkTheme, LightTheme} from '../../theme/theme';
 
 // ConfirmOrDenyDialog

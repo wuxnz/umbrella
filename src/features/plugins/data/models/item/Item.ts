@@ -1,3 +1,4 @@
+import {Plugin} from '../../../domain/entities/Plugin';
 import SourceType from '../source/SourceType';
 
 interface Item {
@@ -7,6 +8,7 @@ interface Item {
   imageUrl: string;
   url: string;
   type: SourceType;
+  source?: Plugin;
 }
 
 export default Item;

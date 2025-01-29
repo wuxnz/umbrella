@@ -1,3 +1,4 @@
+import {Plugin} from '../Plugin';
 import Item from './Item';
 
 interface Category {
@@ -8,6 +9,7 @@ interface Category {
   nextPageNumber?: number;
   previousPageNumber?: number;
   items: Item[];
+  source?: Plugin;
 }
 
 export default Category;

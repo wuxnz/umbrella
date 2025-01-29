@@ -1,6 +1,6 @@
 import './gesture-handler';
 import {useColorScheme, StatusBar, Alert} from 'react-native';
-import {PaperProvider} from 'react-native-paper';
+import {PaperProvider, useTheme} from 'react-native-paper';
 
 import {DarkTheme, LightTheme} from './src/core/theme/theme';
 import {useEffect} from 'react';
@@ -12,6 +12,7 @@ import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import GrantPermissionDialog from './src/core/shared/components/GrantPermissionDialog';
 
 import nodejs from 'nodejs-mobile-react-native';
+import {useBottomNavigationBarState} from './src/navigation/useBottomNavigationBarState';
 
 const Stack = createNativeStackNavigator();
 
@@ -19,9 +20,9 @@ export default function App() {
   // Start nodejs
   useEffect(() => {
     nodejs.start('main.js');
-    nodejs.channel.addListener('message', message => {
-      Alert.alert('From NodeJS', message);
-    });
+    // nodejs.channel.addListener('message', message => {
+    //   Alert.alert('From NodeJS', message);
+    // });
   });
 
   // Dark mode handling
@@ -36,15 +37,14 @@ export default function App() {
     };
   }, []);
 
+  const theme = useTheme();
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
         style={{
           flex: 1,
-          backgroundColor:
-            colorScheme === 'dark'
-              ? DarkTheme.colors.background
-              : LightTheme.colors.background,
+          backgroundColor: theme.colors.background,
         }}>
         <PaperProvider theme={colorScheme === 'dark' ? DarkTheme : LightTheme}>
           <NavigationContainer

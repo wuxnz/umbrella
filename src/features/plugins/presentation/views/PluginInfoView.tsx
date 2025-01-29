@@ -7,20 +7,53 @@ import {
   Dimensions,
   Linking,
   ScrollView,
+  Share,
+  BackHandler,
 } from 'react-native';
-import React from 'react';
-import {Appbar, Chip, Icon, List, Text} from 'react-native-paper';
+import React, {useCallback, useEffect} from 'react';
+import {
+  Appbar,
+  Chip,
+  Icon,
+  IconButton,
+  List,
+  Text,
+  useTheme,
+} from 'react-native-paper';
 import {DarkTheme, LightTheme} from '../../../../core/theme/theme';
 import LinearGradient from 'react-native-linear-gradient';
 import {useNavigation} from '@react-navigation/native';
 import FileViewer from 'react-native-file-viewer';
+import {Plugin} from '../../domain/entities/Plugin';
+import constants from '../../../../core/utils/constants';
+import getBaseUrlFromString from '../../../../core/utils/getBaseUrlFromString';
+import {useBottomNavigationBarState} from '../../../../navigation/useBottomNavigationBarState';
 
 const PluginInfoView = ({route}: {route: any}) => {
-  const plugin = route.params.plugin;
+  const plugin: Plugin = route.params.plugin;
 
   const colorScheme = useColorScheme();
+  const theme = useTheme();
 
   const navigation = useNavigation();
+  const {setVisible} = useBottomNavigationBarState();
+
+  useEffect(() => {
+    const backAction = () => {
+      setVisible(true);
+      navigation.goBack();
+      return true;
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction,
+    );
+  }, []);
+
+  useEffect(() => {
+    setVisible(false);
+  }, []);
 
   return (
     <View style={{flex: 1}}>
@@ -29,21 +62,45 @@ const PluginInfoView = ({route}: {route: any}) => {
         showsVerticalScrollIndicator={false}
         style={{
           ...styles.scrollView,
-          backgroundColor:
-            colorScheme === 'dark'
-              ? DarkTheme.colors.background
-              : LightTheme.colors.background,
+          backgroundColor: theme.colors.background,
         }}>
         <Appbar.Header>
           <Appbar.BackAction
             onPress={() => {
+              setVisible(true);
               navigation.goBack();
             }}
           />
           <Appbar.Content title={plugin.name} />
-          <Appbar.Action icon="star" onPress={() => {}} />
-          <Appbar.Action icon="earth" onPress={() => {}} />
-          <Appbar.Action icon="share" onPress={() => {}} />
+          {/* <Appbar.Action icon="star" onPress={() => {}} /> */}
+          <Appbar.Action
+            icon="earth"
+            onPress={() => {
+              if (plugin.homePageUrl === undefined) return;
+              {
+                if (plugin.homePageUrl === undefined) return;
+                Linking.openURL(plugin.homePageUrl);
+              }
+            }}
+          />
+          <Appbar.Action
+            icon="share"
+            onPress={() => {
+              if (plugin.homePageUrl === undefined) return;
+              Share.share(
+                {
+                  title: plugin.name,
+                  url: plugin.homePageUrl,
+                  message: plugin.homePageUrl,
+                },
+                {
+                  dialogTitle: plugin.name,
+                  subject: plugin.name,
+                  tintColor: 'black',
+                },
+              );
+            }}
+          />
         </Appbar.Header>
         {plugin.bannerImageUrl !== undefined ? (
           <>
@@ -88,7 +145,10 @@ const PluginInfoView = ({route}: {route: any}) => {
                 closeIcon={'open-in-new'}
                 style={styles.chip}
                 onClose={() => {}}
-                onPress={() => Linking.openURL(plugin.homePageUrl)}>
+                onPress={() => {
+                  if (plugin.homePageUrl === undefined) return;
+                  Linking.openURL(plugin.homePageUrl);
+                }}>
                 Home Page
               </Chip>
             ) : null}
@@ -96,7 +156,10 @@ const PluginInfoView = ({route}: {route: any}) => {
               closeIcon={'open-in-new'}
               style={styles.chip}
               onClose={() => {}}
-              onPress={() => Linking.openURL(plugin.manifestUrl)}>
+              onPress={() => {
+                if (plugin.manifestUrl === undefined) return;
+                Linking.openURL(plugin.manifestUrl);
+              }}>
               Manifest
             </Chip>
             <Chip
@@ -118,24 +181,36 @@ const PluginInfoView = ({route}: {route: any}) => {
               description={plugin.readme}
               onPress={() => {}}
             />
-            <List.Item
-              title="License"
-              description={plugin.license}
-              onPress={() => {}}
-            />
+            {plugin.license && (
+              <List.Item
+                title="License"
+                description={plugin.license}
+                onPress={() => {}}
+              />
+            )}
             <List.Item
               title="Manifest File Location"
               description={plugin.manifestPath}
               onPress={() => {
-                FileViewer.open(plugin.manifestPath);
+                FileViewer.open(plugin.manifestPath!);
               }}
+              right={props => (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Icon {...props} source="folder" size={20} />
+                </View>
+              )}
             />
             <List.Item
               title="Plugin File Location"
               description={plugin.pluginPath}
               onPress={() => {
-                FileViewer.open(plugin.pluginPath);
+                FileViewer.open(plugin.pluginPath!);
               }}
+              right={props => (
+                <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <Icon {...props} source="folder" size={20} />
+                </View>
+              )}
             />
           </List.Section>
         </View>

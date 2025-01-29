@@ -21,7 +21,7 @@ export interface Plugin {
   bannerImageUrl?: string; // Optional banner to show in plugin page
   changelog?: string;
   readme?: string;
-  licese?: string;
+  license?: string;
   // contentServiceSource?: string; // Content service provided by the plugin to get content
   // contentService?: ContentService;
 }

@@ -21,7 +21,8 @@ interface ItemMedia {
   size?: number;
   fileType?: string;
   headers?: Record<string, string>;
-  sources: (ExtractorVideo | RawVideo | ExtractorAudio | RawAudio)[];
+  // sources: (ExtractorVideo | RawVideo | ExtractorAudio | RawAudio)[];
+  sources: (RawAudio | RawVideo)[];
 }
 
 export default ItemMedia;

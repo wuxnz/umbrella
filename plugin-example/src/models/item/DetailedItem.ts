@@ -2,6 +2,7 @@ import Item from './Item';
 import Genre from './Genre';
 import ItemMedia from './ItemMedia';
 import SourceType from '../source/SourceType';
+import {Plugin} from '../Plugin';
 
 interface DetailedItem extends Item {
   language: string;
@@ -18,6 +19,7 @@ interface DetailedItem extends Item {
   nsfw?: boolean;
   type: SourceType;
   nextMediaRelease?: string;
+  source?: Plugin;
 }
 
 export default DetailedItem;

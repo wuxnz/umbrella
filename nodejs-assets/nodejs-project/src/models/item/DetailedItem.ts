@@ -16,7 +16,7 @@ interface DetailedItem extends Item {
   creators?: string[];
   status?: string;
   nsfw?: boolean;
-  type?: PluginType;
+  type?: SourceType;
   nextMediaRelease?: string;
 }
 

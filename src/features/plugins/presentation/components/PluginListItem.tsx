@@ -2,7 +2,7 @@ import {StyleSheet, Image, View} from 'react-native';
 import React from 'react';
 import {Plugin} from '../../domain/entities/Plugin';
 import {Icon, IconButton, List} from 'react-native-paper';
-import {usePluginStore} from '../stores/usePluginStore';
+import {usePluginStore} from '../state/usePluginStore';
 import {useNavigation} from '@react-navigation/core';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 

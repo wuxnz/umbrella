@@ -36,7 +36,11 @@ class ExamplePlugin {
         const id = item.match(idRegex)[1];
         const name = item.match(nameRegex)[1];
         const description = item.match(descriptionRegex)[1].trim();
-        const imageUrl = item.match(imageUrlRegex)[1];
+        var imageUrl = item.match(imageUrlRegex)[1];
+
+        if (imageUrl.startsWith('/cover')) {
+          imageUrl = `${this.baseUrl}${imageUrl}`;
+        }
 
         items.push({
           id,
@@ -72,6 +76,10 @@ class ExamplePlugin {
 
   async getItemDetails(id: string): Promise<object> {
     return {};
+  }
+
+  async getItemMedia(id: string): Promise<object[]> {
+    return [];
   }
 }
 

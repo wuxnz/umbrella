@@ -13,10 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const PluginLoader_1 = __importDefault(require("./PluginLoader"));
-function runPluginMethodInSandbox(contentService, methodToRun, args) {
+function runPluginMethodInSandbox(pluginPath, methodToRun, args) {
     return __awaiter(this, void 0, void 0, function* () {
         // Dynamically load the plugin
-        const pluginLoader = new PluginLoader_1.default(contentService);
+        const pluginLoader = new PluginLoader_1.default(pluginPath);
         const contentServiceClass = pluginLoader.loadPlugin();
         // Get list of methods in content service
         const methods = Object.keys(contentServiceClass);

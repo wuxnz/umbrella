@@ -1,7 +1,8 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PluginListView from './presentation/views/PluginListView';
 import PluginInfoView from './presentation/views/PluginInfoView';
-import {useColorScheme} from 'react-native';
+import {useColorScheme, View} from 'react-native';
+import {useTheme} from 'react-native-paper';
 
 const Stack = createNativeStackNavigator();
 
@@ -9,6 +10,8 @@ const Stack = createNativeStackNavigator();
 // This component is used to navigate to the
 // different screens of the plugin feature
 const PluginsNavigator = () => {
+  const theme = useTheme();
+
   return (
     <Stack.Navigator
       initialRouteName="pluginListView"

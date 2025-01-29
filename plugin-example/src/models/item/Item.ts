@@ -8,6 +8,7 @@ interface Item {
   imageUrl: string;
   url: string;
   type: SourceType;
+  source?: Plugin;
 }
 
 export default Item;

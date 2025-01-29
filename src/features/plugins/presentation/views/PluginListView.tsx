@@ -8,14 +8,14 @@ import {
   useColorScheme,
   View,
 } from 'react-native';
-import {Text} from 'react-native-paper';
-import {usePluginStore} from '../stores/usePluginStore';
+import {Text, useTheme} from 'react-native-paper';
+import {usePluginStore} from '../state/usePluginStore';
 import constants from '../../../../core/utils/constants';
-import {useInstallPluginDialogStore} from '../stores/useInstallPluginDialogStore';
+import {useInstallPluginDialogStore} from '../state/useInstallPluginDialogStore';
 import {PluginViewModel} from '../viewmodels/PluginViewModel';
 import {checkManagePermission} from 'manage-external-storage';
 import GrantPermissionDialog from '../../../../core/shared/components/GrantPermissionDialog';
-import {useGrantPermissionDialogStore} from '../stores/useGrantPermissionDialogStore';
+import {useGrantPermissionDialogStore} from '../state/useGrantPermissionDialogStore';
 import InstallPluginDialog from '../../../../core/shared/components/InstallPluginDialog';
 import PluginList from '../components/PluginList';
 import ConfirmOrDenyDialog from '../../../../core/shared/components/ConfirmOrDenyDialog';
@@ -165,15 +165,13 @@ const PluginListView = () => {
   useEffect(() => {}, [pluginToDelete]);
 
   const colorScheme = useColorScheme();
+  const theme = useTheme();
 
   return (
     <View
       style={{
         ...styles.container,
-        backgroundColor:
-          colorScheme === 'dark'
-            ? DarkTheme.colors.background
-            : LightTheme.colors.background,
+        backgroundColor: theme.colors.background,
       }}>
       {plugins.length === 0 ? (
         <View style={styles.noPlugins}>

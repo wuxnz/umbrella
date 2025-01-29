@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {BottomNavigation, Drawer, Text} from 'react-native-paper';
+import {BottomNavigation, Drawer, Text, useTheme} from 'react-native-paper';
 import PluginsNavigator from '../features/plugins/PluginsNavigator';
 import {
   StyleSheet,
@@ -13,6 +13,8 @@ import {
   DrawerContentScrollView,
 } from '@react-navigation/drawer';
 import {useNavigation} from '@react-navigation/native';
+import SearchNavigator from '../features/search/SearchNavigator';
+import {useBottomNavigationBarState} from './useBottomNavigationBarState';
 
 // BottomNavigationBar
 // This component is used to display the bottom navigation bar
@@ -22,7 +24,6 @@ import {useNavigation} from '@react-navigation/native';
 const DrawerNavigator = createDrawerNavigator();
 
 const DrawerContent = ({props, setIndex}: any) => {
-  const navigation = useNavigation();
   const colorScheme = useColorScheme();
 
   return (
@@ -62,6 +63,24 @@ const DrawerContent = ({props, setIndex}: any) => {
   );
 };
 
+const HomeRoute = () => (
+  <View style={styles.container}>
+    <Text>Home Screen</Text>
+  </View>
+);
+
+const SearchRoute = () => (
+  <View style={styles.container}>
+    <Text>Search Screen</Text>
+  </View>
+);
+
+const LibraryRoute = () => (
+  <View style={styles.container}>
+    <Text>Library Screen</Text>
+  </View>
+);
+
 const SettingsRoute = () => (
   <View style={styles.container}>
     <Text>Settings Screen</Text>
@@ -72,6 +91,24 @@ const BottomNavigationBar = () => {
   const colorScheme = useColorScheme();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
+    {
+      key: 'home',
+      title: 'Home',
+      focusedIcon: 'home',
+      unfocusedIcon: 'home-outline',
+    },
+    {
+      key: 'search',
+      title: 'Search',
+      focusedIcon: 'magnify',
+      unfocusedIcon: 'magnify',
+    },
+    {
+      key: 'library',
+      title: 'Library',
+      focusedIcon: 'library',
+      unfocusedIcon: 'library',
+    },
     {
       key: 'plugins',
       title: 'Plugins',
@@ -87,12 +124,18 @@ const BottomNavigationBar = () => {
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
+    home: HomeRoute,
+    search: SearchNavigator,
+    library: LibraryRoute,
     plugins: PluginsNavigator,
     settings: SettingsRoute,
   });
 
   const {height, width} = useWindowDimensions();
   const isLandScape = width > height;
+
+  const theme = useTheme();
+  const navigation = useNavigation();
 
   if (isLandScape) {
     return (
@@ -106,38 +149,35 @@ const BottomNavigationBar = () => {
         screenOptions={{
           headerShown: false,
           sceneStyle: {
-            backgroundColor:
-              colorScheme === 'dark'
-                ? DarkTheme.colors.surface
-                : LightTheme.colors.surface,
+            backgroundColor: theme.colors.surface,
           },
           drawerStyle: {
             width: 80,
-            backgroundColor:
-              colorScheme === 'dark'
-                ? DarkTheme.colors.surface
-                : LightTheme.colors.surface,
+            backgroundColor: theme.colors.surface,
           },
           drawerType: 'permanent',
         }}
         defaultStatus="open">
+        <DrawerNavigator.Screen name="home" component={HomeRoute} />
+        <DrawerNavigator.Screen name="search" component={SearchNavigator} />
+        <DrawerNavigator.Screen name="library" component={LibraryRoute} />
         <DrawerNavigator.Screen name="plugins" component={PluginsNavigator} />
         <DrawerNavigator.Screen name="settings" component={SettingsRoute} />
       </DrawerNavigator.Navigator>
     );
   }
 
+  const {visible} = useBottomNavigationBarState();
+
   return (
     <BottomNavigation
       navigationState={{index, routes}}
       onIndexChange={setIndex}
       renderScene={renderScene}
-      theme={colorScheme === 'dark' ? DarkTheme : LightTheme}
+      theme={theme}
       barStyle={{
-        backgroundColor:
-          colorScheme === 'dark'
-            ? DarkTheme.colors.surface
-            : LightTheme.colors.surface,
+        backgroundColor: theme.colors.surface,
+        display: visible ? 'flex' : 'none',
       }}
     />
   );

@@ -1,3 +1,4 @@
+import {Plugin} from '../Plugin';
 import Item from './Item';
 
 interface Genre {
@@ -7,6 +8,7 @@ interface Genre {
   isPaginated: boolean;
   getNextPage?: (page: number) => Promise<Item[]>;
   items: Item[];
+  source?: Plugin;
 }
 
 export default Genre;

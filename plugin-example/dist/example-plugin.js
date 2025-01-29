@@ -12,12 +12,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 class ExamplePlugin {
     constructor() {
         this.baseUrl = 'https://ww23.gogoanimes.fi/';
-        this.search_path = '/search.html';
     }
     search(query, page) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const response = yield fetch(`${this.baseUrl + this.search_path}?keyword=${query}&page=${page}`)
+                const response = yield fetch(`${this.baseUrl}/search.html?keyword=${query}&page=${page}`)
                     .then(response => response)
                     .then(data => data.text())
                     .catch(error => console.error(error));
@@ -26,22 +25,22 @@ class ExamplePlugin {
                 }
                 const ulRegex = /<ul[^>]*class="items"[^>]*>([\s\S]*?)<\/ul>/;
                 const listUl = response.match(ulRegex)[1];
-                // throw new Error(listUl.toString());
                 const listItemsRegex = /<li>([\s\S]*?)<\/li>/g;
                 const listItems = [...listUl.matchAll(listItemsRegex)].map(item => item[1]);
-                // throw new Error(listItems.length.toString());
                 const items = [];
                 const idRegex = /<a href="\/category\/(.*?)" title=".*?">/;
                 const nameRegex = /<a href="\/category\/.*?" title="(.*?)">/;
                 const descriptionRegex = /(Released: .*?)<\/p>/;
                 const imageUrlRegex = /<img src="(.*?)" alt=".*?"[\s\S]*\/>/;
                 const sourceType = 'Anime';
-                // throw new Error(listItems.length.toString());
                 for (const item of listItems) {
                     const id = item.match(idRegex)[1];
                     const name = item.match(nameRegex)[1];
                     const description = item.match(descriptionRegex)[1].trim();
-                    const imageUrl = item.match(imageUrlRegex)[1];
+                    var imageUrl = item.match(imageUrlRegex)[1];
+                    if (imageUrl.startsWith('/cover')) {
+                        imageUrl = `${this.baseUrl}${imageUrl}`;
+                    }
                     items.push({
                         id,
                         name,
@@ -54,7 +53,7 @@ class ExamplePlugin {
                 return {
                     name: 'Gogoanime',
                     description: `Search results for ${query}`,
-                    url: decodeURIComponent(`${this.baseUrl + this.search_path}?keyword=${query}`),
+                    url: decodeURIComponent(`${this.baseUrl}/search.html?keyword=${query}`),
                     isPaginated: true,
                     nextPageNumber: page + 1,
                     previousPageNumber: page > 1 ? page - 1 : undefined,
@@ -79,6 +78,11 @@ class ExamplePlugin {
     getItemDetails(id) {
         return __awaiter(this, void 0, void 0, function* () {
             return {};
+        });
+    }
+    getItemMedia(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return [];
         });
     }
 }

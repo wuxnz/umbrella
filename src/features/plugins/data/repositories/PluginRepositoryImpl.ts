@@ -1,10 +1,10 @@
 import Status from '../../../../core/shared/types/Status';
 import {Plugin} from '../../domain/entities/Plugin';
 import {PluginRepository} from '../../domain/repositories/PluginRepository';
-import {usePluginStore} from '../../presentation/stores/usePluginStore';
+import {usePluginStore} from '../../presentation/state/usePluginStore';
 import Category from '../models/item/Category';
 import DetailedItem from '../models/item/DetailedItem';
-import {PluginService} from '../sources/PluginService';
+import {PluginService} from '../datasource/PluginService';
 
 // Plugin repository implementation
 // This is the implementation of the plugin repository
