@@ -133,7 +133,7 @@ const PluginInfoView = ({route}: {route: any}) => {
               <Text variant="headlineMedium" style={{fontWeight: 'bold'}}>
                 {plugin.name}
               </Text>
-              <Text variant="bodyMedium">{plugin.author}</Text>
+              <Text variant="bodyLarge">{plugin.author}</Text>
               <Text variant="bodyMedium">{plugin.description}</Text>
             </View>
             <View style={{flex: 1}} />
@@ -258,6 +258,7 @@ const styles = StyleSheet.create({
   pluginNameAndDescription: {
     flexDirection: 'column',
     marginLeft: 10,
+    flexWrap: 'wrap',
   },
   pluginMetaDataContainer: {
     flex: 1,
