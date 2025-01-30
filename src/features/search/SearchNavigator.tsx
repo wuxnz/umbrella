@@ -30,9 +30,18 @@ const SearchNavigator = () => {
     setScrollOffset(event.nativeEvent.contentOffset.y);
   };
 
+  const [contentHeight, setContentHeight] = useState(0);
+
+  const onContentSizeChange = (contentWidth: number, contentHeight: number) => {
+    setContentHeight(contentHeight);
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={{flexGrow: 1}} onScroll={handleScroll}>
+      <ScrollView
+        contentContainerStyle={{flexGrow: 1}}
+        onScroll={handleScroll}
+        onContentSizeChange={onContentSizeChange}>
         <View
           style={{
             ...styles.searchBarAndFilters,
@@ -57,6 +66,7 @@ const SearchNavigator = () => {
             page={1}
             bottomSheetRef={bottomSheetRef}
             scrollOffset={scrollOffset}
+            contentHeight={contentHeight}
           />
         )}
       </ScrollView>

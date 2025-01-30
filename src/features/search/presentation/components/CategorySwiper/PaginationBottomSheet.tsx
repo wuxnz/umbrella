@@ -13,11 +13,13 @@ const PaginationBottomSheet = ({
   page,
   bottomSheetRef,
   scrollOffset,
+  contentHeight,
 }: {
   getNextPage: (page: number, plugin: Plugin) => Promise<void>;
   page: number;
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
   scrollOffset: number;
+  contentHeight: number;
 }) => {
   const {
     bottomSheetActivePlugin,
@@ -69,16 +71,11 @@ const PaginationBottomSheet = ({
         flex: 1,
         backgroundColor: 'transparent',
         position: 'absolute',
-        top:
-          Dimensions.get('window').height < Dimensions.get('window').width
-            ? scrollOffset
-            : 0,
+        top: scrollOffset,
         left: 0,
         right: 0,
         bottom:
-          Dimensions.get('window').height < Dimensions.get('window').width
-            ? Dimensions.get('window').height - scrollOffset - 250
-            : 0,
+          contentHeight - scrollOffset - 25 - Dimensions.get('window').height,
         zIndex: 10,
       }}>
       <BottomSheet
