@@ -137,4 +137,4 @@ dist
 
 
 # Ignore example-plugin.ts
-src/example-plugin.ts
+example-plugin.*

@@ -29,6 +29,7 @@ import InstallPluginDialog from './src/core/shared/components/InstallPluginDialo
 import {useInstallPluginDialogStore} from './src/features/plugins/presentation/state/useInstallPluginDialogStore';
 import constants from './src/core/utils/constants';
 import SplashScreen from 'react-native-splash-screen';
+import DetailsNavigator from './src/features/details/DetailsNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -47,8 +48,6 @@ export default function App() {
 
   useEffect(() => {}, [colorScheme]);
 
-  const {setPlugins} = usePluginStore(state => state);
-
   // Check if app & navigation is ready
   useEffect(() => {
     return () => {
@@ -58,7 +57,7 @@ export default function App() {
 
   const theme = useTheme();
 
-  const {plugins} = usePluginStore(state => state);
+  const {setPlugins} = usePluginStore(state => state);
 
   const pluginViewModel = new PluginViewModel();
 
@@ -68,15 +67,25 @@ export default function App() {
         setPlugins(result.data!);
       }
     });
-  }, [plugins]);
+  }, []);
 
   const {
+    visible: installVisible,
     setVisible: setInstallVisible,
     setPlugin,
     loading,
     setLoading,
     setOnConfirm: setInstallOnConfirm,
   } = useInstallPluginDialogStore(state => state);
+
+  useEffect(() => {
+    if (installVisible) return;
+    pluginViewModel.loadAllPluginsFromStorage().then(result => {
+      if (result.status === 'success') {
+        setPlugins(result.data!);
+      }
+    });
+  }, [installVisible]);
 
   useEffect(() => {
     Linking.addEventListener('url', async ({url}) => {
@@ -143,6 +152,7 @@ export default function App() {
               }}>
               <Stack.Navigator screenOptions={{headerShown: false}}>
                 <Stack.Screen name="Root" component={BottomNavigationBar} />
+                <Stack.Screen name="details" component={DetailsNavigator} />
               </Stack.Navigator>
               <StatusBar
                 backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}

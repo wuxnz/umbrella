@@ -17,12 +17,10 @@ import {
 import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import SearchNavigator from '../features/search/SearchNavigator';
 import {useBottomNavigationBarState} from './useBottomNavigationBarState';
-import {useInstallPluginDialogStore} from '../features/plugins/presentation/state/useInstallPluginDialogStore';
 import {useEffect, useState} from 'react';
 import {checkManagePermission} from 'manage-external-storage';
 import {usePluginStore} from '../features/plugins/presentation/state/usePluginStore';
 import {useGrantPermissionDialogStore} from '../features/plugins/presentation/state/useGrantPermissionDialogStore';
-import GrantPermissionDialog from '../core/shared/components/GrantPermissionDialog';
 
 // BottomNavigationBar
 // This component is used to display the bottom navigation bar

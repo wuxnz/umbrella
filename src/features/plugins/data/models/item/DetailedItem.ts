@@ -6,18 +6,17 @@ import {Plugin} from '../../../domain/entities/Plugin';
 
 interface DetailedItem extends Item {
   language: string;
-  trailerUrl: string;
+  trailerUrl?: string;
   synopsis: string;
-  related: Item[];
-  genres: Genre[];
+  related?: Item[];
+  genres?: Genre[];
   media: ItemMedia[];
-  releaseDate: string;
+  releaseDate?: string;
   rating?: number;
   ratingCount?: number;
   creators?: string[];
   status?: string;
   nsfw?: boolean;
-  type: SourceType;
   nextMediaRelease?: string;
   source?: Plugin;
 }

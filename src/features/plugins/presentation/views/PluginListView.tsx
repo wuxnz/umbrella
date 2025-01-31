@@ -22,23 +22,7 @@ import ConfirmOrDenyDialog from '../../../../core/shared/components/ConfirmOrDen
 import {DarkTheme, LightTheme} from '../../../../core/theme/theme';
 
 const PluginListView = () => {
-  const {plugins, setPlugins} = usePluginStore(state => state);
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [requested, setRequested] = useState(false);
-
-  const {permissionsGranted, onPermissionsGranted} = usePluginStore(
-    state => state,
-  );
-
-  const {
-    setTitle,
-    setReason,
-    setOnConfirm: setGrantOnConfirm,
-    setVisible: setGrantVisible,
-  } = useGrantPermissionDialogStore(state => state);
-
-  const pluginViewModel = new PluginViewModel();
+  const {plugins} = usePluginStore(state => state);
 
   const {deletePlugin, pluginToDelete, setPluginToDelete} = usePluginStore(
     state => state,
@@ -46,7 +30,6 @@ const PluginListView = () => {
 
   useEffect(() => {}, [pluginToDelete]);
 
-  const colorScheme = useColorScheme();
   const theme = useTheme();
 
   return (

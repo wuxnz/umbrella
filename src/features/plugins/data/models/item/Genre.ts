@@ -2,12 +2,14 @@ import {Plugin} from '../../../domain/entities/Plugin';
 import Item from './Item';
 
 interface Genre {
+  id: string;
   name: string;
-  description: string | undefined;
+  description?: string | undefined;
   url: string;
-  isPaginated: boolean;
-  getNextPage?: (page: number) => Promise<Item[]>;
-  items: Item[];
+  isPaginated?: boolean;
+  nextPageNumber?: number;
+  previousPageNumber?: number;
+  items?: Item[];
   source?: Plugin;
 }
 

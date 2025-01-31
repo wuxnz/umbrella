@@ -7,7 +7,7 @@ import RawVideo from '../media/RawVideo';
 
 interface ItemMedia {
   id: string;
-  name: string;
+  name?: string;
   description?: string;
   imageUrl?: string;
   releaseDate?: string;
@@ -16,13 +16,14 @@ interface ItemMedia {
   filler?: boolean;
   type: MediaType;
   url: string;
-  width?: number;
-  height?: number;
-  size?: number;
-  fileType?: string;
-  headers?: Record<string, string>;
-  // sources: (ExtractorVideo | RawVideo | ExtractorAudio | RawAudio)[];
-  sources: (RawAudio | RawVideo)[];
+  language?: string;
+  // width?: number;
+  // height?: number;
+  // size?: number;
+  // fileType?: string;
+  // headers?: Record<string, string>;
+  // // sources: (ExtractorVideo | RawVideo | ExtractorAudio | RawAudio)[];
+  // sources: (RawAudio | RawVideo)[];
 }
 
 export default ItemMedia;
