@@ -28,17 +28,19 @@ import {useGrantPermissionDialogStore} from './src/features/plugins/presentation
 import InstallPluginDialog from './src/core/shared/components/InstallPluginDialog';
 import {useInstallPluginDialogStore} from './src/features/plugins/presentation/state/useInstallPluginDialogStore';
 import constants from './src/core/utils/constants';
+import SplashScreen from 'react-native-splash-screen';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
   // Start nodejs
   useEffect(() => {
+    SplashScreen.hide();
     nodejs.start('main.js');
     // nodejs.channel.addListener('message', message => {
     //   Alert.alert('From NodeJS', message);
     // });
-  });
+  }, []);
 
   // Dark mode handling
   const colorScheme = useColorScheme();

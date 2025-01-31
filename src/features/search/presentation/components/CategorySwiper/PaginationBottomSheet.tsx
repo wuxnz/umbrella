@@ -65,6 +65,9 @@ const PaginationBottomSheet = ({
 
   const theme = useTheme();
 
+  const paddingToAddBottomSheet =
+    Dimensions.get('screen').height > Dimensions.get('window').width ? 100 : 20;
+
   return (
     <GestureHandlerRootView
       style={{
@@ -75,7 +78,10 @@ const PaginationBottomSheet = ({
         left: 0,
         right: 0,
         bottom:
-          contentHeight - scrollOffset - 25 - Dimensions.get('window').height,
+          contentHeight -
+          scrollOffset -
+          Dimensions.get('window').height +
+          paddingToAddBottomSheet,
         zIndex: 10,
       }}>
       <BottomSheet
@@ -87,7 +93,8 @@ const PaginationBottomSheet = ({
         enableDynamicSizing={true}
         onClose={() => {
           setBottomSheetVisible(false);
-        }}>
+        }}
+        style={styles.bottomSheetWrapper}>
         <BottomSheetScrollView
           onScroll={onScrollToBottom}
           onMomentumScrollEnd={onMomentumScrollEnd}
@@ -117,7 +124,10 @@ export default PaginationBottomSheet;
 
 const styles = StyleSheet.create({
   bottomSheetWrapper: {
-    height: Dimensions.get('window').height,
+    paddingBottom:
+      Dimensions.get('screen').height > Dimensions.get('window').width
+        ? 100
+        : 0,
   },
   container: {
     flex: 1,

@@ -1,6 +1,7 @@
 // Include ts-nocheck here if using modules that arent builtin to node
 // Also delete any imports from this file. Use require() instead
 
+//This is an example plugin. Do not use in production.
 class ExamplePlugin {
   baseUrl = 'https://ww23.gogoanimes.fi/';
   async search(query: string, page?: number) {
