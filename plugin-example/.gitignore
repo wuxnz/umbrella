@@ -135,5 +135,6 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+
 # Ignore example-plugin.ts
-example-plugin.ts
+src/example-plugin.ts
