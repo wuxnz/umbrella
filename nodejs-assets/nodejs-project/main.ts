@@ -8,7 +8,7 @@ rn_bridge.channel.on('message', async (message: any) => {
   var messageJson;
   messageJson = JSON.parse(message);
   if (Object.keys(messageJson).length !== 3) {
-    rn_bridge.channel.send(message);
+    throw new Error('Invalid message: ' + message);
     return;
   }
 
@@ -23,7 +23,7 @@ rn_bridge.channel.on('message', async (message: any) => {
     );
 
     // Send the result
-    rn_bridge.channel.send(JSON.stringify({success: true, data: result}));
+    rn_bridge.channel.send(JSON.stringify({status: 'success', data: result}));
   } catch (error: any) {
     // Send the error message if any
     rn_bridge.channel.send('Error: ' + error.message);

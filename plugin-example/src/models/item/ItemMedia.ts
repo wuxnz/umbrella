@@ -17,6 +17,7 @@ interface ItemMedia {
   type: MediaType;
   url: string;
   language?: string;
+  number: number;
   // width?: number;
   // height?: number;
   // size?: number;

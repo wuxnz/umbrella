@@ -94,6 +94,7 @@ export default function App() {
       }
       if (url.startsWith(constants.PLUGIN_SCHEME)) {
         setLoading(true);
+        setPlugins([]);
 
         const manifestUrl = url.replace(constants.PLUGIN_SCHEME, 'http://');
 
@@ -131,6 +132,11 @@ export default function App() {
         });
         setInstallVisible(true);
         setLoading(false);
+        pluginViewModel.loadAllPluginsFromStorage().then(result => {
+          if (result.status === 'success') {
+            setPlugins(result.data!);
+          }
+        });
       }
     });
   }, []);

@@ -25,6 +25,8 @@ interface PluginStoreState {
   deletePlugin: (plugin: Plugin) => Promise<void>;
   getPlugin: (path: string) => Plugin | undefined;
   getPlugins: () => Plugin[];
+  activePlugin: Plugin | null;
+  setActivePlugin: (plugin: Plugin | null) => void;
 }
 
 export const usePluginStore = create(
@@ -53,6 +55,8 @@ export const usePluginStore = create(
       getPlugin: path =>
         get().plugins.find(plugin => plugin.pluginPath === path),
       getPlugins: () => get().plugins,
+      activePlugin: null,
+      setActivePlugin: plugin => set({activePlugin: plugin}),
     }),
     {
       name: 'plugins',

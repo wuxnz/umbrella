@@ -2,6 +2,8 @@ import ContentService from './models/ContentService';
 import {Plugin} from './models/Plugin';
 import PluginLoader from './PluginLoader';
 
+const rn_bridge = require('rn-bridge');
+
 async function runPluginMethodInSandbox(
   pluginPath: string,
   methodToRun: string,
@@ -19,7 +21,7 @@ async function runPluginMethodInSandbox(
     const result = await contentServiceClass[methodToRun](...args);
     return result;
   } else {
-    return null;
+    throw new Error('Method not found');
   }
 }
 

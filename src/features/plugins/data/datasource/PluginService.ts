@@ -162,10 +162,6 @@ export const PluginService = {
     methodToRun: string,
     args: any[],
   ): Promise<Status<Category | Category[] | DetailedItem | null>> {
-    const manifestPath = pluginPath.split('.')[0] + '.json';
-
-    const manifest = await RNFS.readFile(manifestPath, 'utf8');
-    var plugin = JSON.parse(manifest) as Plugin;
     return new Promise(async (resolve, reject) => {
       nodejs.channel.send(JSON.stringify({pluginPath, methodToRun, args}));
       nodejs.channel.addListener('message', async (response: any) => {
@@ -184,53 +180,13 @@ export const PluginService = {
     }).then(value => {
       switch (methodToRun) {
         case 'search':
-          const valueTempSearch = value as Status<Category>;
-          return {
-            status: valueTempSearch.status,
-            data: {
-              ...valueTempSearch.data,
-              items: valueTempSearch.data?.items.map(item => ({
-                ...item,
-                source: plugin,
-              })),
-              source: plugin,
-            },
-          } as Status<Category>;
+          return value as Status<Category>;
         case 'getCategory':
-          const valueTempGetCategory = value as Status<Category>;
-          return {
-            status: valueTempGetCategory.status,
-            data: {
-              ...valueTempGetCategory.data,
-              items: valueTempGetCategory.data?.items.map(item => ({
-                ...item,
-                source: plugin,
-              })),
-              source: plugin,
-            },
-          } as Status<Category>;
+          return value as Status<Category>;
         case 'getCategories':
-          const valueTempGetCategories = value as Status<Category[]>;
-          return {
-            status: valueTempGetCategories.status,
-            data: valueTempGetCategories.data?.map(category => ({
-              ...category,
-              items: category.items.map(item => ({
-                ...item,
-                source: plugin,
-              })),
-              source: plugin,
-            })),
-          } as Status<Category[]>;
+          return value as Status<Category[]>;
         case 'getItemDetails':
-          const valueTempGetItemDetails = value as Status<DetailedItem>;
-          return {
-            status: valueTempGetItemDetails.status,
-            data: {
-              ...valueTempGetItemDetails.data,
-              source: plugin,
-            },
-          } as Status<DetailedItem>;
+          return value as Status<DetailedItem>;
         default:
           return {
             status: 'error',

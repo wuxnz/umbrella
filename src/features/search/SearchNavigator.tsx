@@ -18,6 +18,7 @@ const SearchNavigator = () => {
     bottomSheetActivePlugin,
     bottomSheetVisible,
     setBottomSheetVisible,
+    pluginsToSearch,
   } = useSearchPageDataStore(state => state);
 
   const searchViewModel = new SearchViewModel();
@@ -55,6 +56,7 @@ const SearchNavigator = () => {
             <CategorySwiper
               category={category}
               bottomSheetRef={bottomSheetRef}
+              plugin={pluginsToSearch[index]}
             />
           </View>
         ))}

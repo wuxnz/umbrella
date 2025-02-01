@@ -20,7 +20,7 @@ rn_bridge.channel.on('message', (message) => __awaiter(void 0, void 0, void 0, f
     var messageJson;
     messageJson = JSON.parse(message);
     if (Object.keys(messageJson).length !== 3) {
-        rn_bridge.channel.send(message);
+        throw new Error('Invalid message: ' + message);
         return;
     }
     const { pluginPath, methodToRun, args } = messageJson;
@@ -28,7 +28,7 @@ rn_bridge.channel.on('message', (message) => __awaiter(void 0, void 0, void 0, f
     try {
         const result = yield (0, runPluginMethodInSandbox_1.default)(pluginPath, methodToRun, args);
         // Send the result
-        rn_bridge.channel.send(JSON.stringify({ success: true, data: result }));
+        rn_bridge.channel.send(JSON.stringify({ status: 'success', data: result }));
     }
     catch (error) {
         // Send the error message if any

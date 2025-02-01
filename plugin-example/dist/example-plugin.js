@@ -37,7 +37,10 @@ class ExamplePlugin {
                     const id = item.match(idRegex)[1];
                     const name = item.match(nameRegex)[1];
                     const description = item.match(descriptionRegex)[1].trim();
-                    const imageUrl = item.match(imageUrlRegex)[1];
+                    var imageUrl = item.match(imageUrlRegex)[1];
+                    if (imageUrl.startsWith('/')) {
+                        imageUrl = `${this.baseUrl}${imageUrl}`;
+                    }
                     items.push({
                         id,
                         name,
@@ -83,18 +86,33 @@ class ExamplePlugin {
             }
             const nameRegex = /<h1>(.*?)<\/h1>/;
             const name = response.match(nameRegex)[1].trim();
-            const descriptionRegex = /<p class="type">[\s\S]*<a href=".*?">(.*?)<\/a>/;
+            const descriptionRegex = /<p class="type">[\s\S]*?<span>Type:.*<\/span>[\s\s]*?<a href=.*>(.*)<\/a>/;
             const description = response.match(descriptionRegex)[1].trim();
-            const imageUrlRegex = /<div class="anime_info_body_bg">[\s\S]*?<img src="(.*?)" alt=".*?"[\s\S]*\/></;
-            const imageUrl = response.match(imageUrlRegex)[1];
+            const imageUrlRegex = /<div class="anime_info_body_bg">[\s\S]*?<img src="(.*?)"/;
+            var imageUrl = response.match(imageUrlRegex)[1];
+            if (imageUrl.startsWith('/')) {
+                imageUrl = `${this.baseUrl}${imageUrl}`;
+            }
             const sourceType = 'Anime';
             const language = name.includes('(Dub)') ? 'English' : 'Japanese';
             const synopsisRegex = /<div class="description">([\s\S]*?)<\/div>/;
-            const synopsis = response.match(synopsisRegex)[1].trim();
+            var synopsis = response.match(synopsisRegex)[1].trim();
+            const openingTagRegex = /<.*?>/g;
+            synopsis = synopsis.replace(openingTagRegex, '');
+            const closingTagRegex = /<\/.*?>/g;
+            synopsis = synopsis.replace(closingTagRegex, '');
             const genres = [];
-            const genresRegex = /<p class="type">[\s\S]*<span>Genre:[\s\S]*?<a href="(.*?)" title="(.*?)">.*?<\/a>/g;
-            const genresList = [...response.matchAll(genresRegex)];
+            const genresElementRegex = /p class="type">[\s\S]*<span>[\s\S]*<\/p/;
+            const genresElement = response.match(genresElementRegex)[0];
+            const genresRegex = /<a href="(.*?)" title="(.*?)">.*?<\/a>/g;
+            const genresList = [...genresElement.matchAll(genresRegex)];
             for (const genre of genresList) {
+                if (genre[1].startsWith('/')) {
+                    genre[1] = `${this.baseUrl}${genre[1]}`;
+                }
+                if (genre[1] === 'javascript:void(0);') {
+                    continue;
+                }
                 genres.push({
                     id: genre[1].split('/').pop(),
                     name: genre[2],
@@ -103,16 +121,14 @@ class ExamplePlugin {
             }
             const releaseDateRegex = /<p class="type">[\s\S]*<span>Released:[\s\S]*?<\/span>(.*?)<\/p>/;
             const releaseDate = response.match(releaseDateRegex)[1].trim();
-            const statusRegex = /<p class="type">[\s\S]*<span>Status:[\s\S]*?<\/span><a.*?>(.*?)<\/a>/;
+            const statusRegex = /Status:[\s\S]*?<\/span>[\s\S]*?<a href=".*?">(.*?)<\/a>/;
             const status = response.match(statusRegex)[1].trim();
-            const lastEpisodeNumberRegex = /<ul class="episode_list">[\s\S]*?<li>[\s\S]*?<a href=".*?">(.*?)<\/a>/;
-            const lastEpisodeNumber = response
-                .match(lastEpisodeNumberRegex)[response.match(lastEpisodeNumberRegex).length - 1].trim();
-            const movieIdRegex = /<input type="hidden" value="(.*?)" id="movie_id" class="movie_id">/;
+            const lastEpisodeNumber = 10000;
+            const movieIdRegex = /value="(.*?)" id="movie_id" class="movie_id"/;
             const movieId = response.match(movieIdRegex)[1];
-            const defaultEpRegex = /<input type="hidden" value="(.*?)" id="default_ep" class="default_ep">/;
+            const defaultEpRegex = /value="(.*?)" id="default_ep" class="default_ep"/;
             const defaultEp = response.match(defaultEpRegex)[1];
-            const aliasRegex = /<input type="hidden" value="(.*?)" id="alias_anime" class="alias_anime">/;
+            const aliasRegex = /value="(.*?)" id="alias_anime" class="alias_anime"/;
             const alias = response.match(aliasRegex)[1];
             const episodes = [];
             const episodesUrl = `${this.ajaxUrl}ajax/load-list-episode?ep_start=0&ep_end=${lastEpisodeNumber}&id=${movieId}&default_ep=${defaultEp}&alias=${alias}`;
@@ -148,6 +164,7 @@ class ExamplePlugin {
                         language: episode[4].trim().toLowerCase() === 'english'
                             ? 'English'
                             : 'Japanese',
+                        number: parseInt(episode[3].trim()),
                     });
                 }
                 return {

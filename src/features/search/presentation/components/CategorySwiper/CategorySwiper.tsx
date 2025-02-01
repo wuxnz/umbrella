@@ -4,13 +4,16 @@ import Category from '../../../../plugins/data/models/item/Category';
 import {IconButton, Text, useTheme} from 'react-native-paper';
 import CategorySwiperItem from './CategorySwiperItem';
 import {useSearchPageDataStore} from '../../state/useSearchPageDataStore';
+import {Plugin} from '../../../../plugins/domain/entities/Plugin';
 
 const CategorySwiper = ({
   category,
   bottomSheetRef,
+  plugin,
 }: {
   category: Category;
   bottomSheetRef: any;
+  plugin: Plugin;
 }) => {
   const theme = useTheme();
 
@@ -44,7 +47,10 @@ const CategorySwiper = ({
           style={styles.scrollView}>
           {category.items.map((item, index) => (
             <View key={index} style={styles.cardWrapper}>
-              <CategorySwiperItem key={index} item={item} />
+              <CategorySwiperItem
+                key={index}
+                item={{...item, source: plugin}}
+              />
             </View>
           ))}
         </ScrollView>
