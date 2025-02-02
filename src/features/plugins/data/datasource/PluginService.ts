@@ -7,6 +7,8 @@ import Category from '../models/item/Category';
 import DetailedItem from '../models/item/DetailedItem';
 import nodejs from 'nodejs-mobile-react-native';
 import {usePluginStore} from '../../presentation/state/usePluginStore';
+import RawAudio from '../models/media/RawAudio';
+import RawVideo from '../models/media/RawVideo';
 
 // Plugin service
 // This is the service that gets the data for the plugin
@@ -161,7 +163,11 @@ export const PluginService = {
     pluginPath: string,
     methodToRun: string,
     args: any[],
-  ): Promise<Status<Category | Category[] | DetailedItem | null>> {
+  ): Promise<
+    Status<
+      Category | Category[] | DetailedItem | (RawAudio | RawVideo)[] | null
+    >
+  > {
     return new Promise(async (resolve, reject) => {
       nodejs.channel.send(JSON.stringify({pluginPath, methodToRun, args}));
       nodejs.channel.addListener('message', async (response: any) => {
@@ -187,6 +193,8 @@ export const PluginService = {
           return value as Status<Category[]>;
         case 'getItemDetails':
           return value as Status<DetailedItem>;
+        case 'getItemMedia':
+          return value as Status<(RawAudio | RawVideo)[]>;
         default:
           return {
             status: 'error',

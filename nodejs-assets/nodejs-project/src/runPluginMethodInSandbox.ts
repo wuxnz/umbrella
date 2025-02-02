@@ -1,8 +1,5 @@
 import ContentService from './models/ContentService';
-import {Plugin} from './models/Plugin';
 import PluginLoader from './PluginLoader';
-
-const rn_bridge = require('rn-bridge');
 
 async function runPluginMethodInSandbox(
   pluginPath: string,

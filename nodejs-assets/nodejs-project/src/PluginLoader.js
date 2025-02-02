@@ -45,6 +45,9 @@ class PluginLoader {
             getItemDetails(id) {
                 return pluginInstance.getItemDetails(id);
             },
+            getItemMedia(id) {
+                return pluginInstance.getItemMedia(id);
+            },
         };
         // Return the content service
         return contentService;

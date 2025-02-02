@@ -110,7 +110,9 @@ const PaginationBottomSheet = ({
             }}>
             {bottomSheetItems.map((item, index) => (
               <View key={index} style={styles.cardWrapper}>
-                <CategorySwiperItem item={item} />
+                <CategorySwiperItem
+                  item={{...item, source: bottomSheetActivePlugin}}
+                />
               </View>
             ))}
           </View>

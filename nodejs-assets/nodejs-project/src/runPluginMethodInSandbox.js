@@ -13,7 +13,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const PluginLoader_1 = __importDefault(require("./PluginLoader"));
-const rn_bridge = require('rn-bridge');
 function runPluginMethodInSandbox(pluginPath, methodToRun, args) {
     return __awaiter(this, void 0, void 0, function* () {
         // Dynamically load the plugin

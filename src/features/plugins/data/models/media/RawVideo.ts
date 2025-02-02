@@ -3,6 +3,8 @@ import MediaType from './MediaType';
 interface RawVideo {
   type: MediaType.RawVideo;
   url: string;
+  naame: string;
+  iconUrl?: string;
   width?: number;
   height?: number;
   size?: number;

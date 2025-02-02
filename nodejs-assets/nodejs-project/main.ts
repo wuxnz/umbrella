@@ -8,7 +8,6 @@ rn_bridge.channel.on('message', async (message: any) => {
   var messageJson;
   messageJson = JSON.parse(message);
   if (Object.keys(messageJson).length !== 3) {
-    throw new Error('Invalid message: ' + message);
     return;
   }
 

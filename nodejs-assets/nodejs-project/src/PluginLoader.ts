@@ -3,6 +3,8 @@ import Category from './models/item/Category';
 import DetailedItem from './models/item/DetailedItem';
 import vm from 'vm';
 import fs from 'fs';
+import RawVideo from './models/media/RawVideo';
+import RawAudio from './models/media/RawAudio';
 
 export class PluginLoader {
   private pluginPath: string;
@@ -51,6 +53,9 @@ export class PluginLoader {
       },
       getItemDetails(id: string): Promise<DetailedItem> {
         return pluginInstance.getItemDetails(id);
+      },
+      getItemMedia(id: string): Promise<(RawAudio | RawVideo)[]> {
+        return pluginInstance.getItemMedia(id);
       },
     } as ContentService;
 

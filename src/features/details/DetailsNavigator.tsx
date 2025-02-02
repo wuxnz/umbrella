@@ -6,6 +6,9 @@ import {
   ScrollView,
   Dimensions,
   Image,
+  Alert,
+  Linking,
+  NativeModules,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -18,14 +21,12 @@ import {
   ActivityIndicator,
   Card,
   IconButton,
-  Icon,
   Button,
   DataTable,
+  TouchableRipple,
 } from 'react-native-paper';
-import {useBottomNavigationBarState} from '../../navigation/useBottomNavigationBarState';
 import {DetailsViewModel} from './presentation/viewmodels/DetailsViewModel';
 import DetailedItem from '../plugins/data/models/item/DetailedItem';
-import Status from '../../core/shared/types/Status';
 import LinearGradient from 'react-native-linear-gradient';
 
 type DetailsNavigatorParams = {
@@ -48,19 +49,70 @@ const DetailsNavigator = () => {
   useEffect(() => {
     const fetchDetails = async () => {
       setFetchingDetails(true);
-      const details = await detailsViewModel.fetchDetails(item.id, item.source);
+      const details = await detailsViewModel.fetchDetails(
+        item.id,
+        item.source!,
+      );
       if (details.status === 'success') {
         setDetails(details.data);
       }
       setFetchingDetails(false);
     };
-
+    if (!item.source) {
+      return;
+    }
     fetchDetails();
   }, [item.id]);
 
   const [page, setPage] = useState(1);
 
   const [synopsisCutOff, setSynopsisCutOff] = useState(200);
+
+  const fetchRawItemMedia = async (index: number): Promise<void> => {
+    var media = await detailsViewModel.getItemMedia(
+      details!.media[index].id,
+      item.source!,
+    );
+    if (details && details.media.length > 0) {
+      const SendIntentAndroid = NativeModules.SendIntentAndroid;
+      await SendIntentAndroid.isAppInstalled('com.mxtech.videoplayer.ad').then(
+        async (isInstalled: boolean) => {
+          if (!isInstalled) {
+            Alert.alert(
+              'Install MX Player',
+              'MX Player is not installed. Do you want to install it?',
+              [
+                {
+                  text: 'Cancel',
+                  onPress: () => console.log('Cancel Pressed'),
+                  style: 'cancel',
+                },
+                {
+                  text: 'OK',
+                  onPress: () =>
+                    Linking.openURL(
+                      'market://details?id=com.mxtech.videoplayer.ad',
+                    ),
+                },
+              ],
+            );
+          } else {
+            console.log([Object.values(media[0].headers!)].toString());
+            await SendIntentAndroid.openAppWithData(
+              'com.mxtech.videoplayer.ad',
+              media[0].url,
+              'video/*',
+              {
+                position: '0',
+                title: item.name + ' - ' + details!.media[index].name,
+                headers: [Object.values(media[0].headers!)].toString(),
+              },
+            );
+          }
+        },
+      );
+    }
+  };
 
   if (fetchingDetails) {
     return (
@@ -130,22 +182,51 @@ const DetailsNavigator = () => {
                 <Text variant="bodyMedium">{details?.status}</Text>
               </View>
             </View>
-            <View style={styles.genres}>
-              {details?.genres &&
-                details?.genres.map((genre, index) => (
-                  <Chip
-                    key={index}
-                    style={{
-                      backgroundColor: theme.colors.surface,
-                    }}>
-                    {genre.name}
-                  </Chip>
-                ))}
+            <View style={styles.genresWrapper}>
+              <Text
+                variant="titleLarge"
+                style={{fontWeight: 'bold', marginBottom: 8}}>
+                Genres
+              </Text>
+              <View style={styles.genres}>
+                {details?.genres &&
+                  details?.genres.map((genre, index) => (
+                    <Chip
+                      key={index}
+                      style={{
+                        backgroundColor: theme.colors.surface,
+                      }}>
+                      {genre.name}
+                    </Chip>
+                  ))}
+              </View>
+            </View>
+            <View style={styles.genresWrapper}>
+              <Text
+                variant="titleLarge"
+                style={{fontWeight: 'bold', marginBottom: 8}}>
+                Other Names
+              </Text>
+              <View style={styles.genres}>
+                {details?.otherNames &&
+                  details?.otherNames.map((name, index) => (
+                    <Chip
+                      key={index}
+                      style={{
+                        backgroundColor: theme.colors.surface,
+                      }}>
+                      {name}
+                    </Chip>
+                  ))}
+              </View>
             </View>
             <Card>
               <Card.Title title="Synopsis" />
               <Card.Content>
-                <Text>{details?.synopsis.slice(0, synopsisCutOff)}</Text>
+                <Text>
+                  {details?.synopsis.slice(0, synopsisCutOff)}
+                  {synopsisCutOff === details?.synopsis.length ? '' : '...'}
+                </Text>
               </Card.Content>
               <Card.Actions>
                 <Button
@@ -179,13 +260,19 @@ const DetailsNavigator = () => {
                 .sort((a, b) => a.number - b.number)
                 .slice((page - 1) * 10, page * 10)
                 .map((media, index) => (
-                  <DataTable.Row key={index}>
-                    {/* <DataTable.Cell>{media.season}</DataTable.Cell> */}
-                    <DataTable.Cell>{media.name}</DataTable.Cell>
-                    <DataTable.Cell numeric>
-                      <IconButton icon="play" />
-                    </DataTable.Cell>
-                  </DataTable.Row>
+                  <TouchableRipple
+                    key={index}
+                    onPress={() => {
+                      fetchRawItemMedia(index);
+                    }}>
+                    <DataTable.Row key={index}>
+                      {/* <DataTable.Cell>{media.season}</DataTable.Cell> */}
+                      <DataTable.Cell>{media.name}</DataTable.Cell>
+                      <DataTable.Cell numeric>
+                        <IconButton icon="play" size={20} />
+                      </DataTable.Cell>
+                    </DataTable.Row>
+                  </TouchableRipple>
                 ))}
               <DataTable.Pagination
                 page={page}
@@ -250,6 +337,10 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     width: Dimensions.get('window').width - 200,
     rowGap: 2,
+  },
+  genresWrapper: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   },
   genres: {
     flexDirection: 'row',

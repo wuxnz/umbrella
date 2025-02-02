@@ -20,7 +20,6 @@ rn_bridge.channel.on('message', (message) => __awaiter(void 0, void 0, void 0, f
     var messageJson;
     messageJson = JSON.parse(message);
     if (Object.keys(messageJson).length !== 3) {
-        throw new Error('Invalid message: ' + message);
         return;
     }
     const { pluginPath, methodToRun, args } = messageJson;
