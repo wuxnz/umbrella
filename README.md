@@ -1,79 +1,149 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🚀 Plugin-Based React Native App with Sandboxed Execution  
 
-# Getting Started
+A modular **React Native** application featuring a **plugin-based architecture** that allows dynamic downloading and execution of JavaScript plugins in a secure **Node.js sandbox**.  
 
->**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
+This project is designed for **extensibility, security, and scalability**, making it easy to add new functionalities without modifying the core codebase.  
 
-## Step 1: Start the Metro Server
+---
 
-First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
+## 🔥 Features  
 
-To start Metro, run the following command from the _root_ of your React Native project:
+- **Plugin System** 🧩: Dynamically download and execute JavaScript plugins through the package [nodejs-mobile-react-native](https://github.com/nodejs-mobile/nodejs-mobile-react-native) and  through the package `[vm2]([https://github.com/nodejs-mobile/nodejs-mobile-react-native](https://github.com/patriksimek/vm2)).
+- **Sandboxed Execution** 🛡️: Secure Node.js environment for running untrusted code.
+- **CLEAN + M MVVM Architecture** 🏗️: Maintainable and scalable design pattern.
+- **Dynamic UI Rendering** 🎨: Load and display React Native components from plugins.
+- **Web Scraping Support** 🌐: Utilize `Node.js`.
+- **Comprehensive Testing** ✅: Unit and integration tests for stability and reliability.
+- **Detailed Documentation** 📖: Well-structured project with clear usage instructions.
 
-```bash
-# using npm
-npm start
+---
 
-# OR using Yarn
-yarn start
+## 🚧 Planned Features
+### **I'm actively working on expanding the functionality of this project! Here are some exciting features in the pipeline:**
+1. Advanced Plugin Capabilities
+  - Support for external modules inside sandbox.
+  - Plugin versioning system to allow updates while maintaining backward compatibility.
+2. Unimplemented In-App Screens
+  - Create layout and logic for displaying categories and choosing sources on Home feature.
+  - Create persisted store and CRUD logic for saving the info of items from different sources in the Library feature.
+  - Create settings that users can edit to customize their Umbrella experience.
+3. UI & UX Improvements
+  - Add more info support to the [CategorySwiperItem.tsx](src/features/search/presentation/components/CategorySwiper/CategorySwiperItem.tsx).
+  - Improve support for displaying optional fields for details feature's Screen in [DetailsNavigator.tsx](src\features\details\DetailsNavigator.tsx).
+  - Add FAB to Plugins Screen for adding plugins through link from inside the app.
+4. Security & Performance Enhancements
+  - Stricter sandboxing with limited permissions for plugin execution.
+  - Performance optimizations for faster plugin execution and reduced memory usage.
+  - Encrypted plugin storage to protect against unauthorized modifications.
+5. General Improvements
+  - Reduce app size (apk).
+  - Verify IOS support (I don't have a MacOS device, but will try to find someone who does).
+6. Testing
+  - Write tests to ensure expected functionality for different parts of the app..
+  - Make sure app is responsive.
+  - Ensure performance on different network speeds and device specs.
+
+---
+
+## 📸 Screenshots  
+
+_Coming Soon_
+
+---
+
+## 🏗️ Architecture  
+
+This project follows the **CLEAN + MVVM** pattern to ensure separation of concerns and modularity.  
+
+### **Core Layers**  
+
+1. **Presentation Layer (UI & Components)**  
+2. **ViewModel Layer (State & Business Logic)**  
+3. **Use Case Layer (Application-Specific Logic)**  
+4. **Data Layer (APIs, Local Storage, Plugins)**  
+
+### **Plugin System Overview**  
+
+- Plugins are downloaded as **JavaScript files** with a corresponding **manifest.json**.  
+- A **sandboxed Node.js runtime** executes plugin logic securely.  
+- Plugins provide methods that will fetch the media to be handled by the app.
+
+---
+
+## 🛠️ Installation & Setup  
+
+### **Prerequisites**  
+- Node.js & npm installed  
+- React Native
+- Android emulator or physical device (IOS Not tested)
+
+### **1️⃣ Clone the Repository**  
+```sh
+git clone https://github.com/yourusername/your-project.git
+cd your-project
+```
+### **2️⃣ Install Dependencies**
+```sh
+npm install
+```
+### **3️⃣ Run on Android Emulator (must open first)**
+```sh
+npx react-native run-android
 ```
 
-## Step 2: Start your Application
+---
 
-Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
+## 🔌 How to Create a Plugin
+### **Plugin Structure**
+#### **Each plugin consists of:**
+##### plugin.js: The main logic file (Plugin methods to be exported are defined in [ContentService.ts](plugin-example/src/models/ContentService.ts)).
+###### **Plugin Info**
+- Example of plugin layout can be found in [example-plugin-template.ts](plugin-example/src/example-plugin-template.ts).
+- Return types and arguments for methods that must be implemented can be found in [ContentService.ts](plugin-example/src/models/ContentService.ts) (All types are in the [models](plugin-example/src/models) folder).
+- Plugin class can implement any number of methods needed, but the only methods that will be ran in the sandbox are the predefined ones in [ContentService.ts](plugin-example/src/models/ContentService.ts).
+##### manifest.json: Metadata defining plugin behavior and UI components (Deeplinks should point to this file using the "umbrella://" scheme. Refer to [index.html](plugin-example/test/index.html) and [manifest.json](plugin-example/test/manifest.json).
+###### **Manifest Fields**
+- sourceType (String): Type of source this manifest file points to (Types are defined in [SourceType.ts](plugin-example/src/models/source/SourceType.ts).
+- author (String): The name/alias of the person making this plugin.
+- name (String): Name of the plugin you are making.
+- version (Int): Version number of the plugin (This will be used when checking for updates).
+- description (String): Description of what your plugin does/provides.
+- homePageUrl (String): Home page/Root route of the site your deeplink is located.
+- iconUrl (String): Profile image url of the author (will be displayed in the Plugin related screens).
+- manifestUrl (String): Link to the manifest.json file (This will be used along with the version field for checking for updates).
+- pluginUrl (String): Link to your plugin.js file (Used to fetch the code for the the plugin).
+- bannerImageUrl (String): Link to the image you want to be dispalyed as the plugin banner (Used in the plugin info view).
+- changelog (String): This plugin version's changes from the previous version.
+- readme (String): Any special info about/that is needed for using your plugin.
+- license (String): License or Description for how or whether or not someone can share, edit, or sell your plugin.
+#### **Example Plugin**
+For an example of how a plugin file should be structured can be found in [example-plugin-template.ts](plugin-example/src/example-plugin-template.ts). Return types and arguments are defined in [ContentService.ts](plugin-example/src/models/ContentService.ts). You can implement other methods in the plugin class if needed, but all plugins should implement the methods in the [ContentService.ts](plugin-example/src/models/ContentService.ts) file.
+### **Registering the Plugin**
+1. Upload the plugin.js and manifest.json to a remote server (You can test with the "Live Server" VS Code extension).
+2. Create a link to the plugin that points to the manifest.json file with the information to your plugin (Should follow the "umbrella://{url_to_manifest_file" pattern. Example can be found in [index.html](plugin-example/test/index.html))
+3. Click the link on the device that has the app installed and open in the background
+4. Click "Install" on dialog
+5. Check the "Plugins" page to see if your plugin has been installed and is working.
 
-### For Android
+---
 
-```bash
-# using npm
-npm run android
+## 🔒 Security & Sandboxing
+- Node.js-Mobile is used to create an isolated execution environment.
+- Plugins run in a restricted sandbox with limited access to system resources.
+- Data validation ensures plugins conform to expected behavior.
 
-# OR using Yarn
-yarn android
-```
+---
 
-### For iOS
+## 🤝 Contributing
+### **We welcome contributions! To contribute:**
+1. Fork the repository.
+2. Create a new branch (feature-branch).
+3. Make your changes and commit them.
+5. Open a pull request.
 
-```bash
-# using npm
-npm run ios
+---
 
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
-
-This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
-
-## Step 3: Modifying your App
-
-Now that you have successfully run the app, let's modify it.
-
-1. Open `App.tsx` in your text editor of choice and edit some lines.
-2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
-
-   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 📧 Contact
+### For questions, feel free to reach out:
+####📩 Email: softshoes67@gmail.com
+####🌍 GitHub: wuxnz
