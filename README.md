@@ -144,5 +144,5 @@ For an example of how a plugin file should be structured can be found in [exampl
 
 ## 📧 Contact
 ### For questions, feel free to reach out:
-####📩 Email: softshoes67@gmail.com
-####🌍 GitHub: wuxnz
+#### 📩 Email: softshoes67@gmail.com
+#### 🌍 GitHub: wuxnz
