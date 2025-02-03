@@ -14,6 +14,7 @@ This project is designed for **extensibility, security, and scalability**, makin
 - **Web Scraping Support** 🌐: Utilize `Node.js`.
 - **State Management**: Utilize [zustand](https://github.com/pmndrs/zustand) for storing, managing, and persisting state.
 - **Integration with external apps through intents**: Using Intents to open external apps like MX Player to handle different the media types supported.
+- **Material Design 3 Inspired UI**: Using components from [react-native-paper](https://github.com/callstack/react-native-paper).
 
 ---
 
