@@ -29,7 +29,7 @@ This project is designed for **extensibility, security, and scalability**, makin
   - Create settings that users can edit to customize their Umbrella experience.
 3. UI & UX Improvements
   - Add more info support to the [CategorySwiperItem.tsx](src/features/search/presentation/components/CategorySwiper/CategorySwiperItem.tsx).
-  - Improve support for displaying optional fields for details feature's Screen in [DetailsNavigator.tsx](src\features\details\DetailsNavigator.tsx).
+  - Improve support for displaying optional fields for details feature's Screen in [DetailsNavigator.tsx](src/features/details/DetailsNavigator.tsx).
   - Add FAB to Plugins Screen for adding plugins through link from inside the app.
 4. Security & Performance Enhancements
   - Stricter sandboxing with limited permissions for plugin execution.
