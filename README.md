@@ -1,4 +1,4 @@
-# 🚀 Plugin-Based React Native App with Sandboxed Execution  
+# ☂️ Umbrella: A Plugin-Based React Native App with Sandboxed Execution  
 
 A modular **React Native** application featuring a **plugin-based architecture** that allows dynamic downloading and execution of JavaScript plugins in a secure **Node.js sandbox**.  
 
@@ -8,7 +8,7 @@ This project is designed for **extensibility, security, and scalability**, makin
 
 ## 🔥 Features  
 
-- **Plugin System** 🧩: Dynamically download and execute JavaScript plugins through the package [nodejs-mobile-react-native](https://github.com/nodejs-mobile/nodejs-mobile-react-native) and  through the package `[vm2]([https://github.com/nodejs-mobile/nodejs-mobile-react-native](https://github.com/patriksimek/vm2)).
+- **Plugin System** 🧩: Dynamically download and execute JavaScript plugins through the package [nodejs-mobile-react-native](https://github.com/nodejs-mobile/nodejs-mobile-react-native) and  through the package [vm2]([https://github.com/nodejs-mobile/nodejs-mobile-react-native](https://github.com/patriksimek/vm2)).
 - **Sandboxed Execution** 🛡️: Secure Node.js environment for running untrusted code.
 - **CLEAN + M MVVM Architecture** 🏗️: Maintainable and scalable design pattern.
 - **Web Scraping Support** 🌐: Utilize `Node.js`.
@@ -119,9 +119,9 @@ npx react-native run-android
 For an example of how a plugin file should be structured can be found in [example-plugin-template.ts](plugin-example/src/example-plugin-template.ts). Return types and arguments are defined in [ContentService.ts](plugin-example/src/models/ContentService.ts). You can implement other methods in the plugin class if needed, but all plugins should implement the methods in the [ContentService.ts](plugin-example/src/models/ContentService.ts) file.
 ### **Registering the Plugin**
 1. Upload the plugin.js and manifest.json to a remote server (You can test with the "Live Server" VS Code extension).
-2. Create a link to the plugin that points to the manifest.json file with the information to your plugin (Should follow the "umbrella://{url_to_manifest_file" pattern. Example can be found in [index.html](plugin-example/test/index.html))
-3. Click the link on the device that has the app installed and open in the background
-4. Click "Install" on dialog
+2. Create a link to the plugin that points to the manifest.json file with the information to your plugin (Should follow the "umbrella://{url_to_manifest_file" pattern. Example can be found in [index.html](plugin-example/test/index.html)).
+3. Click the link on the device that has the app installed and open in the background.
+4. Click "Install" on dialog.
 5. Check the "Plugins" page to see if your plugin has been installed and is working.
 
 ---
