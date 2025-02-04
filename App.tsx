@@ -95,6 +95,7 @@ export default function App() {
       if (url.startsWith(constants.PLUGIN_SCHEME)) {
         setLoading(true);
         setPlugins([]);
+        setPlugin(undefined);
 
         const manifestUrl = url.replace(constants.PLUGIN_SCHEME, 'http://');
 

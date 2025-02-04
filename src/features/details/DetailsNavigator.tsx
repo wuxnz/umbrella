@@ -8,7 +8,6 @@ import {
   Image,
   Alert,
   Linking,
-  NativeModules,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -74,10 +73,9 @@ const DetailsNavigator = () => {
       item.source!,
     );
     if (details && details.media.length > 0) {
-      const SendIntentAndroid = NativeModules.SendIntentAndroid;
-      await SendIntentAndroid.isAppInstalled('com.mxtech.videoplayer.ad').then(
-        async (isInstalled: boolean) => {
-          if (!isInstalled) {
+      await Linking.canOpenURL(media[0].url).then(
+        async (supported: boolean) => {
+          if (!supported) {
             Alert.alert(
               'Install MX Player',
               'MX Player is not installed. Do you want to install it?',
@@ -98,16 +96,30 @@ const DetailsNavigator = () => {
             );
           } else {
             console.log([Object.values(media[0].headers!)].toString());
-            await SendIntentAndroid.openAppWithData(
-              'com.mxtech.videoplayer.ad',
-              media[0].url,
-              'video/*',
+            var headers = [];
+            for (const [key, value] of Object.entries(media[0].headers!)) {
+              headers.push(key);
+              headers.push(value);
+            }
+            console.log(headers.toString());
+            await Linking.sendIntent('android.intent.action.VIEW', [
               {
-                position: '0',
-                title: item.name + ' - ' + details!.media[index].name,
-                headers: [Object.values(media[0].headers!)].toString(),
+                key: 'package',
+                value: 'com.mxtech.videoplayer.ad',
               },
-            );
+              {
+                key: 'data',
+                value: media[0].url,
+              },
+              {
+                key: 'type',
+                value: 'video/*',
+              },
+              {
+                key: 'title',
+                value: item.name + ' - ' + details!.media[index].name,
+              },
+            ]);
           }
         },
       );
@@ -127,6 +139,12 @@ const DetailsNavigator = () => {
           <Appbar.Content title={item.name} />
           <Appbar.Action icon="heart" />
           <Appbar.Action icon="bell" />
+          <Appbar.Action
+            icon="earth"
+            onPress={() => {
+              Linking.openURL(item.url);
+            }}
+          />
         </Appbar.Header>
         <View style={styles.loadingContainer}>
           <ActivityIndicator size={'large'} />
@@ -147,7 +165,12 @@ const DetailsNavigator = () => {
         <Appbar.Content title={item.name} />
         <Appbar.Action icon="heart" />
         <Appbar.Action icon="bell" />
-        <Appbar.Action icon="dots-vertical" />
+        <Appbar.Action
+          icon="earth"
+          onPress={() => {
+            Linking.openURL(item.url);
+          }}
+        />
       </Appbar.Header>
       <View style={styles.content}>
         <ScrollView

@@ -48,9 +48,7 @@ export const usePluginStore = create(
           throw new Error('Plugin not found');
         }
         await deletePlugin.execute(plugin);
-        set(state => ({
-          plugins: state.plugins.filter(p => Object.is(p, plugin)),
-        }));
+        get().setPlugins(get().plugins.filter(p => p !== plugin));
       },
       getPlugin: path =>
         get().plugins.find(plugin => plugin.pluginPath === path),

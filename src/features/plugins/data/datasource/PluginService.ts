@@ -2,7 +2,7 @@ import Status from '../../../../core/shared/types/Status';
 import constants from '../../../../core/utils/constants';
 import {Plugin} from '../../domain/entities/Plugin';
 import {toSourceType} from '../models/source/SourceType';
-import * as RNFS from '@dr.pogodin/react-native-fs';
+import * as RNFS from 'react-native-fs';
 import Category from '../models/item/Category';
 import DetailedItem from '../models/item/DetailedItem';
 import nodejs from 'nodejs-mobile-react-native';

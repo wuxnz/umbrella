@@ -13,7 +13,7 @@ interface InstallPluginDialogStoreState {
   visible: boolean;
   setVisible: (visible: boolean) => void;
   plugin?: Plugin;
-  setPlugin: (plugin: Plugin) => void;
+  setPlugin: (plugin: Plugin | undefined) => void;
   deleteManifestFile: () => void;
   onConfirm: () => Promise<void>;
   setOnConfirm: (onConfirm: () => void) => void;
