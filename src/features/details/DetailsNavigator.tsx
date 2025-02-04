@@ -27,6 +27,7 @@ import {
 import {DetailsViewModel} from './presentation/viewmodels/DetailsViewModel';
 import DetailedItem from '../plugins/data/models/item/DetailedItem';
 import LinearGradient from 'react-native-linear-gradient';
+import SendIntentAndroid from 'react-native-send-intent';
 
 type DetailsNavigatorParams = {
   item: Item;
@@ -73,12 +74,23 @@ const DetailsNavigator = () => {
       item.source!,
     );
     if (details && details.media.length > 0) {
-      await Linking.canOpenURL(media[0].url).then(
-        async (supported: boolean) => {
-          if (!supported) {
+      // console.log('media', media);
+      await SendIntentAndroid.isAppInstalled('com.mxtech.videoplayer.ad').then(
+        async isInstalled => {
+          if (isInstalled) {
+            await SendIntentAndroid.openAppWithData(
+              'com.mxtech.videoplayer.ad',
+              media[0].url,
+              'video/*',
+              {
+                title: item.name + ' - ' + details.media[index].name,
+                headers: JSON.stringify(media[0].headers),
+              },
+            );
+          } else {
             Alert.alert(
-              'Install MX Player',
-              'MX Player is not installed. Do you want to install it?',
+              'MX Player is not installed, would you like to install it?',
+              'You can always install it later from the Play Store',
               [
                 {
                   text: 'Cancel',
@@ -86,40 +98,16 @@ const DetailsNavigator = () => {
                   style: 'cancel',
                 },
                 {
-                  text: 'OK',
-                  onPress: () =>
-                    Linking.openURL(
+                  text: 'Install',
+                  onPress: async () => {
+                    await SendIntentAndroid.installRemoteApp(
                       'market://details?id=com.mxtech.videoplayer.ad',
-                    ),
+                      'com.mxtech.videoplayer.ad',
+                    );
+                  },
                 },
               ],
             );
-          } else {
-            console.log([Object.values(media[0].headers!)].toString());
-            var headers = [];
-            for (const [key, value] of Object.entries(media[0].headers!)) {
-              headers.push(key);
-              headers.push(value);
-            }
-            console.log(headers.toString());
-            await Linking.sendIntent('android.intent.action.VIEW', [
-              {
-                key: 'package',
-                value: 'com.mxtech.videoplayer.ad',
-              },
-              {
-                key: 'data',
-                value: media[0].url,
-              },
-              {
-                key: 'type',
-                value: 'video/*',
-              },
-              {
-                key: 'title',
-                value: item.name + ' - ' + details!.media[index].name,
-              },
-            ]);
           }
         },
       );

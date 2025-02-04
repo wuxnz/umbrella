@@ -29,7 +29,7 @@ function InstallPluginDialog() {
     setVisible(false);
   };
 
-  if (visible && waitingForPlugins && plugin === undefined) {
+  if (visible && waitingForPlugins) {
     return (
       <Snackbar
         visible={waitingForPlugins}
