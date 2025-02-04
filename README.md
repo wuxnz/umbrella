@@ -47,7 +47,13 @@ This project is designed for **extensibility, security, and scalability**, makin
 
 ## 📸 Screenshots  
 
-_Coming Soon_
+| Splash Screen | Plugin List (No Plugins) | Install Plugin Dialog | Plugin Info Screen |
+|---------------|--------------------------|-----------------------|--------------------|
+| <img src="screenshots/SplashScreen.png" alt="Splasch Screen" width="200" /> | <img src="screenshots/PluginListNoPlugins.png" alt="Plugin List (No Plugins)" width="200"/> | <img src="screenshots/InstallPluginDialog.png" alt="Install Plugin Dialog" width="200"/> |<img src="screenshots/PluginInfoScreen.png" alt="Plugin Info Screen" width="200"/> |
+| Plugin List | Delete Plugin Dialog | Search Screen | Search Screen More Modal |
+| <img src="screenshots/PluginList.png" alt="Plugin List" width="200"/> | <img src="screenshots/DeletePluginDialog.png" alt="Delete Plugin Dialog" width="200"/> | <img src="screenshots/SearchScreen.png" alt="Search Screen" width="200"/> | <img src="screenshots/SearchScreenModal.png" alt="Search Screen More Modal" width="200"/> |
+| Search Sreen More Modal (Fullscreen) | Details Screen | Details Screen (Bottom) |
+| <img src="screenshots/SearchPageFullModal.png" alt="Search Screen More Modal (Fullscreen)" width="200"/> | <img src="screenshots/DetaisScreen.png" alt="Details Screen" width="200"/> | <img src="screenshots/DetailsScreenBottom.png" alt="Details Screen (Bottom)" width="200"/> |
 
 ---
 
