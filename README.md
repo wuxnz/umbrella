@@ -47,7 +47,13 @@ This project is designed for **extensibility, security, and scalability**, makin
 
 ## 📸 Screenshots  
 
-_Coming Soon_
+| Splash Screen | Plugin List (No Plugins) | Install Plugin Dialog | Plugin Info Screen |
+|---------------|--------------------------|-----------------------|--------------------|
+| <img src="screenshots/SplashScreen.png" alt="Splasch Screen" width="200" /> | <img src="screenshots/PluginListNoPlugins.png" alt="Plugin List (No Plugins)" width="200"/> | <img src="screenshots/InstallPluginDialog.png" alt="Install Plugin Dialog" width="200"/> |<img src="screenshots/PluginInfoScreen.png" alt="Plugin Info Screen" width="200"/> |
+| Plugin List | Delete Plugin Dialog | Search Screen | Search Screen More Modal |
+| <img src="screenshots/PluginList.png" alt="Plugin List" width="200"/> | <img src="screenshots/DeletePluginDialog.png" alt="Delete Plugin Dialog" width="200"/> | <img src="screenshots/SearchScreen.png" alt="Search Screen" width="200"/> | <img src="screenshots/SearchScreenModal.png" alt="Search Screen More Modal" width="200"/> |
+| Search Sreen More Modal (Fullscreen) | Details Screen | Details Screen (Bottom) |
+| <img src="screenshots/SearchPageFullModal.png" alt="Search Screen More Modal (Fullscreen)" width="200"/> | <img src="screenshots/DetaisScreen.png" alt="Details Screen" width="200"/> | <img src="screenshots/DetailsScreenBottom.png" alt="Details Screen (Bottom)" width="200"/> |
 
 ---
 
@@ -140,6 +146,22 @@ For an example of how a plugin file should be structured can be found in [exampl
 2. Create a new branch (feature-branch).
 3. Make your changes and commit them.
 5. Open a pull request.
+
+---
+
+## ⚠️ Disclaimer
+### This project is intended for educational and research purposes only. I do not promote, encourage, or endorse piracy or any form of illegal activity. Users are solely responsible for how they use this software.
+
+### **Fair Use Notice**
+#### **Some features, such as web scraping, may involve retrieving publicly available data. Users must ensure they comply with the terms of service of any website they access. This project does not provide, store, or facilitate access to copyrighted or restricted content in any way.**
+
+### **Third-Party Plugins & User Responsibility**
+- **This application allows users to install and execute third-party plugins, which are not controlled or verified by me.**
+- **I am not responsible for any damages, security risks, or data loss caused by third-party plugins.**
+- **Users should exercise caution and verify the source of any plugin they install.**
+
+### **Use at Your Own Risk**
+#### **This software is provided "as is", without any warranties, express or implied. The author is not liable for any misuse, data loss, legal consequences, or damages resulting from the use of this software. Users assume full responsibility for their actions when using this project.**
 
 ---
 
