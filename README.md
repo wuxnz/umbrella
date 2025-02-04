@@ -149,6 +149,22 @@ For an example of how a plugin file should be structured can be found in [exampl
 
 ---
 
+## ⚠️ Disclaimer
+### This project is intended for educational and research purposes only. I do not promote, encourage, or endorse piracy or any form of illegal activity. Users are solely responsible for how they use this software.
+
+### **Fair Use Notice**
+#### **Some features, such as web scraping, may involve retrieving publicly available data. Users must ensure they comply with the terms of service of any website they access. This project does not provide, store, or facilitate access to copyrighted or restricted content in any way.**
+
+### **Third-Party Plugins & User Responsibility**
+- **This application allows users to install and execute third-party plugins, which are not controlled or verified by me.**
+- **I am not responsible for any damages, security risks, or data loss caused by third-party plugins.**
+- **Users should exercise caution and verify the source of any plugin they install.**
+
+### **Use at Your Own Risk**
+#### **This software is provided "as is", without any warranties, express or implied. The author is not liable for any misuse, data loss, legal consequences, or damages resulting from the use of this software. Users assume full responsibility for their actions when using this project.**
+
+---
+
 ## 📧 Contact
 ### For questions, feel free to reach out:
 #### 📩 Email: softshoes67@gmail.com
