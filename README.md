@@ -85,8 +85,8 @@ This project follows the **CLEAN + MVVM** pattern to ensure separation of concer
 
 ### **1️⃣ Clone the Repository**  
 ```sh
-git clone https://github.com/yourusername/your-project.git
-cd your-project
+git clone https://github.com/wuxnz/umbrella.git
+cd umbrealla
 ```
 ### **2️⃣ Install Dependencies**
 ```sh
