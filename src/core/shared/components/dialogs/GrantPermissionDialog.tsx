@@ -1,8 +1,8 @@
 import React, {useEffect} from 'react';
 import {useColorScheme, View} from 'react-native';
 import {Button, Dialog, Portal, Text} from 'react-native-paper';
-import {DarkTheme, LightTheme} from '../../theme/theme';
-import {useGrantPermissionDialogStore} from '../../../features/plugins/presentation/state/useGrantPermissionDialogStore';
+import {DarkTheme, LightTheme} from '../../../theme/theme';
+import {useGrantPermissionDialogStore} from '../../../../features/plugins/presentation/state/useGrantPermissionDialogStore';
 import {requestManagePermission} from 'manage-external-storage';
 
 // GrantPermissionDialog

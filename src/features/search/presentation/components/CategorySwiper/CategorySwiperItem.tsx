@@ -15,11 +15,20 @@ const CategorySwiperItem = ({item}: {item: Item}) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<DetailsScreenProps>>();
 
+  const [showPlaceholder, setShowPlaceholder] = React.useState(false);
+
   return (
     <Card
       style={styles.card}
       onPress={() => navigation.navigate('details', {item: item})}>
-      <Card.Cover source={{uri: item.imageUrl}} />
+      <Card.Cover
+        source={
+          showPlaceholder
+            ? require('../../../../../../assets/images/placeholders/tall.jpg')
+            : {uri: item.imageUrl}
+        }
+        onError={() => setShowPlaceholder(true)}
+      />
       <Card.Title
         title={item.name}
         titleStyle={{textAlign: 'center'}}

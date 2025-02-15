@@ -1,7 +1,7 @@
 import {View, useColorScheme} from 'react-native';
 import React, {useState} from 'react';
 import {Portal, Dialog, Button, Text, useTheme} from 'react-native-paper';
-import {DarkTheme, LightTheme} from '../../theme/theme';
+import {DarkTheme, LightTheme} from '../../../theme/theme';
 
 // ConfirmOrDenyDialog
 // This component is used to display a dialog that asks the user to confirm or deny a request

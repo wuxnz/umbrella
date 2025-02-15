@@ -29,11 +29,13 @@ class ExamplePluginTemplate {
 
 module.exports = {
   search: async (query: string, page?: number): Promise<object> =>
-    new ExamplePlugin().search(query, page),
+    new ExamplePluginTemplate().search(query, page),
   getCategory: async (category: string, page?: number): Promise<object> =>
-    new ExamplePlugin().getCategory(category, page),
+    new ExamplePluginTemplate().getCategory(category, page),
   getHomeCategories: async (): Promise<object[]> =>
-    new ExamplePlugin().getHomeCategories(),
+    new ExamplePluginTemplate().getHomeCategories(),
   getItemDetails: async (id: string): Promise<object> =>
-    new ExamplePlugin().getItemDetails(id),
+    new ExamplePluginTemplate().getItemDetails(id),
+  getItemMedia: async (id: string): Promise<object[]> =>
+    new ExamplePluginTemplate().getItemMedia(id),
 };

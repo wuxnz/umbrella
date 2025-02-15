@@ -5,6 +5,7 @@ import {Icon, IconButton, List} from 'react-native-paper';
 import {usePluginStore} from '../state/usePluginStore';
 import {useNavigation} from '@react-navigation/core';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
+import LazyImage from '../../../../core/shared/components/LazyImage';
 
 type RootStackParamList = {
   pluginInfoView: {
@@ -24,11 +25,11 @@ const PluginListItem = ({plugin}: {plugin: Plugin}) => {
         description={plugin.description}
         left={props =>
           plugin.iconUrl !== undefined ? (
-            <Image
+            <LazyImage
               {...props}
-              source={{uri: plugin.iconUrl}}
+              src={plugin.iconUrl}
+              placeholderSource="circle"
               style={styles.pluginIcon}
-              resizeMode="contain"
             />
           ) : (
             <View style={styles.pluginIcon}>

@@ -1,8 +1,8 @@
 import {useColorScheme, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {Button, Dialog, Portal, Snackbar, Text} from 'react-native-paper';
-import {DarkTheme, LightTheme} from '../../theme/theme';
-import {useInstallPluginDialogStore} from '../../../features/plugins/presentation/state/useInstallPluginDialogStore';
+import {DarkTheme, LightTheme} from '../../../theme/theme';
+import {useInstallPluginDialogStore} from '../../../../features/plugins/presentation/state/useInstallPluginDialogStore';
 
 // InstallPluginDialog
 // This component is used to display a dialog that asks the user to install a plugin
@@ -29,7 +29,7 @@ function InstallPluginDialog() {
     setVisible(false);
   };
 
-  if (visible && waitingForPlugins) {
+  if (visible && waitingForPlugins && plugin === undefined) {
     return (
       <Snackbar
         visible={waitingForPlugins}

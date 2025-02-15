@@ -14,11 +14,11 @@ import constants from '../../../../core/utils/constants';
 import {useInstallPluginDialogStore} from '../state/useInstallPluginDialogStore';
 import {PluginViewModel} from '../viewmodels/PluginViewModel';
 import {checkManagePermission} from 'manage-external-storage';
-import GrantPermissionDialog from '../../../../core/shared/components/GrantPermissionDialog';
+import GrantPermissionDialog from '../../../../core/shared/components/dialogs/GrantPermissionDialog';
 import {useGrantPermissionDialogStore} from '../state/useGrantPermissionDialogStore';
-import InstallPluginDialog from '../../../../core/shared/components/InstallPluginDialog';
+import InstallPluginDialog from '../../../../core/shared/components/dialogs/InstallPluginDialog';
 import PluginList from '../components/PluginList';
-import ConfirmOrDenyDialog from '../../../../core/shared/components/ConfirmOrDenyDialog';
+import ConfirmOrDenyDialog from '../../../../core/shared/components/dialogs/ConfirmOrDenyDialog';
 import {DarkTheme, LightTheme} from '../../../../core/theme/theme';
 
 const PluginListView = () => {

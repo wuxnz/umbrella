@@ -28,6 +28,7 @@ import {DetailsViewModel} from './presentation/viewmodels/DetailsViewModel';
 import DetailedItem from '../plugins/data/models/item/DetailedItem';
 import LinearGradient from 'react-native-linear-gradient';
 import SendIntentAndroid from 'react-native-send-intent';
+import LazyImage from '../../core/shared/components/LazyImage';
 
 type DetailsNavigatorParams = {
   item: Item;
@@ -67,6 +68,8 @@ const DetailsNavigator = () => {
   const [page, setPage] = useState(1);
 
   const [synopsisCutOff, setSynopsisCutOff] = useState(200);
+
+  const [showPlaceholder, setShowPlaceholder] = useState(false);
 
   const fetchRawItemMedia = async (index: number): Promise<void> => {
     var media = await detailsViewModel.getItemMedia(
@@ -165,7 +168,12 @@ const DetailsNavigator = () => {
           contentContainerStyle={{flexGrow: 1, width: '100%'}}
           showsVerticalScrollIndicator={false}>
           <ImageBackground
-            source={{uri: details?.imageUrl}}
+            source={
+              showPlaceholder
+                ? require('../../../assets/images/placeholders/wide.jpg')
+                : {uri: details?.imageUrl}
+            }
+            onError={() => setShowPlaceholder(true)}
             style={styles.banner}>
             <LinearGradient
               colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.85)']}
@@ -173,13 +181,14 @@ const DetailsNavigator = () => {
           </ImageBackground>
           <View style={styles.detailsWrapper}>
             <View style={styles.imageAndTitle}>
-              <Image
-                source={{uri: details?.imageUrl}}
+              <LazyImage
+                src={details?.imageUrl}
+                placeholderSource="tall"
                 style={{
                   width: 125,
                   aspectRatio: 2 / 3,
                   borderRadius: 8,
-                }}></Image>
+                }}></LazyImage>
               <View style={styles.headlineInfo}>
                 <Text
                   variant="headlineMedium"

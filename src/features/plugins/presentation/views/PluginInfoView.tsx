@@ -25,6 +25,7 @@ import {useNavigation} from '@react-navigation/native';
 import FileViewer from 'react-native-file-viewer';
 import {Plugin} from '../../domain/entities/Plugin';
 import {useBottomNavigationBarState} from '../../../../navigation/useBottomNavigationBarState';
+import LazyImage from '../../../../core/shared/components/LazyImage';
 
 const PluginInfoView = ({route}: {route: any}) => {
   const plugin: Plugin = route.params.plugin;
@@ -51,6 +52,8 @@ const PluginInfoView = ({route}: {route: any}) => {
   useEffect(() => {
     setVisible(false);
   }, []);
+
+  const [showPlaceholder, setShowPlaceholder] = React.useState(false);
 
   return (
     <View style={{flex: 1}}>
@@ -101,7 +104,12 @@ const PluginInfoView = ({route}: {route: any}) => {
         {plugin.bannerImageUrl !== undefined ? (
           <>
             <ImageBackground
-              source={{uri: plugin.bannerImageUrl}}
+              source={
+                showPlaceholder
+                  ? require('../../../../../assets/images/placeholders/wide.jpg')
+                  : {uri: plugin.bannerImageUrl}
+              }
+              onError={() => setShowPlaceholder(true)}
               style={styles.banner}>
               <LinearGradient
                 colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.85)']}
@@ -116,9 +124,10 @@ const PluginInfoView = ({route}: {route: any}) => {
         <View style={styles.pluginInfoView}>
           <View style={styles.pluginInfoContainer}>
             {plugin.iconUrl !== undefined ? (
-              <Image
-                source={{uri: plugin.iconUrl}}
-                style={styles.authorAvatarImage}
+              <LazyImage
+                src={plugin.iconUrl}
+                placeholderSource="circle"
+                style={{width: 100, height: 100, borderRadius: 100}}
               />
             ) : (
               <View style={styles.authorAvatarIcon}>
@@ -242,10 +251,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     marginBottom: 8,
     flex: 1,
-  },
-  authorAvatarImage: {
-    width: 100,
-    height: 100,
   },
   authorAvatarIcon: {
     width: 100,
