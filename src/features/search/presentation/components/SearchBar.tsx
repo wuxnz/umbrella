@@ -2,7 +2,7 @@ import {StyleSheet, View} from 'react-native';
 import React from 'react';
 import {TextInput} from 'react-native-paper';
 import {useSearchPageDataStore} from '../state/useSearchPageDataStore';
-import SourceType from '../../../plugins/data/models/source/SourceType';
+import SourceType from '../../../plugins/data/model/source/SourceType';
 
 const SearchBar = ({
   onSubmitEditing,
@@ -23,7 +23,7 @@ const SearchBar = ({
         onChangeText={text => setQuery(text)}
         label="Search"
         mode="outlined"
-        style={{paddingLeft: 6}}
+        style={{paddingLeft: 8}}
         outlineStyle={{borderRadius: 80}}
         underlineStyle={{display: 'none'}}
         onSubmitEditing={() => onSubmitEditing(query, sourceTypesToSearch)}

@@ -1,8 +1,8 @@
-import {View, Text, StyleSheet} from 'react-native';
-import React, {useEffect} from 'react';
+import {View, StyleSheet} from 'react-native';
+import React from 'react';
 import {useSearchPageDataStore} from '../state/useSearchPageDataStore';
 import {ScrollView} from 'react-native';
-import SourceType from '../../../plugins/data/models/source/SourceType';
+import SourceType from '../../../plugins/data/model/source/SourceType';
 import {Chip, useTheme} from 'react-native-paper';
 
 const SearchFiltersSelector = () => {

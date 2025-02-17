@@ -1,7 +1,7 @@
 import {View, StyleSheet} from 'react-native';
 import React from 'react';
 import {Card, Text} from 'react-native-paper';
-import Item from '../../../../plugins/data/models/item/Item';
+import Item from '../../../../plugins/data/model/item/Item';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/core';
 

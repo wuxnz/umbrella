@@ -1,4 +1,4 @@
-import SourceType from '../../../plugins/data/models/source/SourceType';
+import SourceType from '../../../plugins/data/model/source/SourceType';
 import {Plugin} from '../../../plugins/domain/entities/Plugin';
 import {SearchRepository} from '../../domain/repository/SearchRepository';
 import {SearchService} from '../datasource/SearchService';

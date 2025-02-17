@@ -1,5 +1,5 @@
-import DetailedItem from '../../../plugins/data/models/item/DetailedItem';
-import Item from '../../../plugins/data/models/item/Item';
+import DetailedItem from '../../../plugins/data/model/item/DetailedItem';
+import Item from '../../../plugins/data/model/item/Item';
 
 export interface DetailsPageData {
   item: Item;

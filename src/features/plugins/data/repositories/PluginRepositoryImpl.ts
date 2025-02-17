@@ -2,9 +2,11 @@ import Status from '../../../../core/shared/types/Status';
 import {Plugin} from '../../domain/entities/Plugin';
 import {PluginRepository} from '../../domain/repositories/PluginRepository';
 import {usePluginStore} from '../../presentation/state/usePluginStore';
-import Category from '../models/item/Category';
-import DetailedItem from '../models/item/DetailedItem';
+import Category from '../model/item/Category';
+import DetailedItem from '../model/item/DetailedItem';
 import {PluginService} from '../datasource/PluginService';
+import RawVideo from '../model/media/RawVideo';
+import RawAudio from '../model/media/RawAudio';
 
 // Plugin repository implementation
 // This is the implementation of the plugin repository
@@ -54,7 +56,11 @@ export class PluginRepositoryImpl implements PluginRepository {
     pluginPath: string,
     methodToRun: string,
     args: any[],
-  ): Promise<Status<Category | Category[] | DetailedItem | null>> {
+  ): Promise<
+    Status<
+      Category | Category[] | DetailedItem | (RawAudio | RawVideo)[] | null
+    >
+  > {
     return PluginService.runPluginMethodInSandbox(
       pluginPath,
       methodToRun,

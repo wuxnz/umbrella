@@ -1,5 +1,5 @@
 import Status from '../../../../core/shared/types/Status';
-import DetailedItem from '../../../plugins/data/models/item/DetailedItem';
+import DetailedItem from '../../../plugins/data/model/item/DetailedItem';
 import {Plugin} from '../../../plugins/domain/entities/Plugin';
 import {DetailsRepository} from '../repository/DetailsRepository';
 

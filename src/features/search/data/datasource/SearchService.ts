@@ -1,7 +1,7 @@
 import {PluginService} from '../../../plugins/data/datasource/PluginService';
-import ContentService from '../../../plugins/data/models/ContentService';
-import Category from '../../../plugins/data/models/item/Category';
-import SourceType from '../../../plugins/data/models/source/SourceType';
+import ContentService from '../../../plugins/data/model/ContentService';
+import Category from '../../../plugins/data/model/item/Category';
+import SourceType from '../../../plugins/data/model/source/SourceType';
 import {Plugin} from '../../../plugins/domain/entities/Plugin';
 import {usePluginStore} from '../../../plugins/presentation/state/usePluginStore';
 

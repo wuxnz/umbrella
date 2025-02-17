@@ -6,6 +6,7 @@ import {
   Platform,
   AppState,
   Linking,
+  View,
 } from 'react-native';
 import {PaperProvider, useTheme} from 'react-native-paper';
 
@@ -20,7 +21,7 @@ import GrantPermissionDialog from './src/core/shared/components/dialogs/GrantPer
 
 import nodejs from 'nodejs-mobile-react-native';
 import {useBottomNavigationBarState} from './src/navigation/useBottomNavigationBarState';
-import {PluginViewModel} from './src/features/plugins/presentation/viewmodels/PluginviewModel';
+import {PluginViewModel} from './src/features/plugins/presentation/viewmodels/PluginvViewModel';
 import {usePluginStore} from './src/features/plugins/presentation/state/usePluginStore';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {checkManagePermission} from 'manage-external-storage';
@@ -30,6 +31,8 @@ import {useInstallPluginDialogStore} from './src/features/plugins/presentation/s
 import constants from './src/core/utils/constants';
 import SplashScreen from 'react-native-splash-screen';
 import DetailsNavigator from './src/features/details/DetailsNavigator';
+import {useProfileStore} from './src/features/profile/presentation/state/useProfileStore';
+import ProfileNavigator from './src/features/profile/ProfileNavigator';
 
 const Stack = createNativeStackNavigator();
 
@@ -142,14 +145,17 @@ export default function App() {
     });
   }, []);
 
+  const {profiles, activeProfile} = useProfileStore(state => state);
+
   return (
     <GestureHandlerRootView>
       <SafeAreaProvider>
         <SafeAreaView
           style={{
-            flex: 1,
-            backgroundColor: theme.colors.background,
-          }}>
+            flex: 0,
+          }}
+        />
+        <SafeAreaView style={{flex: 1, backgroundColor: 'red'}}>
           <PaperProvider
             theme={colorScheme === 'dark' ? DarkTheme : LightTheme}>
             <NavigationContainer
@@ -157,8 +163,23 @@ export default function App() {
               onReady={() => {
                 isReadyRef.current = true;
               }}>
-              <Stack.Navigator screenOptions={{headerShown: false}}>
-                <Stack.Screen name="Root" component={BottomNavigationBar} />
+              <Stack.Navigator
+                screenOptions={{
+                  headerShown: false,
+                  contentStyle: {
+                    backgroundColor:
+                      colorScheme === 'dark'
+                        ? DarkTheme.colors.background
+                        : LightTheme.colors.background,
+                  },
+                }}
+                initialRouteName={
+                  activeProfile === undefined || profiles.length === 0
+                    ? 'profile'
+                    : 'root'
+                }>
+                <Stack.Screen name="profile" component={ProfileNavigator} />
+                <Stack.Screen name="root" component={BottomNavigationBar} />
                 <Stack.Screen name="details" component={DetailsNavigator} />
               </Stack.Navigator>
               <StatusBar

@@ -1,8 +1,8 @@
 import Status from '../../../../core/shared/types/Status';
 import {PluginService} from '../../../plugins/data/datasource/PluginService';
-import DetailedItem from '../../../plugins/data/models/item/DetailedItem';
-import RawAudio from '../../../plugins/data/models/media/RawAudio';
-import RawVideo from '../../../plugins/data/models/media/RawVideo';
+import DetailedItem from '../../../plugins/data/model/item/DetailedItem';
+import RawAudio from '../../../plugins/data/model/media/RawAudio';
+import RawVideo from '../../../plugins/data/model/media/RawVideo';
 import {Plugin} from '../../../plugins/domain/entities/Plugin';
 
 export const DetailsService = {

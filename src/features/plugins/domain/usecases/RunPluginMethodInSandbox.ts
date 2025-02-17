@@ -1,6 +1,6 @@
 import Status from '../../../../core/shared/types/Status';
-import Category from '../../data/models/item/Category';
-import DetailedItem from '../../data/models/item/DetailedItem';
+import Category from '../../data/model/item/Category';
+import DetailedItem from '../../data/model/item/DetailedItem';
 import {Plugin} from '../entities/Plugin';
 import {PluginRepository} from '../repositories/PluginRepository';
 

@@ -1,6 +1,8 @@
 import Status from '../../../../core/shared/types/Status';
-import Category from '../../data/models/item/Category';
-import DetailedItem from '../../data/models/item/DetailedItem';
+import Category from '../../data/model/item/Category';
+import DetailedItem from '../../data/model/item/DetailedItem';
+import RawAudio from '../../data/model/media/RawAudio';
+import RawVideo from '../../data/model/media/RawVideo';
 import {Plugin} from '../entities/Plugin';
 
 // Plugin repository
@@ -19,5 +21,9 @@ export interface PluginRepository {
     pluginPath: string,
     methodToRun: string,
     args: any[],
-  ): Promise<Status<Category | Category[] | DetailedItem | null>>;
+  ): Promise<
+    Status<
+      Category | Category[] | DetailedItem | (RawAudio | RawVideo)[] | null
+    >
+  >;
 }

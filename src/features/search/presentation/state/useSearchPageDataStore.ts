@@ -1,8 +1,12 @@
 import {create} from 'zustand';
-import SourceType from '../../../plugins/data/models/source/SourceType';
+import SourceType from '../../../plugins/data/model/source/SourceType';
 import {Plugin} from '../../../plugins/domain/entities/Plugin';
-import Category from '../../../plugins/data/models/item/Category';
-import Item from '../../../plugins/data/models/item/Item';
+import Category from '../../../plugins/data/model/item/Category';
+import Item from '../../../plugins/data/model/item/Item';
+
+// Search page data store
+// This is used to store the search query and results.
+// TODO: Test this with multiple plugins.
 
 interface SearchPageDataStoreState {
   query: string;

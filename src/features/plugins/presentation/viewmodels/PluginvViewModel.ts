@@ -1,6 +1,6 @@
 import Status from '../../../../core/shared/types/Status';
-import Category from '../../data/models/item/Category';
-import DetailedItem from '../../data/models/item/DetailedItem';
+import Category from '../../data/model/item/Category';
+import DetailedItem from '../../data/model/item/DetailedItem';
 import {PluginRepositoryImpl} from '../../data/repositories/PluginRepositoryImpl';
 import {Plugin} from '../../domain/entities/Plugin';
 import {PluginRepository} from '../../domain/repositories/PluginRepository';
@@ -23,7 +23,7 @@ const loadAllPluginsFromStorage = new LoadAllPluginsFromStorageUsecase(
 );
 const registerPlugin = new RegisterPluginUsecase(new PluginRepositoryImpl());
 
-// Plugin viewmodel
+// Plugin View Model
 // This is the viewmodel for the plugin feature
 // Will be used by the plugin view
 // Triggers the plugin usecases

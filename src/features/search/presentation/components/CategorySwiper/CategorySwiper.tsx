@@ -1,6 +1,6 @@
 import {View, ScrollView, Dimensions, StyleSheet} from 'react-native';
 import React from 'react';
-import Category from '../../../../plugins/data/models/item/Category';
+import Category from '../../../../plugins/data/model/item/Category';
 import {IconButton, Text, useTheme} from 'react-native-paper';
 import CategorySwiperItem from './CategorySwiperItem';
 import {useSearchPageDataStore} from '../../state/useSearchPageDataStore';

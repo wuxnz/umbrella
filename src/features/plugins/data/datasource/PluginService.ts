@@ -1,14 +1,14 @@
 import Status from '../../../../core/shared/types/Status';
 import constants from '../../../../core/utils/constants';
 import {Plugin} from '../../domain/entities/Plugin';
-import {toSourceType} from '../models/source/SourceType';
+import {toSourceType} from '../model/source/SourceType';
 import * as RNFS from 'react-native-fs';
-import Category from '../models/item/Category';
-import DetailedItem from '../models/item/DetailedItem';
+import Category from '../model/item/Category';
+import DetailedItem from '../model/item/DetailedItem';
 import nodejs from 'nodejs-mobile-react-native';
 import {usePluginStore} from '../../presentation/state/usePluginStore';
-import RawAudio from '../models/media/RawAudio';
-import RawVideo from '../models/media/RawVideo';
+import RawAudio from '../model/media/RawAudio';
+import RawVideo from '../model/media/RawVideo';
 
 // Plugin service
 // This is the service that gets the data for the plugin

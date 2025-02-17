@@ -1,5 +1,5 @@
 // import ContentService from '../../data/models/ContentService';
-import SourceType from '../../data/models/source/SourceType';
+import SourceType from '../../data/model/source/SourceType';
 
 // Plugin
 // This is the interface for a plugin

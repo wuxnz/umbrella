@@ -13,6 +13,7 @@ const deletePlugin = new DeletePluginUsecase(new PluginRepositoryImpl());
 // Also has CRUD methods for plugins.
 // TODO: implement usecases
 // TODO: persist plugins
+//
 interface PluginStoreState {
   plugins: Plugin[];
   setPlugins: (plugins: Plugin[]) => void;

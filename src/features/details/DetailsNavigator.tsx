@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import Item from '../plugins/data/models/item/Item';
+import Item from '../plugins/data/model/item/Item';
 import {
   useTheme,
   Text,
@@ -25,7 +25,7 @@ import {
   TouchableRipple,
 } from 'react-native-paper';
 import {DetailsViewModel} from './presentation/viewmodels/DetailsViewModel';
-import DetailedItem from '../plugins/data/models/item/DetailedItem';
+import DetailedItem from '../plugins/data/model/item/DetailedItem';
 import LinearGradient from 'react-native-linear-gradient';
 import SendIntentAndroid from 'react-native-send-intent';
 import LazyImage from '../../core/shared/components/LazyImage';
