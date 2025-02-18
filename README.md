@@ -23,6 +23,7 @@ This project is designed for **extensibility, security, and scalability**, makin
 1. Advanced Plugin Capabilities
   - Support for external modules inside sandbox.
   - Plugin versioning system to allow updates while maintaining backward compatibility.
+  - Allow loading plugins through a link without the browser.
 2. Unimplemented In-App Screens
   - Create layout and logic for displaying categories and choosing sources on Home feature.
   - Create persisted store and CRUD logic for saving the info of items from different sources in the Library feature.
@@ -42,6 +43,12 @@ This project is designed for **extensibility, security, and scalability**, makin
   - Write tests to ensure expected functionality for different parts of the app..
   - Make sure app is responsive.
   - Ensure performance on different network speeds and device specs.
+7. Local Profiles
+  - Allow users to have separate state for different users.
+  - Sync through link, QR code, or id,
+8. Compatability
+  - Check for IOS, Android TV, Firestick, Windows, and web support.
+  - Ensure Design Responsiveness.
 
 ---
 
