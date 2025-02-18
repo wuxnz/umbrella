@@ -155,7 +155,14 @@ export default function App() {
             flex: 0,
           }}
         />
-        <SafeAreaView style={{flex: 1, backgroundColor: 'red'}}>
+        <SafeAreaView
+          style={{
+            flex: 1,
+            backgroundColor:
+              colorScheme === 'dark'
+                ? DarkTheme.colors.background
+                : LightTheme.colors.background,
+          }}>
           <PaperProvider
             theme={colorScheme === 'dark' ? DarkTheme : LightTheme}>
             <NavigationContainer

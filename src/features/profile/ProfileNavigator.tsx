@@ -1,5 +1,5 @@
 import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Appbar,
   Icon,
@@ -22,15 +22,30 @@ const ProfileNavigator = () => {
   const profileViewModel = new ProfileViewModel();
   const {profiles} = useProfileStore(state => state);
 
+  const [showCreateProfileScreen, setShowCreateProfileScreen] =
+    React.useState<boolean>(false);
+
+  useEffect(() => {
+    if (profiles.length === 0) {
+      setShowCreateProfileScreen(true);
+    } else {
+      setShowCreateProfileScreen(false);
+    }
+  }, [profiles]);
+
   return (
     <View style={{flex: 1}}>
-      {profiles.length > 1 ? (
+      {showCreateProfileScreen ? (
+        <CreateProfileView
+          profileViewModel={profileViewModel}
+          setShowCreateProfileScreen={setShowCreateProfileScreen}
+        />
+      ) : (
         <SelectProfile
           profiles={profiles}
           profileViewModel={profileViewModel}
+          setShowCreateProfileScreen={setShowCreateProfileScreen}
         />
-      ) : (
-        <CreateProfileView profileViewModel={profileViewModel} />
       )}
     </View>
   );

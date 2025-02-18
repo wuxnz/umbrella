@@ -9,9 +9,13 @@ import {ProfileRepository} from '../../domain/repository/ProfileRepository';
 
 type CreateProfileViewProps = {
   profileViewModel: ProfileRepository;
+  setShowCreateProfileScreen: (showCreateProfileScreen: boolean) => void;
 };
 
-const CreateProfileView = ({profileViewModel}: CreateProfileViewProps) => {
+const CreateProfileView = ({
+  profileViewModel,
+  setShowCreateProfileScreen,
+}: CreateProfileViewProps) => {
   const theme = useTheme();
 
   const [name, setName] = React.useState('Name');
@@ -19,13 +23,14 @@ const CreateProfileView = ({profileViewModel}: CreateProfileViewProps) => {
 
   useEffect(() => {
     setProfileImageUrl(
-      `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${name}&radius=10`,
+      `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${name}`,
     );
   }, [name]);
 
   return (
     <View style={styles.container}>
       <Appbar.Header>
+        <Appbar.BackAction onPress={() => setShowCreateProfileScreen(false)} />
         <Appbar.Content title="Create Profile" />
       </Appbar.Header>
       <View style={styles.content}>
@@ -53,8 +58,9 @@ const CreateProfileView = ({profileViewModel}: CreateProfileViewProps) => {
                 id: uuid.v4(),
                 name: name,
                 profile_image: profileImageUrl,
-                tiemstamp: Date.now(),
+                timestamp: Date.now(),
               });
+              setShowCreateProfileScreen(false);
             }}>
             Create
           </Button>

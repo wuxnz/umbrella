@@ -21,6 +21,8 @@ import {useEffect, useState} from 'react';
 import {checkManagePermission} from 'manage-external-storage';
 import {usePluginStore} from '../features/plugins/presentation/state/usePluginStore';
 import {useGrantPermissionDialogStore} from '../features/plugins/presentation/state/useGrantPermissionDialogStore';
+import HomeNavigator from '../features/home/HomeNavigator';
+import LibraryNavigator from '../features/library/LibraryNavigator';
 
 // BottomNavigationBar
 // This component is used to display the bottom navigation bar
@@ -106,11 +108,11 @@ const DrawerContent = ({props, setIndex}: any) => {
   );
 };
 
-const HomeRoute = () => (
-  <View style={styles.container}>
-    <Text>Home Screen</Text>
-  </View>
-);
+// const HomeRoute = () => (
+//   <View style={styles.container}>
+//     <Text>Home Screen</Text>
+//   </View>
+// );
 
 const SearchRoute = () => (
   <View style={styles.container}>
@@ -118,11 +120,11 @@ const SearchRoute = () => (
   </View>
 );
 
-const LibraryRoute = () => (
-  <View style={styles.container}>
-    <Text>Library Screen</Text>
-  </View>
-);
+// const LibraryRoute = () => (
+//   <View style={styles.container}>
+//     <Text>Library Screen</Text>
+//   </View>
+// );
 
 const SettingsRoute = () => (
   <View style={styles.container}>
@@ -166,9 +168,9 @@ const BottomNavigationBar = () => {
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
-    home: HomeRoute,
+    home: HomeNavigator,
     search: SearchNavigator,
-    library: LibraryRoute,
+    library: LibraryNavigator,
     plugins: PluginsNavigator,
     settings: SettingsRoute,
   });
@@ -274,9 +276,9 @@ const BottomNavigationBar = () => {
           drawerType: 'permanent',
         }}
         defaultStatus="open">
-        <DrawerNavigator.Screen name="home" component={HomeRoute} />
+        <DrawerNavigator.Screen name="home" component={HomeNavigator} />
         <DrawerNavigator.Screen name="search" component={SearchNavigator} />
-        <DrawerNavigator.Screen name="library" component={LibraryRoute} />
+        <DrawerNavigator.Screen name="library" component={LibraryNavigator} />
         <DrawerNavigator.Screen name="plugins" component={PluginsNavigator} />
         <DrawerNavigator.Screen name="settings" component={SettingsRoute} />
       </DrawerNavigator.Navigator>
