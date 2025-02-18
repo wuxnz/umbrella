@@ -77,8 +77,8 @@ const SelectProfile = ({
               .map((profile: Profile) => (
                 <TouchableOpacity
                   style={{
-                    width: landscape ? '15%' : '30%',
-                    aspectRatio: 1 / 1.25,
+                    width: landscape ? '25%' : '40%',
+                    aspectRatio: 1 / 1.35,
                   }}
                   onPress={() => {
                     profileViewModel.loadProfile(profile.id);
@@ -90,52 +90,49 @@ const SelectProfile = ({
                     navigation.navigate('root' as never);
                   }}
                   key={profile.id}>
-                  <View style={styles.profileImageContainer}>
-                    <View
-                      style={{
-                        width: '100%',
-                        height: '80%',
-                        overflow: 'hidden',
-                        borderRadius: 12,
-                      }}>
-                      <SvgUri
-                        width="100%"
-                        height="100%"
-                        uri={profile.profile_image}
-                      />
-                    </View>
-                    <Text
-                      variant="bodyLarge"
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                      style={{textAlign: 'center'}}>
-                      {profile.name}
-                    </Text>
+                  <View
+                    style={{
+                      width: '100%',
+                      height: '80%',
+                      overflow: 'hidden',
+                      borderRadius: 12,
+                      marginBottom: 8,
+                    }}>
+                    <SvgUri
+                      width="100%"
+                      height="100%"
+                      uri={profile.profile_image}
+                    />
                   </View>
+                  <Text
+                    variant="bodyLarge"
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                    style={{textAlign: 'center'}}>
+                    {profile.name}
+                  </Text>
                 </TouchableOpacity>
               ))}
             <TouchableOpacity
               style={{
-                width: landscape ? '15%' : '30%',
-                aspectRatio: 1 / 1.25,
+                width: landscape ? '25%' : '40%',
+                aspectRatio: 1 / 1.35,
               }}
               onPress={() => setShowCreateProfileScreen(true)}>
-              <View style={styles.addProfileImageContainer}>
-                <View style={styles.iconContainer}>
-                  <Icon
-                    source="plus"
-                    size={50}
-                    color={theme.colors.onBackground}
-                  />
-                </View>
-                <Text
-                  variant="bodyLarge"
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={{textAlign: 'center'}}>
-                  Add Profile
-                </Text>
+              <View style={styles.iconContainer}>
+                <Icon
+                  source="plus"
+                  size={50}
+                  color={theme.colors.onBackground}
+                />
               </View>
+              <Text
+                variant="bodyLarge"
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{textAlign: 'center'}}>
+                Add Profile
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
@@ -168,12 +165,11 @@ const styles = StyleSheet.create({
   },
   profileImageContainer: {
     borderRadius: 8,
-    gap: 8,
   },
   addProfileImageContainer: {
+    flex: 1,
     width: '100%',
     overflow: 'hidden',
-    gap: 8,
   },
   iconContainer: {
     width: '100%',
@@ -183,5 +179,6 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderColor: '#808080',
     borderRadius: 12,
+    marginBottom: 8,
   },
 });

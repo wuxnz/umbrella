@@ -48,13 +48,19 @@ const NavScreenWrapper: React.FC<any> = props => {
       <Appbar.Header>
         <Appbar.Content title={props.title} />
         <TouchableRipple>
-          <SvgUri
-            width={32}
-            height={32}
-            uri={activeProfile?.profile_image || ''}
-            style={{marginRight: 16}}
-            onPress={() => navigation.navigate('profile' as never)}
-          />
+          <View
+            style={{
+              overflow: 'hidden',
+              borderRadius: 2,
+              marginRight: 16,
+            }}>
+            <SvgUri
+              width={32}
+              height={32}
+              uri={activeProfile?.profile_image || ''}
+              onPress={() => navigation.navigate('profile' as never)}
+            />
+          </View>
         </TouchableRipple>
       </Appbar.Header>
       <View style={styles.container}>{props.children}</View>

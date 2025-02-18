@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {BackHandler, StyleSheet, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {Appbar, Button, TextInput, useTheme} from 'react-native-paper';
 import {SvgUri} from 'react-native-svg';
@@ -6,6 +6,7 @@ import {Profile} from '../../domain/entities/Profile';
 import uuid from 'react-native-uuid';
 import {useProfileStore} from '../state/useProfileStore';
 import {ProfileRepository} from '../../domain/repository/ProfileRepository';
+import {useNavigation} from '@react-navigation/native';
 
 type CreateProfileViewProps = {
   profileViewModel: ProfileRepository;
@@ -16,6 +17,7 @@ const CreateProfileView = ({
   profileViewModel,
   setShowCreateProfileScreen,
 }: CreateProfileViewProps) => {
+  const navigation = useNavigation();
   const theme = useTheme();
 
   const [name, setName] = React.useState('Name');
@@ -26,6 +28,21 @@ const CreateProfileView = ({
       `https://api.dicebear.com/9.x/fun-emoji/svg?seed=${name}`,
     );
   }, [name]);
+
+  useEffect(() => {
+    const backHandler = () => {
+      setShowCreateProfileScreen(false);
+      return true;
+    };
+
+    navigation.addListener('beforeRemove', backHandler);
+    BackHandler.addEventListener('hardwareBackPress', backHandler);
+
+    return () => {
+      navigation.removeListener('beforeRemove', backHandler);
+      BackHandler.removeEventListener('hardwareBackPress', backHandler);
+    };
+  }, []);
 
   return (
     <View style={styles.container}>
