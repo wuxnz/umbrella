@@ -268,19 +268,17 @@ const styles = StyleSheet.create({
   pluginMetaDataContainer: {
     flex: 1,
     width: '100%',
+    paddingHorizontal: 16,
     paddingVertical: 8,
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     flexWrap: 'wrap',
-    columnGap: 8,
-    rowGap: 16,
+    gap: 16,
   },
   chip: {
-    height: 36,
+    height: 32,
     width:
-      Dimensions.get('window').width >= 600
-        ? Dimensions.get('window').width / 3
-        : Dimensions.get('window').width / 2 - 24,
+      Dimensions.get('window').width / 2 - Dimensions.get('window').width / 16,
   },
   pluginDetailsContainer: {
     flex: 1,

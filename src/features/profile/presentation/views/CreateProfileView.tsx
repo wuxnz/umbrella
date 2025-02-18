@@ -58,7 +58,6 @@ const CreateProfileView = ({
     } else {
       setLandscape(false);
     }
-    console.log('is landscape: ', landscape);
   };
 
   useEffect(() => {

@@ -77,7 +77,6 @@ const DetailsNavigator = () => {
       item.source!,
     );
     if (details && details.media.length > 0) {
-      // console.log('media', media);
       await SendIntentAndroid.isAppInstalled('com.mxtech.videoplayer.ad').then(
         async isInstalled => {
           if (isInstalled) {
@@ -97,7 +96,7 @@ const DetailsNavigator = () => {
               [
                 {
                   text: 'Cancel',
-                  onPress: () => console.log('Cancel Pressed'),
+                  onPress: () => {},
                   style: 'cancel',
                 },
                 {

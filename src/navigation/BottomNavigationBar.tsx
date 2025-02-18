@@ -347,7 +347,7 @@ const BottomNavigationBar = () => {
         screenOptions={{
           headerShown: false,
           sceneStyle: {
-            backgroundColor: theme.colors.surface,
+            backgroundColor: theme.colors.background,
           },
           drawerStyle: {
             width: 80,
