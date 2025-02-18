@@ -1,4 +1,10 @@
-import {BackHandler, StyleSheet, View} from 'react-native';
+import {
+  BackHandler,
+  Dimensions,
+  ScrollView,
+  StyleSheet,
+  View,
+} from 'react-native';
 import React, {useEffect} from 'react';
 import {Appbar, Button, TextInput, useTheme} from 'react-native-paper';
 import {SvgUri} from 'react-native-svg';
@@ -44,15 +50,51 @@ const CreateProfileView = ({
     };
   }, []);
 
+  const [landscape, setLandscape] = React.useState(false);
+
+  const isLanddscape = () => {
+    if (Dimensions.get('window').height < Dimensions.get('window').width) {
+      setLandscape(true);
+    } else {
+      setLandscape(false);
+    }
+    console.log('is landscape: ', landscape);
+  };
+
+  useEffect(() => {
+    const updateDimensions = () => {
+      isLanddscape();
+    };
+
+    Dimensions.addEventListener('change', updateDimensions);
+  }, []);
+
   return (
     <View style={styles.container}>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => setShowCreateProfileScreen(false)} />
         <Appbar.Content title="Create Profile" />
       </Appbar.Header>
-      <View style={styles.content}>
-        <View style={styles.avatarContainer}>
-          <SvgUri uri={profileImageUrl} width={200} height={200} />
+      <View
+        style={{
+          flex: 1,
+          flexDirection: landscape ? 'row' : 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          rowGap: 25,
+          columnGap: 75,
+        }}>
+        <View
+          style={{
+            ...styles.avatarContainer,
+          }}>
+          <SvgUri
+            uri={profileImageUrl}
+            style={{
+              width: 200,
+              aspectRatio: 1,
+            }}
+          />
         </View>
         <View style={styles.inputContainer}>
           <TextInput
@@ -92,12 +134,6 @@ export default CreateProfileView;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    flexDirection: 'column',
-    justifyContent: 'center',
   },
   avatarContainer: {
     alignItems: 'center',
