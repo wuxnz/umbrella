@@ -14,7 +14,7 @@ type RootStackParamList = {
 };
 
 const PluginListItem = ({plugin}: {plugin: Plugin}) => {
-  const {setPluginToDelete} = usePluginStore.getState();
+  const {setPluginToDelete, setViewInfoPlugin} = usePluginStore.getState();
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
@@ -47,7 +47,8 @@ const PluginListItem = ({plugin}: {plugin: Plugin}) => {
           />
         )}
         onPress={() => {
-          navigation.navigate('pluginInfoView', {plugin: plugin});
+          setViewInfoPlugin(plugin);
+          navigation.navigate('pluginInfoView', {plugin});
         }}
       />
     </>

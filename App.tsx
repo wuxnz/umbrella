@@ -21,7 +21,7 @@ import GrantPermissionDialog from './src/core/shared/components/dialogs/GrantPer
 
 import nodejs from 'nodejs-mobile-react-native';
 import {useBottomNavigationBarState} from './src/navigation/useBottomNavigationBarState';
-import {PluginViewModel} from './src/features/plugins/presentation/viewmodels/PluginvViewModel';
+import {PluginViewModel} from './src/features/plugins/presentation/viewmodels/PluginsViewModel';
 import {usePluginStore} from './src/features/plugins/presentation/state/usePluginStore';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {checkManagePermission} from 'manage-external-storage';
@@ -33,6 +33,8 @@ import SplashScreen from 'react-native-splash-screen';
 import DetailsNavigator from './src/features/details/DetailsNavigator';
 import {useProfileStore} from './src/features/profile/presentation/state/useProfileStore';
 import ProfileNavigator from './src/features/profile/ProfileNavigator';
+import PluginInfoView from './src/features/plugins/presentation/views/PluginInfoView';
+import PluginListView from './src/features/plugins/presentation/views/PluginListView';
 
 const Stack = createNativeStackNavigator();
 
@@ -188,6 +190,13 @@ export default function App() {
                 <Stack.Screen name="profile" component={ProfileNavigator} />
                 <Stack.Screen name="root" component={BottomNavigationBar} />
                 <Stack.Screen name="details" component={DetailsNavigator} />
+                <Stack.Screen
+                  name="pluginInfoView"
+                  component={PluginInfoView}
+                  options={{
+                    headerShown: false,
+                  }}
+                />
               </Stack.Navigator>
               <StatusBar
                 backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}

@@ -26,9 +26,11 @@ import FileViewer from 'react-native-file-viewer';
 import {Plugin} from '../../domain/entities/Plugin';
 import {useBottomNavigationBarState} from '../../../../navigation/useBottomNavigationBarState';
 import LazyImage from '../../../../core/shared/components/LazyImage';
+import {usePluginStore} from '../state/usePluginStore';
 
-const PluginInfoView = ({route}: {route: any}) => {
-  const plugin: Plugin = route.params.plugin;
+const PluginInfoView = () => {
+  const plugin =
+    usePluginStore(state => state.viewInfoPlugin) || ({} as Plugin);
 
   const colorScheme = useColorScheme();
   const theme = useTheme();

@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   searchBarAndFilters: {
-    height: 125,
+    gap: 8,
     flexDirection: 'column',
     justifyContent: 'space-evenly',
   },

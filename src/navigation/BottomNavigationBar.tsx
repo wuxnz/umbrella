@@ -1,5 +1,12 @@
 import * as React from 'react';
-import {BottomNavigation, Drawer, Text, useTheme} from 'react-native-paper';
+import {
+  Appbar,
+  BottomNavigation,
+  Drawer,
+  Text,
+  TouchableRipple,
+  useTheme,
+} from 'react-native-paper';
 import PluginsNavigator from '../features/plugins/PluginsNavigator';
 import {
   AppState,
@@ -23,11 +30,37 @@ import {usePluginStore} from '../features/plugins/presentation/state/usePluginSt
 import {useGrantPermissionDialogStore} from '../features/plugins/presentation/state/useGrantPermissionDialogStore';
 import HomeNavigator from '../features/home/HomeNavigator';
 import LibraryNavigator from '../features/library/LibraryNavigator';
+import {SvgUri} from 'react-native-svg';
+import {useProfileStore} from '../features/profile/presentation/state/useProfileStore';
+import PluginListView from '../features/plugins/presentation/views/PluginListView';
 
 // BottomNavigationBar
 // This component is used to display the bottom navigation bar
 // Shown on all top level screens
 // Shows a Rail when in landscape mode
+
+const NavScreenWrapper: React.FC<any> = props => {
+  const navigation = useNavigation();
+  const {activeProfile} = useProfileStore(state => state);
+
+  return (
+    <View style={{flex: 1}}>
+      <Appbar.Header>
+        <Appbar.Content title={props.title} />
+        <TouchableRipple>
+          <SvgUri
+            width={32}
+            height={32}
+            uri={activeProfile?.profile_image || ''}
+            style={{marginRight: 16}}
+            onPress={() => navigation.navigate('profile' as never)}
+          />
+        </TouchableRipple>
+      </Appbar.Header>
+      <View style={styles.container}>{props.children}</View>
+    </View>
+  );
+};
 
 const DrawerNavigator = createDrawerNavigator();
 
@@ -127,7 +160,7 @@ const SearchRoute = () => (
 // );
 
 const SettingsRoute = () => (
-  <View style={styles.container}>
+  <View>
     <Text>Settings Screen</Text>
   </View>
 );
@@ -167,12 +200,42 @@ const BottomNavigationBar = () => {
     },
   ]);
 
+  const Home = () => (
+    <NavScreenWrapper title="Home">
+      <HomeNavigator />
+    </NavScreenWrapper>
+  );
+
+  const Search = () => (
+    <NavScreenWrapper title="Search">
+      <SearchNavigator />
+    </NavScreenWrapper>
+  );
+
+  const Library = () => (
+    <NavScreenWrapper title="Library">
+      <LibraryNavigator />
+    </NavScreenWrapper>
+  );
+
+  const Plugins = () => (
+    <NavScreenWrapper title="Plugins">
+      <PluginsNavigator />
+    </NavScreenWrapper>
+  );
+
+  const Settings = () => (
+    <NavScreenWrapper title="Settings">
+      <SettingsRoute />
+    </NavScreenWrapper>
+  );
+
   const renderScene = BottomNavigation.SceneMap({
-    home: HomeNavigator,
-    search: SearchNavigator,
-    library: LibraryNavigator,
-    plugins: PluginsNavigator,
-    settings: SettingsRoute,
+    home: Home,
+    search: Search,
+    library: Library,
+    plugins: Plugins,
+    settings: Settings,
   });
 
   const {height, width} = useWindowDimensions();
@@ -247,6 +310,15 @@ const BottomNavigationBar = () => {
 
   const {visible} = useBottomNavigationBarState();
 
+  const navigation = useNavigation();
+  const {activeProfile} = useProfileStore(state => state);
+
+  useEffect(() => {
+    if (!activeProfile) {
+      navigation.navigate('profile' as never);
+    }
+  }, [navigation, activeProfile]);
+
   if (isLandScape) {
     return (
       <DrawerNavigator.Navigator
@@ -262,7 +334,9 @@ const BottomNavigationBar = () => {
             ? 'library'
             : index === 3
             ? 'plugins'
-            : 'settings'
+            : index === 4
+            ? 'settings'
+            : 'home'
         }
         screenOptions={{
           headerShown: false,
@@ -276,11 +350,11 @@ const BottomNavigationBar = () => {
           drawerType: 'permanent',
         }}
         defaultStatus="open">
-        <DrawerNavigator.Screen name="home" component={HomeNavigator} />
-        <DrawerNavigator.Screen name="search" component={SearchNavigator} />
-        <DrawerNavigator.Screen name="library" component={LibraryNavigator} />
-        <DrawerNavigator.Screen name="plugins" component={PluginsNavigator} />
-        <DrawerNavigator.Screen name="settings" component={SettingsRoute} />
+        <DrawerNavigator.Screen name="home" component={Home} />
+        <DrawerNavigator.Screen name="search" component={Search} />
+        <DrawerNavigator.Screen name="library" component={Library} />
+        <DrawerNavigator.Screen name="plugins" component={Plugins} />
+        <DrawerNavigator.Screen name="settings" component={Settings} />
       </DrawerNavigator.Navigator>
     );
   }
@@ -306,5 +380,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor: 'blue',
   },
 });

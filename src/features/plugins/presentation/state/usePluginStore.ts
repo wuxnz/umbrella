@@ -28,6 +28,8 @@ interface PluginStoreState {
   getPlugins: () => Plugin[];
   activePlugin: Plugin | null;
   setActivePlugin: (plugin: Plugin | null) => void;
+  viewInfoPlugin: Plugin | null;
+  setViewInfoPlugin: (plugin: Plugin) => void;
 }
 
 export const usePluginStore = create(
@@ -56,6 +58,8 @@ export const usePluginStore = create(
       getPlugins: () => get().plugins,
       activePlugin: null,
       setActivePlugin: plugin => set({activePlugin: plugin}),
+      viewInfoPlugin: null,
+      setViewInfoPlugin: (plugin: Plugin) => set({viewInfoPlugin: plugin}),
     }),
     {
       name: 'plugins',
