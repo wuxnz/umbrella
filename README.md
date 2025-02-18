@@ -59,8 +59,10 @@ This project is designed for **extensibility, security, and scalability**, makin
 | <img src="screenshots/SplashScreen.png" alt="Splasch Screen" width="200" /> | <img src="screenshots/PluginListNoPlugins.png" alt="Plugin List (No Plugins)" width="200"/> | <img src="screenshots/InstallPluginDialog.png" alt="Install Plugin Dialog" width="200"/> |<img src="screenshots/PluginInfoScreen.png" alt="Plugin Info Screen" width="200"/> |
 | Plugin List | Delete Plugin Dialog | Search Screen | Search Screen More Modal |
 | <img src="screenshots/PluginList.png" alt="Plugin List" width="200"/> | <img src="screenshots/DeletePluginDialog.png" alt="Delete Plugin Dialog" width="200"/> | <img src="screenshots/SearchScreen.png" alt="Search Screen" width="200"/> | <img src="screenshots/SearchScreenModal.png" alt="Search Screen More Modal" width="200"/> |
-| Search Sreen More Modal (Fullscreen) | Details Screen | Details Screen (Bottom) |
-| <img src="screenshots/SearchPageFullModal.png" alt="Search Screen More Modal (Fullscreen)" width="200"/> | <img src="screenshots/DetaisScreen.png" alt="Details Screen" width="200"/> | <img src="screenshots/DetailsScreenBottom.png" alt="Details Screen (Bottom)" width="200"/> |
+| Search Sreen More Modal (Fullscreen) | Details Screen | Details Screen (Bottom) | Home Screen (NYI) | 
+| <img src="screenshots/SearchPageFullModal.png" alt="Search Screen More Modal (Fullscreen)" width="200"/> | <img src="screenshots/DetaisScreen.png" alt="Details Screen" width="200"/> | <img src="screenshots/DetailsScreenBottom.png" alt="Details Screen (Bottom)" width="200"/> | <img src="screenshots/HomeScreen.png" alt="Home Screen (Not Yet Implemented)" width="200" /> |
+| Library Screen (NYI) | SettingsScreen (NYI) | Create Profile Screen | Select Profile Screen |
+|  <img src="screenshots/LibraryScreen.png" alt="Library Screen (Not Yet Implemented)" width="200" /> | <img src="screenshots/SettingsScreen.png" alt="Settings Screen (Not Yet Implemented)" width="200" /> | <img src="screenshots/CreateProfileScreen.png" alt="Create Profile Screen" width="200" /> | <img src="screenshots/SelectProfileScreen.png" alt="Select Profile Screen" width="200" /> |
 
 ---
 
