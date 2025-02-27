@@ -94,7 +94,10 @@ const PaginationBottomSheet = ({
         onClose={() => {
           setBottomSheetVisible(false);
         }}
-        style={styles.bottomSheetWrapper}>
+        style={{
+          ...styles.bottomSheetWrapper,
+          backgroundColor: theme.colors.surface,
+        }}>
         <BottomSheetScrollView
           onScroll={onScrollToBottom}
           onMomentumScrollEnd={onMomentumScrollEnd}

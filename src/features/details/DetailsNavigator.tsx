@@ -29,6 +29,12 @@ import DetailedItem from '../plugins/data/model/item/DetailedItem';
 import LinearGradient from 'react-native-linear-gradient';
 import SendIntentAndroid from 'react-native-send-intent';
 import LazyImage from '../../core/shared/components/LazyImage';
+import {LibraryViewModel} from '../library/presentation/viewmodels/LibraryViewModel';
+import {useLibraryPageDataStore} from '../library/presentation/state/useLibraryPageDataStore';
+import {useFavoriteStore} from './presentation/state/useFavoriteStore';
+import BottomSheet from '@gorhom/bottom-sheet';
+import FavoriteBottomSheet from './presentation/components/FavoriteBottomSheet';
+import {Favorite} from '../library/domain/entities/Favorite';
 
 type DetailsNavigatorParams = {
   item: Item;
@@ -70,6 +76,54 @@ const DetailsNavigator = () => {
   const [synopsisCutOff, setSynopsisCutOff] = useState(200);
 
   const [showPlaceholder, setShowPlaceholder] = useState(false);
+
+  const {currentProfile} = useLibraryPageDataStore(state => state);
+
+  const {
+    isFavorited,
+    setIsFavorited,
+    visible,
+    setVisible,
+    removeFavorite,
+    updateFavorite,
+  } = useFavoriteStore(state => state);
+
+  const bottomSheetRef = React.useRef<BottomSheet>(null);
+
+  const [scrollOffset, setScrollOffset] = useState(0);
+
+  const handleScroll = (event: any) => {
+    setScrollOffset(event.nativeEvent.contentOffset.y);
+  };
+
+  const [contentHeight, setContentHeight] = useState(0);
+
+  const onContentSizeChange = (contentWidth: number, contentHeight: number) => {
+    setContentHeight(contentHeight);
+  };
+
+  const [itemInFavorites, setItemInFavorites] = useState<Favorite | undefined>(
+    undefined,
+  );
+
+  useEffect(() => {
+    setIsFavorited(false);
+  }, []);
+
+  useEffect(() => {
+    const itemFoundInFavorites = currentProfile?.favorites?.filter(
+      fItem =>
+        fItem.item.source?.author === item.source?.author &&
+        fItem.item.source?.name === item.source?.name &&
+        fItem.item.id === item.id,
+    )[0];
+    if (itemFoundInFavorites !== undefined) {
+      setItemInFavorites(itemFoundInFavorites);
+      setIsFavorited(true);
+    } else {
+      setIsFavorited(false);
+    }
+  }, [setIsFavorited, currentProfile?.favorites]);
 
   const fetchRawItemMedia = async (index: number): Promise<void> => {
     var media = await detailsViewModel.getItemMedia(
@@ -127,18 +181,66 @@ const DetailsNavigator = () => {
             }}
           />
           <Appbar.Content title={item.name} />
-          <Appbar.Action icon="heart" />
-          <Appbar.Action icon="bell" />
+          <Appbar.Action
+            icon="heart"
+            color={isFavorited ? theme.colors.primary : undefined}
+            onPress={() => {
+              if (isFavorited) {
+                removeFavorite(itemInFavorites!.id);
+              } else {
+                setVisible(true);
+                bottomSheetRef.current?.snapToIndex(1);
+              }
+            }}
+          />
+          <Appbar.Action
+            icon="bell"
+            color={
+              itemInFavorites?.notify === true
+                ? theme.colors.primary
+                : undefined
+            }
+            onPress={() => {
+              if (isFavorited && itemInFavorites !== undefined) {
+                updateFavorite(itemInFavorites!.id, {
+                  ...itemInFavorites!,
+                  notify: !itemInFavorites.notify,
+                });
+              } else {
+                Alert.alert(
+                  'Unable to enable notifications',
+                  `You must favorite ${item.name} before enabling notifications`,
+                  [{text: 'OK', onPress: () => {}}],
+                );
+              }
+            }}
+          />
           <Appbar.Action
             icon="earth"
             onPress={() => {
-              Linking.openURL(item.url);
+              Linking.openURL(details?.url || '');
             }}
           />
         </Appbar.Header>
-        <View style={styles.loadingContainer}>
+        <ScrollView
+          onScroll={handleScroll}
+          onContentSizeChange={onContentSizeChange}
+          contentContainerStyle={{
+            flexGrow: 1,
+            height: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
           <ActivityIndicator size={'large'} />
-        </View>
+        </ScrollView>
+        {visible && (
+          <FavoriteBottomSheet
+            item={item}
+            bottomSheetRef={bottomSheetRef}
+            scrollOffset={scrollOffset}
+            contentHeight={contentHeight}
+          />
+        )}
       </View>
     );
   }
@@ -153,18 +255,50 @@ const DetailsNavigator = () => {
           }}
         />
         <Appbar.Content title={item.name} />
-        <Appbar.Action icon="heart" />
-        <Appbar.Action icon="bell" />
+        <Appbar.Action
+          icon="heart"
+          color={isFavorited ? theme.colors.primary : undefined}
+          onPress={() => {
+            if (isFavorited) {
+              removeFavorite(itemInFavorites!.id);
+            } else {
+              setVisible(true);
+              bottomSheetRef.current?.snapToIndex(1);
+            }
+          }}
+        />
+        <Appbar.Action
+          icon="bell"
+          color={
+            itemInFavorites?.notify === true ? theme.colors.primary : undefined
+          }
+          onPress={() => {
+            if (isFavorited && itemInFavorites !== undefined) {
+              updateFavorite(itemInFavorites!.id, {
+                ...itemInFavorites!,
+                notify: !itemInFavorites.notify,
+              });
+            } else {
+              Alert.alert(
+                'Unable to enable notifications',
+                `You must favorite ${item.name} before enabling notifications`,
+                [{text: 'OK', onPress: () => {}}],
+              );
+            }
+          }}
+        />
         <Appbar.Action
           icon="earth"
           onPress={() => {
-            Linking.openURL(item.url);
+            Linking.openURL(details?.url || '');
           }}
         />
       </Appbar.Header>
       <View style={styles.content}>
         <ScrollView
           contentContainerStyle={{flexGrow: 1, width: '100%'}}
+          onScroll={handleScroll}
+          onContentSizeChange={onContentSizeChange}
           showsVerticalScrollIndicator={false}>
           <ImageBackground
             source={
@@ -314,6 +448,14 @@ const DetailsNavigator = () => {
               />
             </DataTable>
           </View>
+          {visible && (
+            <FavoriteBottomSheet
+              item={item}
+              bottomSheetRef={bottomSheetRef}
+              scrollOffset={scrollOffset}
+              contentHeight={contentHeight}
+            />
+          )}
         </ScrollView>
       </View>
     </View>

@@ -6,20 +6,13 @@ import {
   DimensionValue,
 } from 'react-native';
 import React, {useEffect} from 'react';
-import {
-  Appbar,
-  Card,
-  Icon,
-  Text,
-  TouchableRipple,
-  useTheme,
-} from 'react-native-paper';
+import {Appbar, Icon, Text, useTheme} from 'react-native-paper';
 import {Profile} from '../../domain/entities/Profile';
-import {useProfileStore} from '../state/useProfileStore';
 import {ProfileRepository} from '../../domain/repository/ProfileRepository';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SvgUri} from 'react-native-svg';
 import {useNavigation} from '@react-navigation/native';
+import {LibraryViewModel} from '../../../library/presentation/viewmodels/LibraryViewModel';
 
 type SelectProfileProps = {
   profiles: Profile[];

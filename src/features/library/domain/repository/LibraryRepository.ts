@@ -1,13 +1,13 @@
 import {Favorite} from '../entities/Favorite';
-import {LibrayPageData} from '../entities/LibraryPageData';
+import {LibraryPageData} from '../entities/LibraryPageData';
 
 export interface LibraryRepository {
-  data: LibrayPageData;
+  createFavoriteStore(profileId: string): void;
   loadProfile(profileId: string): void;
-  getData(): LibrayPageData;
+  getFavoritesData(): LibraryPageData;
   getFavorites(): Favorite[];
   addFavorite(item: Favorite): void;
-  removeFavorite(item: Favorite): void;
-  updateFavorite(item: Favorite): void;
+  removeFavorite(id: string): void;
+  updateFavorite(id: string, item: Favorite): void;
   clearFavorites(): void;
 }

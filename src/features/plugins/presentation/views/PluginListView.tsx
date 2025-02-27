@@ -27,7 +27,6 @@ const PluginListView = () => {
           <Text>Waiting for plugins to load</Text>
           <View style={{height: 8}} />
           <Text>¯\_( ͡° ͜ʖ ͡°)_/¯</Text>
-          <View style={{height: 16}} />
         </View>
       ) : (
         <View style={styles.pluginList}>
@@ -59,9 +58,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'blue',
   },
   noPlugins: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    height: '100%',
   },
   pluginList: {
     flex: 1,

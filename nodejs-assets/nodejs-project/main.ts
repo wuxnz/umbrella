@@ -25,7 +25,9 @@ rn_bridge.channel.on('message', async (message: any) => {
     rn_bridge.channel.send(JSON.stringify({status: 'success', data: result}));
   } catch (error: any) {
     // Send the error message if any
-    rn_bridge.channel.send('Error: ' + error.message);
+    rn_bridge.channel.send(
+      JSON.stringify({status: 'error', error: error.message}),
+    );
   }
 });
 

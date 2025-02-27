@@ -17,7 +17,6 @@ const SearchNavigator = () => {
     results,
     bottomSheetActivePlugin,
     bottomSheetVisible,
-    setBottomSheetVisible,
     pluginsToSearch,
   } = useSearchPageDataStore(state => state);
 

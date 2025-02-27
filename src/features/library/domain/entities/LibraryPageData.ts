@@ -1,6 +1,6 @@
 import {Favorite} from './Favorite';
 
-export interface LibrayPageData {
+export interface LibraryPageData {
   id: string;
   favorites: Favorite[];
 }

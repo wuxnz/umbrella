@@ -1,14 +1,10 @@
 {
   "folders": [
-	{
-		"name": "umbrella-plugin-example",
-		"path": "../umbrella-plugin-example"
-	},
-	{
-		"name": "umbrella",
-		"path": "."
-	}
-],
+		{
+			"name": "umbrella",
+			"path": "."
+		}
+	],
   "settings": {
     "liveServer.settings.multiRootWorkspaceName": "umbrella-plugin-example"
   }
