@@ -20,13 +20,11 @@ const LibraryNavigator = () => {
           categoriesToShow.includes(item.category || ''),
         ),
       );
-    } catch (e) {
-      console.log(e);
-    }
+    } catch (e) {}
   }, [currentProfile, categoriesToShow]);
 
   return (
-    <>
+    <View>
       {items?.length == 0 ? (
         <View style={styles.container}>
           <View style={styles.nothingMessage}>
@@ -46,23 +44,24 @@ const LibraryNavigator = () => {
             contentContainerStyle={{
               flexGrow: 1,
             }}>
-            {items.map((item: Favorite, index: number) => (
-              <View
-                style={{
-                  width: '32%',
-                  // height: 'auto',
-                  // height
-                }}>
-                <LibraryPageItem key={index} item={item} />
-              </View>
-            ))}
+            <View style={styles.itemGrid}>
+              {items?.map((item: Favorite, index: number) => (
+                <View
+                  key={index}
+                  style={{
+                    width: '33%',
+                  }}>
+                  <LibraryPageItem item={item} />
+                </View>
+              ))}
+            </View>
           </ScrollView>
         </View>
       )}
       <View style={styles.filterContainer}>
         <LibraryFiltersSelector />
       </View>
-    </>
+    </View>
   );
 };
 
@@ -71,15 +70,22 @@ export default LibraryNavigator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'red',
     alignItems: 'center',
     justifyContent: 'center',
   },
   itemContainer: {
     flex: 1,
+    paddingHorizontal: 8,
+    paddingVertical: 16,
+    marginLeft: '2%',
+  },
+  itemGrid: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     width: '100%',
-    padding: '2%',
-    backgroundColor: 'blue',
+    rowGap: 16,
+    flexWrap: 'wrap',
   },
   nothingMessage: {
     flex: 1,

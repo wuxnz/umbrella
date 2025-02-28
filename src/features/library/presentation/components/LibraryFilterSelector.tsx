@@ -10,8 +10,6 @@ const LibraryFiltersSelector = () => {
     state => state,
   );
 
-  console.log(categoriesToShow);
-
   const theme = useTheme();
 
   return (
@@ -32,7 +30,6 @@ const LibraryFiltersSelector = () => {
                 : theme.colors.backdrop,
             }}
             onPress={() => {
-              console.log(category);
               if (categoriesToShow.includes(category)) {
                 setCategoriesToShow(
                   categoriesToShow.filter(item => item !== category),

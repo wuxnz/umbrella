@@ -7,6 +7,7 @@ import {
   AppState,
   Linking,
   View,
+  Text,
 } from 'react-native';
 import {PaperProvider, useTheme} from 'react-native-paper';
 
@@ -39,7 +40,7 @@ import PluginListView from './src/features/plugins/presentation/views/PluginList
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // Start nodejs
+  // // Start nodejs
   useEffect(() => {
     SplashScreen.hide();
     nodejs.start('main.js');
@@ -150,6 +151,9 @@ export default function App() {
   const {profiles, activeProfile} = useProfileStore(state => state);
 
   return (
+    // <View>
+    //   <Text>Hello World</Text>
+    // </View>
     <GestureHandlerRootView>
       <SafeAreaProvider>
         <SafeAreaView
@@ -183,6 +187,7 @@ export default function App() {
                   },
                 }}
                 initialRouteName={
+                  // 'root'
                   activeProfile === undefined || profiles.length === 0
                     ? 'profile'
                     : 'root'
@@ -198,12 +203,15 @@ export default function App() {
                   }}
                 />
               </Stack.Navigator>
-              <StatusBar
-                backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}
-                barStyle={
-                  colorScheme === 'dark' ? 'light-content' : 'dark-content'
-                }
-              />
+              <View>
+                <Text>Hello World</Text>
+                <StatusBar
+                  backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}
+                  barStyle={
+                    colorScheme === 'dark' ? 'light-content' : 'dark-content'
+                  }
+                />
+              </View>
               <GrantPermissionDialog />
               <InstallPluginDialog />
             </NavigationContainer>
