@@ -101,7 +101,12 @@ cd umbrealla
 ```sh
 npm install
 ```
-### **3️⃣ Run on Android Emulator (must open first)**
+### **3️⃣ Set Up Nodejs Mobile**
+```sh
+cd nodejs-assets/nodejs-project
+npx tsc
+```
+### **4️⃣ Run on Android Emulator (must open first)**
 ```sh
 npx react-native run-android
 ```
