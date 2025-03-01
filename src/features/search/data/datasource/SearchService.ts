@@ -8,6 +8,8 @@ import {usePluginStore} from '../../../plugins/presentation/state/usePluginStore
 import nodejs from 'nodejs-mobile-react-native';
 import {useSearchPageDataStore} from '../../presentation/state/useSearchPageDataStore';
 import {get} from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
+import {AppRegistry} from 'react-native';
+import uuid from 'react-native-uuid';
 
 // Search service
 // This is the service that gets the data for the search
@@ -20,7 +22,7 @@ export const SearchService = {
       useSearchPageDataStore.getState();
 
     for (const plugin of pluginsToSearch) {
-      setImmediate(async () => {
+      const search = async () => {
         if (plugin.pluginPath === undefined) {
           return;
         }
@@ -34,7 +36,8 @@ export const SearchService = {
         category.source = plugin;
 
         setResults([...results, category]);
-      });
+      };
+      search();
     }
   },
   async search(): Promise<Category[]> {
