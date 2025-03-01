@@ -139,4 +139,7 @@ dist
 .dist/
 
 # Ignore example-plugin.ts
-example-plugin.*s
+-plugin.*s
+
+# Ignore ignore files
+-ignore.*

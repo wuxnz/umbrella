@@ -12,7 +12,7 @@ const ConfirmOrDenyDialog = ({
   reason,
   visible,
 }: {
-  onConfirm: () => Promise<any>;
+  onConfirm: () => Promise<void>;
   title: string;
   reason: string;
   visible: boolean;

@@ -17,6 +17,8 @@ interface InstallPluginDialogStoreState {
   deleteManifestFile: () => void;
   onConfirm: () => Promise<void>;
   setOnConfirm: (onConfirm: () => void) => void;
+  waitingForPlugins: boolean;
+  setWaitingForPlugins: (waitingForPluginss: boolean) => void;
 }
 
 export const useInstallPluginDialogStore =
@@ -43,4 +45,7 @@ export const useInstallPluginDialogStore =
           set({visible: false, plugin: undefined, loading: false});
         },
       }),
+
+    waitingForPlugins: false,
+    setWaitingForPlugins: waitingForPlugins => set({waitingForPlugins}),
   }));

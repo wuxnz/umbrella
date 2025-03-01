@@ -13,7 +13,6 @@ const deletePlugin = new DeletePluginUsecase(new PluginRepositoryImpl());
 // Also has CRUD methods for plugins.
 // TODO: implement usecases
 // TODO: persist plugins
-//
 interface PluginStoreState {
   plugins: Plugin[];
   setPlugins: (plugins: Plugin[]) => void;
@@ -40,10 +39,12 @@ export const usePluginStore = create(
       onPermissionsDenied: () => set({permissionsGranted: false}),
       plugins: [],
       setPlugins: plugins => set({plugins}),
-      registerPlugin: plugin =>
+      registerPlugin: plugin => {
         set(state => ({
           plugins: [...state.plugins, plugin],
-        })),
+        }));
+        console.log(get().plugins.length);
+      },
       pluginToDelete: null,
       setPluginToDelete: plugin => set({pluginToDelete: plugin}),
       deletePlugin: async (plugin: Plugin) => {

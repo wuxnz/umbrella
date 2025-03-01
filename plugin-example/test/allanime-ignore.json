@@ -1,0 +1,15 @@
+{
+  "sourceType": "Video",
+  "author": "invader",
+  "name": "Allanime Plugin",
+  "version": 1,
+  "description": "Allanime Plugin for Umbrella by invader",
+  "homePageUrl": "http://192.168.1.157:5500/plugin-example/test",
+  "iconUrl": "https://avatars.githubusercontent.com/u/84649528?v=4",
+  "manifestUrl": "http://192.168.1.157:5500/plugin-example/test/allanime-ignore.json",
+  "pluginUrl": "http://192.168.1.157:5500/plugin-example/test/plugins/allanime-plugin.js",
+  "bannerImageUrl": "https://wallpaperswide.com/download/hellsing_alucard-wallpaper-2560x1600.jpg",
+  "changelog": "Added search function to plugin",
+  "readme": "Just a simple example plugin for Umbrella by invader",
+  "license": "MIT"
+}

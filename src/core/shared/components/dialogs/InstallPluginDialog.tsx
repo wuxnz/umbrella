@@ -10,12 +10,18 @@ import {useInstallPluginDialogStore} from '../../../../features/plugins/presenta
 
 function InstallPluginDialog() {
   const colorScheme = useColorScheme();
-  const [waitingForPlugins, setWaitingForPlugins] = useState(false);
   const [cancelLoading, setCancelLoading] = useState(false);
   const [loadingPlugins, setLoadingPlugins] = useState(false);
 
-  const {deleteManifestFile, plugin, visible, setVisible, onConfirm} =
-    useInstallPluginDialogStore(state => state);
+  const {
+    deleteManifestFile,
+    plugin,
+    visible,
+    setVisible,
+    onConfirm,
+    waitingForPlugins,
+    setWaitingForPlugins,
+  } = useInstallPluginDialogStore(state => state);
 
   useEffect(() => {
     setWaitingForPlugins(true);

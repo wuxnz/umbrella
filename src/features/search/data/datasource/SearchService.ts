@@ -20,7 +20,7 @@ export const SearchService = {
       useSearchPageDataStore.getState();
 
     for (const plugin of pluginsToSearch) {
-      queueMicrotask(async () => {
+      setImmediate(async () => {
         if (plugin.pluginPath === undefined) {
           return;
         }

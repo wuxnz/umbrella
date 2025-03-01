@@ -46,9 +46,8 @@ export class PluginRepositoryImpl implements PluginRepository {
   }
 
   async registerPlugin(plugin: Plugin): Promise<Status<void>> {
-    const {registerPlugin} = usePluginStore.getState();
-    registerPlugin(plugin);
-    // this.plugins = plugins;
+    const {registerPlugin: registerPluginState} = usePluginStore.getState();
+    registerPluginState(plugin);
     return {status: 'success', data: undefined};
   }
 

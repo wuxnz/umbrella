@@ -51,6 +51,7 @@ export const PluginService = {
     };
   },
   async deletePlugin(manifest: Plugin): Promise<Status<void>> {
+    console.log(manifest.manifestPath);
     if (!manifest.manifestPath || !manifest.pluginPath) {
       return {
         status: 'error',
@@ -136,23 +137,40 @@ export const PluginService = {
       plugin.name.endsWith('.json'),
     );
 
+    const pluginFiles = pluginsFolderFiles.filter(
+      plugin => !plugin.name.endsWith('.js'),
+    );
+
     for (const manifestFile of manifestFiles) {
       const manifest = await RNFS.readFile(manifestFile.path, 'utf8');
       const manifestJson = JSON.parse(manifest) as Plugin;
 
-      if (!manifestJson.pluginPath) {
+      // Check if the manifest file is empty
+      if (Object.keys(manifestJson).length === 0) {
         return {
           status: 'error',
           error: 'No plugin path found',
         };
       }
 
-      const {registerPlugin} = usePluginStore.getState();
+      const pluginCode = await RNFS.readFile(
+        `${manifestFile.path.replace('.json', '.js')}`,
+        'utf8',
+      );
 
-      registerPlugin(manifestJson);
-
-      plugins.push(manifestJson);
+      // Check if the plugin code exists
+      if (pluginCode.length > 0) {
+        plugins.push({
+          ...manifestJson,
+          pluginPath: `${manifestFile.path.replace('.json', '.js')}`,
+          manifestPath: manifestFile.path,
+        });
+      }
     }
+
+    const {setPlugins} = usePluginStore.getState();
+
+    setPlugins(plugins);
 
     return {
       status: 'success',

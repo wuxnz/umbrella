@@ -38,7 +38,7 @@ const PluginListView = () => {
           visible={Boolean(pluginToDelete)}
           onConfirm={async () => {
             await deletePlugin(pluginToDelete);
-            return setPluginToDelete(null);
+            setPluginToDelete(null);
           }}
           onCancel={() => setPluginToDelete(null)}
           title={`Delete ${pluginToDelete.name}?`}

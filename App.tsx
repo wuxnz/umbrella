@@ -67,40 +67,44 @@ export default function App() {
 
   const pluginViewModel = new PluginViewModel();
 
+  // Load all plugins from disk on app start
   useEffect(() => {
-    pluginViewModel.loadAllPluginsFromStorage().then(result => {
-      if (result.status === 'success') {
-        setPlugins(result.data!);
-      }
-    });
+    const loadPlugins = async () => {
+      await pluginViewModel.loadAllPluginsFromStorage();
+    };
+    loadPlugins();
   }, []);
 
   const {
     visible: installVisible,
     setVisible: setInstallVisible,
+    plugin,
     setPlugin,
     loading,
     setLoading,
     setOnConfirm: setInstallOnConfirm,
+    setWaitingForPlugins,
   } = useInstallPluginDialogStore(state => state);
 
+  // If install dialog closes, load all plugins
   useEffect(() => {
     if (installVisible) return;
-    pluginViewModel.loadAllPluginsFromStorage().then(result => {
-      if (result.status === 'success') {
-        setPlugins(result.data!);
-      }
-    });
+    const loadPlugins = async () => {
+      await pluginViewModel.loadAllPluginsFromStorage();
+    };
+    loadPlugins();
   }, [installVisible]);
 
+  // Listen for deep links to plugins and prompt for install
   useEffect(() => {
     Linking.addEventListener('url', async ({url}) => {
       if (loading) {
         return;
       }
       if (url.startsWith(constants.PLUGIN_SCHEME)) {
+        setInstallVisible(true);
         setLoading(true);
-        setPlugins([]);
+        setWaitingForPlugins(true);
         setPlugin(undefined);
 
         const manifestUrl = url.replace(constants.PLUGIN_SCHEME, 'http://');
@@ -109,17 +113,24 @@ export default function App() {
           switch (result.status) {
             case 'success': {
               setPlugin(result.data);
+              setWaitingForPlugins(false);
+              setInstallVisible(true);
               setInstallOnConfirm(async () => {
                 await pluginViewModel.fetchPlugin(result.data).then(result => {
                   switch (result.status) {
                     case 'success': {
-                      pluginViewModel.registerPlugin(result.data).then(() => {
-                        setInstallVisible(false);
-                      });
+                      Alert.alert(
+                        'Installation successful',
+                        `Plugin ${result.data.name} installed successfully`,
+                      );
+                      pluginViewModel.loadAllPluginsFromStorage();
                       break;
                     }
                     case 'error': {
-                      console.error(result.error);
+                      Alert.alert(
+                        'Installation failed',
+                        `Plugin installation failed`,
+                      );
                       break;
                     }
                     default:
@@ -139,11 +150,6 @@ export default function App() {
         });
         setInstallVisible(true);
         setLoading(false);
-        pluginViewModel.loadAllPluginsFromStorage().then(result => {
-          if (result.status === 'success') {
-            setPlugins(result.data!);
-          }
-        });
       }
     });
   }, []);
@@ -151,9 +157,6 @@ export default function App() {
   const {profiles, activeProfile} = useProfileStore(state => state);
 
   return (
-    // <View>
-    //   <Text>Hello World</Text>
-    // </View>
     <GestureHandlerRootView>
       <SafeAreaProvider>
         <SafeAreaView
