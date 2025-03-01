@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
   itemGrid: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-between',
     width: '100%',
     rowGap: 16,
     flexWrap: 'wrap',

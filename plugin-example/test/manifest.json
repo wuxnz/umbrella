@@ -7,7 +7,7 @@
   "homePageUrl": "http://192.168.1.157:5500/plugin-example/test",
   "iconUrl": "https://avatars.githubusercontent.com/u/84649528?v=4",
   "manifestUrl": "http://192.168.1.157:5500/plugin-example/test/manifest.json",
-  "pluginUrl": "http://192.168.1.157:5500/plugin-example/test/plugins/example-plugin.js",
+  "pluginUrl": "http://192.168.1.157:5500/plugin-example/test/plugins/example-plugin-template.js",
   "bannerImageUrl": "https://wallpaperswide.com/download/hellsing_alucard-wallpaper-2560x1600.jpg",
   "changelog": "Added search function to plugin",
   "readme": "Just a simple example plugin for Umbrella by invader",
