@@ -15,11 +15,15 @@ const LibraryNavigator = () => {
 
   useEffect(() => {
     try {
-      setItems(
-        currentProfile.favorites?.filter(item =>
-          categoriesToShow.includes(item.category || ''),
-        ),
-      );
+      if (categoriesToShow.length === 0) {
+        setItems(currentProfile.favorites);
+      } else {
+        setItems(
+          currentProfile.favorites?.filter(item =>
+            categoriesToShow.includes(item.category || ''),
+          ),
+        );
+      }
     } catch (e) {}
   }, [currentProfile, categoriesToShow]);
 
