@@ -135,11 +135,8 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
-#Ignore dist folder
-.dist/
+# Ignore plugin files
+*-plugin.ts
 
-# Ignore example-plugin.ts
-*-plugin.*
-
-# Ignore ignore files
+# Ignore all -ignore files
 *-ignore.*
