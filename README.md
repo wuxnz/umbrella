@@ -10,7 +10,7 @@ This project is designed for **extensibility, security, and scalability**, makin
 
 - **Plugin System** 🧩: Dynamically download and execute JavaScript plugins through the package [nodejs-mobile-react-native](https://github.com/nodejs-mobile/nodejs-mobile-react-native) and  through the package [vm2]([https://github.com/nodejs-mobile/nodejs-mobile-react-native](https://github.com/patriksimek/vm2)).
 - **Sandboxed Execution** 🛡️: Secure Node.js environment for running untrusted code.
-- **CLEAN + M MVVM Architecture** 🏗️: Maintainable and scalable design pattern.
+- **CLEAN + MVVM Architecture** 🏗️: Maintainable and scalable design pattern.
 - **Web Scraping Support** 🌐: Utilize `Node.js`.
 - **State Management**: Utilize [zustand](https://github.com/pmndrs/zustand) for storing, managing, and persisting state.
 - **Integration with external apps through intents**: Using Intents to open external apps like MX Player to handle different the media types supported.
