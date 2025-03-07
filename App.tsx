@@ -39,11 +39,34 @@ import {useProfileStore} from './src/features/profile/presentation/state/useProf
 import ProfileNavigator from './src/features/profile/ProfileNavigator';
 import PluginInfoView from './src/features/plugins/presentation/views/PluginInfoView';
 import PluginListView from './src/features/plugins/presentation/views/PluginListView';
+import {ExtractorService} from './src/data/services/extractor/data/datasource/ExtractorService';
+import ExtractorVideo from './plugin-example/src/models/media/ExtractorVideo';
+import MediaType from './plugin-example/src/models/media/MediaType';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
-  // // Start nodejs
+  // Extractor Tests
+  // useEffect(() => {
+  //   const extractorServiceExtract = async () => {
+  //     const result = await ExtractorService.extract({
+  //       type: MediaType.ExtractorVideo,
+  //       url: 'https://alions.pro/v/22ly8zuqj9n2',
+  //       name: 'test',
+  //       iconUrl: 'https://ww27.gogoanimes.fi/img/vidhide.png',
+  //       headers: {
+  //         'User-Agent':
+  //           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
+  //         Referer: 'https://ww27.gogoanimes.fi/',
+  //       },
+  //     } as ExtractorVideo);
+  //     console.log('result: ' + result.length);
+  //   };
+
+  //   console.log('running');
+  //   extractorServiceExtract();
+  // }, []);
+  // Start nodejs
   useEffect(() => {
     SplashScreen.hide();
     nodejs.start('main.js');

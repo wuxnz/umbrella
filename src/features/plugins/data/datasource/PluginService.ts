@@ -51,7 +51,6 @@ export const PluginService = {
     };
   },
   async deletePlugin(manifest: Plugin): Promise<Status<void>> {
-    console.log(manifest.manifestPath);
     if (!manifest.manifestPath || !manifest.pluginPath) {
       return {
         status: 'error',
