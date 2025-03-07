@@ -40,8 +40,8 @@ import ProfileNavigator from './src/features/profile/ProfileNavigator';
 import PluginInfoView from './src/features/plugins/presentation/views/PluginInfoView';
 import PluginListView from './src/features/plugins/presentation/views/PluginListView';
 import {ExtractorService} from './src/data/services/extractor/data/datasource/ExtractorService';
-import ExtractorVideo from './plugin-example/src/models/media/ExtractorVideo';
-import MediaType from './plugin-example/src/models/media/MediaType';
+import MediaType from './src/features/plugins/data/model/media/MediaType';
+import ExtractorVideo from './src/features/plugins/data/model/media/ExtractorVideo';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,8 +59,10 @@ export default function App() {
   //           'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36',
   //         Referer: 'https://ww27.gogoanimes.fi/',
   //       },
-  //     } as ExtractorVideo);
-  //     console.log('result: ' + result.length);
+  //     } as ExtractorVideo).then(result => {
+  //       console.log(result);
+  //       return result;
+  //     });
   //   };
 
   //   console.log('running');

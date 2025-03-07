@@ -1,10 +1,10 @@
-import ExtractorAudio from '../../../../../../features/plugins/data/model/media/ExtractorAudio';
-import ExtractorVideo from '../../../../../../features/plugins/data/model/media/ExtractorVideo';
-import MediaType from '../../../../../../features/plugins/data/model/media/MediaType';
-import RawAudio from '../../../../../../features/plugins/data/model/media/RawAudio';
-import RawVideo from '../../../../../../features/plugins/data/model/media/RawVideo';
-import {Extractor} from '../../../domain/entities/Extractor';
-import {ExtractorInfo} from '../../../domain/entities/ExtractorInfo';
+import ExtractorAudio from '../../../../../../../features/plugins/data/model/media/ExtractorAudio';
+import ExtractorVideo from '../../../../../../../features/plugins/data/model/media/ExtractorVideo';
+import MediaType from '../../../../../../../features/plugins/data/model/media/MediaType';
+import RawAudio from '../../../../../../../features/plugins/data/model/media/RawAudio';
+import RawVideo from '../../../../../../../features/plugins/data/model/media/RawVideo';
+import {Extractor} from '../../../../domain/entities/Extractor';
+import {ExtractorInfo} from '../../../../domain/entities/ExtractorInfo';
 
 class VidHideExtractor implements Extractor {
   name: string = 'VidHide';

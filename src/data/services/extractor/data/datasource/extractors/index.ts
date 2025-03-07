@@ -1,5 +1,9 @@
-import VidHideExtractorInfo from './VidHideExtractor';
+import {ExtractorInfo} from '../../../domain/entities/ExtractorInfo';
+import VidHideExtractorInfo from './video/VidHideExtractor';
 
-const Extractors = [new VidHideExtractorInfo()];
+const Extractors = {
+  ExtractorVideo: [new VidHideExtractorInfo()] as ExtractorInfo[],
+  Other: [],
+};
 
 export default Extractors;

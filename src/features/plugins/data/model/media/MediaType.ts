@@ -1,10 +1,10 @@
 enum MediaType {
-  ExtractorVideo,
-  RawVideo,
-  ExtractorAudio,
-  RawAudio,
-  Image,
-  Other,
+  ExtractorVideo = 'ExtractorVideo',
+  RawVideo = 'RawVideo',
+  ExtractorAudio = 'ExtractorAudio',
+  RawAudio = 'RawAudio',
+  Image = 'Image',
+  Other = 'Other',
 }
 
 export function toMediaType(type: string): string {
