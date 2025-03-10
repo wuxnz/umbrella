@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {Dimensions, StyleSheet, View} from 'react-native';
 import {Text, useTheme} from 'react-native-paper';
 import {usePluginStore} from '../state/usePluginStore';
 import PluginList from '../components/PluginList';
@@ -66,5 +66,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     height: '100%',
+    maxWidth: Dimensions.get('window').width - 16,
   },
 });

@@ -1,6 +1,10 @@
 import Status from '../../../../core/shared/types/Status';
 import Category from '../../data/model/item/Category';
 import DetailedItem from '../../data/model/item/DetailedItem';
+import ExtractorAudio from '../../data/model/media/ExtractorAudio';
+import ExtractorVideo from '../../data/model/media/ExtractorVideo';
+import RawAudio from '../../data/model/media/RawAudio';
+import RawVideo from '../../data/model/media/RawVideo';
 import {PluginRepositoryImpl} from '../../data/repositories/PluginRepositoryImpl';
 import {Plugin} from '../../domain/entities/Plugin';
 import {PluginRepository} from '../../domain/repositories/PluginRepository';
@@ -60,7 +64,15 @@ export class PluginViewModel implements PluginRepository {
     pluginPath: string,
     methodToRun: string,
     args: any[],
-  ): Promise<Status<Category | Category[] | DetailedItem | null>> {
+  ): Promise<
+    Status<
+      | Category
+      | Category[]
+      | DetailedItem
+      | (RawAudio | ExtractorAudio | RawVideo | ExtractorVideo)[]
+      | null
+    >
+  > {
     return await new RunPluginMethodInSandbox(
       new PluginRepositoryImpl(),
     ).execute(pluginPath, methodToRun, args);

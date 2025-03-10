@@ -16,7 +16,7 @@ interface SearchPageDataStoreState {
   sourceTypesToSearch: SourceType[];
   setSourceTypesToSearch: (sourceTypesToSearch: SourceType[]) => void;
   results: Category[];
-  setResults: (results: Category[]) => void;
+  setResults: (newResults: Category[]) => void;
   getResults: () => Category[];
   alreadyStarted: boolean;
   setAlreadyStarted: (alreadyStarted: boolean) => void;
@@ -42,8 +42,9 @@ export const useSearchPageDataStore = create<SearchPageDataStoreState>()(
     setResults: (newResults: Category[]) => set({results: newResults}),
     getResults: () => get().results,
     alreadyStarted: false,
-    setAlreadyStarted: (alreadyStarted: boolean) =>
-      set({alreadyStarted: alreadyStarted}),
+    setAlreadyStarted: (newAlreadyStarted: boolean) => {
+      set({alreadyStarted: newAlreadyStarted});
+    },
     bottomSheetActivePlugin: undefined,
     setBottomSheetActivePlugin: (plugin: Plugin) =>
       set({bottomSheetActivePlugin: plugin}),

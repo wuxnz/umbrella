@@ -18,34 +18,51 @@ import uuid from 'react-native-uuid';
 // in a more reactive way
 export const SearchService = {
   async initSearch(): Promise<void> {
-    const {results, query, sourceTypesToSearch, setResults, pluginsToSearch} =
+    const {query, setResults, pluginsToSearch, getResults} =
       useSearchPageDataStore.getState();
+    const SEARCH_TIMEOUT = 5000; // 5 seconds timeout for each search
 
     for (const plugin of pluginsToSearch) {
-      const search = async () => {
-        if (plugin.pluginPath === undefined) {
-          return;
-        }
+      if (!plugin.pluginPath) continue;
 
-        const category = (await PluginService.runPluginMethodInSandbox(
-          plugin.pluginPath!,
+      try {
+        // Function to fetch search results
+        const searchPromise = PluginService.runPluginMethodInSandbox(
+          plugin.pluginPath,
           'search',
           [query],
-        ).then(res => res.data)) as Category;
+        ).then(res => res.data) as Promise<Category>;
 
-        category.source = plugin;
+        // Timeout Promise
+        const timeoutPromise = new Promise<null>(resolve =>
+          setTimeout(() => resolve(null), SEARCH_TIMEOUT),
+        );
 
-        setResults([...results, category]);
-      };
-      search();
+        // Run the search with timeout protection
+        const category = await Promise.race([searchPromise, timeoutPromise]);
+
+        if (category) {
+          category.source = plugin;
+
+          // Fetch the latest results
+          const {results} = useSearchPageDataStore.getState();
+
+          // Avoid duplicate categories by checking the source name
+          if (!results.some(c => c.source?.name === plugin.name)) {
+            setResults([...results, category]); // Directly update the state with the new array
+          }
+        } else {
+          console.warn(`Search timed out for plugin: ${plugin.name}`);
+        }
+      } catch (error) {
+        console.error(`Error searching with plugin ${plugin.name}:`, error);
+      }
     }
   },
   async search(): Promise<Category[]> {
     const {
-      results,
-      pluginsToSearch,
       getResults,
-      alreadyStarted,
+      setAlreadyStarted,
       setResults,
       setPluginsToSearch,
       sourceTypesToSearch,
@@ -66,13 +83,24 @@ export const SearchService = {
       setPluginsToSearch(plugins);
     }
 
+    setAlreadyStarted(true);
     await this.initSearch();
 
+    const timeout = 15;
+    var seconds = 0;
     return new Promise(resolve => {
       const interval = setInterval(() => {
-        if (results.length === pluginsToSearch.length && alreadyStarted) {
+        const {results, alreadyStarted, pluginsToSearch, setAlreadyStarted} =
+          useSearchPageDataStore.getState();
+        if (
+          (results.length === pluginsToSearch.length && alreadyStarted) ||
+          seconds === timeout
+        ) {
           clearInterval(interval);
           resolve(getResults());
+          setAlreadyStarted(false);
+        } else {
+          seconds += 1;
         }
       }, 1000);
     });

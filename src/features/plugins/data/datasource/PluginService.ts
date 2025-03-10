@@ -9,6 +9,8 @@ import nodejs from 'nodejs-mobile-react-native';
 import {usePluginStore} from '../../presentation/state/usePluginStore';
 import RawAudio from '../model/media/RawAudio';
 import RawVideo from '../model/media/RawVideo';
+import ExtractorVideo from '../model/media/ExtractorVideo';
+import ExtractorAudio from '../model/media/ExtractorAudio';
 
 // Plugin service
 // This is the service that gets the data for the plugin
@@ -182,7 +184,11 @@ export const PluginService = {
     args: any[],
   ): Promise<
     Status<
-      Category | Category[] | DetailedItem | (RawAudio | RawVideo)[] | null
+      | Category
+      | Category[]
+      | DetailedItem
+      | (RawAudio | ExtractorAudio | RawVideo | ExtractorVideo)[]
+      | null
     >
   > {
     return new Promise(async (resolve, reject) => {
@@ -211,7 +217,9 @@ export const PluginService = {
         case 'getItemDetails':
           return value as Status<DetailedItem>;
         case 'getItemMedia':
-          return value as Status<(RawAudio | RawVideo)[]>;
+          return value as Status<
+            (RawAudio | ExtractorAudio | RawVideo | ExtractorVideo)[]
+          >;
         default:
           return {
             status: 'error',

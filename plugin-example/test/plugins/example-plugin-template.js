@@ -41,8 +41,9 @@ class ExamplePluginTemplate {
     }
 }
 module.exports = {
-    search: (query, page) => __awaiter(this, void 0, void 0, function* () { return new ExamplePlugin().search(query, page); }),
-    getCategory: (category, page) => __awaiter(this, void 0, void 0, function* () { return new ExamplePlugin().getCategory(category, page); }),
-    getHomeCategories: () => __awaiter(this, void 0, void 0, function* () { return new ExamplePlugin().getHomeCategories(); }),
-    getItemDetails: (id) => __awaiter(this, void 0, void 0, function* () { return new ExamplePlugin().getItemDetails(id); }),
+    search: (query, page) => __awaiter(this, void 0, void 0, function* () { return new ExamplePluginTemplate().search(query, page); }),
+    getCategory: (category, page) => __awaiter(this, void 0, void 0, function* () { return new ExamplePluginTemplate().getCategory(category, page); }),
+    getHomeCategories: () => __awaiter(this, void 0, void 0, function* () { return new ExamplePluginTemplate().getHomeCategories(); }),
+    getItemDetails: (id) => __awaiter(this, void 0, void 0, function* () { return new ExamplePluginTemplate().getItemDetails(id); }),
+    getItemMedia: (id) => __awaiter(this, void 0, void 0, function* () { return new ExamplePluginTemplate().getItemMedia(id); }),
 };

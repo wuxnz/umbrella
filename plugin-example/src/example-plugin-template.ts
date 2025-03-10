@@ -1,5 +1,5 @@
 // Include ts-nocheck here if using modules that arent builtin to node
-// Also delete any imports from this file. Use require() instead
+// You should only import built-in nodejs modules in this file.
 
 //This is an example plugin. Do not use in production.
 // Functions' return types are placeholders

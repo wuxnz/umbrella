@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, Dimensions} from 'react-native';
+import {View, Text, StyleSheet, Dimensions, StatusBar} from 'react-native';
 import React, {useEffect, useRef, useState} from 'react';
 import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
 import {useTheme} from 'react-native-paper';
@@ -66,7 +66,12 @@ const PaginationBottomSheet = ({
   const theme = useTheme();
 
   const paddingToAddBottomSheet =
-    Dimensions.get('screen').height > Dimensions.get('window').width ? 100 : 20;
+    contentHeight -
+    scrollOffset -
+    Dimensions.get('screen').height +
+    (Dimensions.get('screen').height - Dimensions.get('window').height) +
+    (StatusBar.currentHeight || 24) +
+    160;
 
   return (
     <GestureHandlerRootView
@@ -77,11 +82,7 @@ const PaginationBottomSheet = ({
         top: scrollOffset,
         left: 0,
         right: 0,
-        bottom:
-          contentHeight -
-          scrollOffset -
-          Dimensions.get('window').height +
-          paddingToAddBottomSheet,
+        bottom: paddingToAddBottomSheet,
         zIndex: 10,
       }}>
       <BottomSheet
@@ -129,10 +130,7 @@ export default PaginationBottomSheet;
 
 const styles = StyleSheet.create({
   bottomSheetWrapper: {
-    paddingBottom:
-      Dimensions.get('screen').height > Dimensions.get('window').width
-        ? 100
-        : 0,
+    paddingBottom: 20,
   },
   container: {
     flex: 1,

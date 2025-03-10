@@ -35,6 +35,11 @@ import {useFavoriteStore} from './presentation/state/useFavoriteStore';
 import BottomSheet from '@gorhom/bottom-sheet';
 import FavoriteBottomSheet from './presentation/components/FavoriteBottomSheet';
 import {Favorite} from '../library/domain/entities/Favorite';
+import ExtractorNavigator from '../../data/services/extractor/ExtractorNavigator';
+import {useExtractorServiceStore} from '../../data/services/extractor/presentation/state/ExtractorServiceStore';
+import RawAudio from '../plugins/data/model/media/RawAudio';
+import RawVideo from '../plugins/data/model/media/RawVideo';
+import ExtractorSourcesBottomSheet from '../../data/services/extractor/presentation/components/ExtractSourcesBottomSheet';
 
 type DetailsNavigatorParams = {
   item: Item;
@@ -90,6 +95,8 @@ const DetailsNavigator = () => {
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
+  const extractorBottomSheetRef = React.useRef<BottomSheet>(null);
+
   const [scrollOffset, setScrollOffset] = useState(0);
 
   const handleScroll = (event: any) => {
@@ -125,50 +132,28 @@ const DetailsNavigator = () => {
     }
   }, [setIsFavorited, currentProfile?.favorites]);
 
-  const fetchRawItemMedia = async (index: number): Promise<void> => {
-    var media = await detailsViewModel.getItemMedia(
-      details!.media[index].id,
-      item.source!,
-    );
-    if (details && details.media.length > 0) {
-      await SendIntentAndroid.isAppInstalled('com.mxtech.videoplayer.ad').then(
-        async isInstalled => {
-          if (isInstalled) {
-            await SendIntentAndroid.openAppWithData(
-              'com.mxtech.videoplayer.ad',
-              media[0].url,
-              'video/*',
-              {
-                title: item.name + ' - ' + details.media[index].name,
-                headers: JSON.stringify(media[0].headers),
-              },
-            );
-          } else {
-            Alert.alert(
-              'MX Player is not installed, would you like to install it?',
-              'You can always install it later from the Play Store',
-              [
-                {
-                  text: 'Cancel',
-                  onPress: () => {},
-                  style: 'cancel',
-                },
-                {
-                  text: 'Install',
-                  onPress: async () => {
-                    await SendIntentAndroid.installRemoteApp(
-                      'market://details?id=com.mxtech.videoplayer.ad',
-                      'com.mxtech.videoplayer.ad',
-                    );
-                  },
-                },
-              ],
-            );
-          }
-        },
+  const {
+    rawSources,
+    setExtracting,
+    bottomSheetVisible,
+    setBottomSheetVisible: setExtractorBottomSheetVisible,
+    setRawSources,
+  } = useExtractorServiceStore(state => state);
+
+  const [mediaIndex, setMediaIndex] = useState(0);
+
+  useEffect(() => {
+    const getRawSources = async (index: number) => {
+      setRawSources(
+        await detailsViewModel.getItemMedia(
+          details!.media[index].id,
+          item.source!,
+        ),
       );
-    }
-  };
+    };
+
+    getRawSources(mediaIndex);
+  }, [mediaIndex]);
 
   if (fetchingDetails) {
     return (
@@ -415,8 +400,11 @@ const DetailsNavigator = () => {
                 .map((media, index) => (
                   <TouchableRipple
                     key={index}
-                    onPress={() => {
-                      fetchRawItemMedia(index);
+                    onPress={async () => {
+                      setMediaIndex(index);
+                      extractorBottomSheetRef.current?.expand();
+                      extractorBottomSheetRef.current?.snapToIndex(0);
+                      setExtractorBottomSheetVisible(true);
                     }}>
                     <DataTable.Row key={index}>
                       {/* <DataTable.Cell>{media.season}</DataTable.Cell> */}
@@ -454,6 +442,15 @@ const DetailsNavigator = () => {
               bottomSheetRef={bottomSheetRef}
               scrollOffset={scrollOffset}
               contentHeight={contentHeight}
+            />
+          )}
+          {bottomSheetVisible && (
+            <ExtractorSourcesBottomSheet
+              bottomSheetRef={extractorBottomSheetRef}
+              scrollOffset={scrollOffset}
+              contentHeight={contentHeight}
+              detailedItem={details || ({} as DetailedItem)}
+              index={mediaIndex}
             />
           )}
         </ScrollView>

@@ -7,6 +7,8 @@ import DetailedItem from '../model/item/DetailedItem';
 import {PluginService} from '../datasource/PluginService';
 import RawVideo from '../model/media/RawVideo';
 import RawAudio from '../model/media/RawAudio';
+import ExtractorVideo from '../model/media/ExtractorVideo';
+import ExtractorAudio from '../model/media/ExtractorAudio';
 
 // Plugin repository implementation
 // This is the implementation of the plugin repository
@@ -57,7 +59,11 @@ export class PluginRepositoryImpl implements PluginRepository {
     args: any[],
   ): Promise<
     Status<
-      Category | Category[] | DetailedItem | (RawAudio | RawVideo)[] | null
+      | Category
+      | Category[]
+      | DetailedItem
+      | (RawAudio | ExtractorAudio | RawVideo | ExtractorVideo)[]
+      | null
     >
   > {
     return PluginService.runPluginMethodInSandbox(

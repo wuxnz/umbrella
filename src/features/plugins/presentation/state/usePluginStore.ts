@@ -43,7 +43,6 @@ export const usePluginStore = create(
         set(state => ({
           plugins: [...state.plugins, plugin],
         }));
-        console.log(get().plugins.length);
       },
       pluginToDelete: null,
       setPluginToDelete: plugin => set({pluginToDelete: plugin}),

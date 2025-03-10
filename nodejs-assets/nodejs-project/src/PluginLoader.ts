@@ -5,6 +5,8 @@ import vm from 'vm';
 import fs from 'fs';
 import RawVideo from './models/media/RawVideo';
 import RawAudio from './models/media/RawAudio';
+import ExtractorVideo from './models/media/ExtractorVideo';
+import ExtractorAudio from './models/media/ExtractorAudio';
 
 export class PluginLoader {
   private pluginPath: string;
@@ -54,7 +56,9 @@ export class PluginLoader {
       getItemDetails(id: string): Promise<DetailedItem> {
         return pluginInstance.getItemDetails(id);
       },
-      getItemMedia(id: string): Promise<(RawAudio | RawVideo)[]> {
+      getItemMedia(
+        id: string,
+      ): Promise<(RawAudio | ExtractorAudio | RawVideo | ExtractorVideo)[]> {
         return pluginInstance.getItemMedia(id);
       },
     } as ContentService;
