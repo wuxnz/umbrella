@@ -94,7 +94,7 @@ const ExtractorSourcesBottomSheet = ({
       (rawSources as (ExtractorAudio | ExtractorVideo)[]).forEach(
         async (source, index: number) => {
           await extractorViewModel.extract(source).then(result => {
-            result.map((extractedSource: RawAudio | RawVideo, ix2) => {
+            result.map((extractedSource: RawAudio | RawVideo) => {
               setSources([...sources, extractedSource]);
             });
           });
@@ -104,7 +104,6 @@ const ExtractorSourcesBottomSheet = ({
 
     const startExtraction = async () => {
       if (rawSources.length > 0) {
-        console.log('Starting extraction...');
         setExtracting(true);
         await doExtraction().then(() => {
           setExtracting(false);
@@ -156,9 +155,8 @@ const ExtractorSourcesBottomSheet = ({
                 {
                   text: 'Install',
                   onPress: async () => {
-                    await SendIntentAndroid.installRemoteApp(
+                    await Linking.openURL(
                       'market://details?id=com.mxtech.videoplayer.ad',
-                      'com.mxtech.videoplayer.ad',
                     );
                   },
                 },
@@ -184,7 +182,7 @@ const ExtractorSourcesBottomSheet = ({
           );
         } else {
           Alert.alert(
-            'MX Player is not installed, would you like to install it?',
+            'Web Video Cast is not installed, would you like to install it?',
             'You can always install it later from the Play Store',
             [
               {
@@ -195,9 +193,8 @@ const ExtractorSourcesBottomSheet = ({
               {
                 text: 'Install',
                 onPress: async () => {
-                  await SendIntentAndroid.installRemoteApp(
+                  await Linking.openURL(
                     'market://details?id=com.instantbits.cast.webvideo',
-                    'com.instantbits.cast.webvideo',
                   );
                 },
               },
@@ -264,9 +261,9 @@ const ExtractorSourcesBottomSheet = ({
             <ScrollView
               showsVerticalScrollIndicator={false}
               contentContainerStyle={{flexGrow: 1}}>
-              {sources.map(source => (
+              {sources.map((source, sourceIndex) => (
                 <List.Item
-                  key={index}
+                  key={sourceIndex}
                   title={source.name}
                   left={(props: any) =>
                     source.iconUrl ? (

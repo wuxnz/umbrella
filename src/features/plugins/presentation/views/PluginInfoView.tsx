@@ -277,8 +277,7 @@ const styles = StyleSheet.create({
   },
   chip: {
     height: 32,
-    width:
-      Dimensions.get('window').width / 2 - Dimensions.get('window').width / 16,
+    width: Dimensions.get('window').width / 2 - 36,
   },
   pluginDetailsContainer: {
     flex: 1,

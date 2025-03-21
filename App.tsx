@@ -235,7 +235,6 @@ export default function App() {
                 />
               </Stack.Navigator>
               <View>
-                <Text>Hello World</Text>
                 <StatusBar
                   backgroundColor={colorScheme === 'dark' ? '#000' : '#fff'}
                   barStyle={

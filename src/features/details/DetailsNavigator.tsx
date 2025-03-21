@@ -401,7 +401,7 @@ const DetailsNavigator = () => {
                   <TouchableRipple
                     key={index}
                     onPress={async () => {
-                      setMediaIndex(index);
+                      setMediaIndex((page - 1) * 10 + index);
                       extractorBottomSheetRef.current?.expand();
                       extractorBottomSheetRef.current?.snapToIndex(0);
                       setExtractorBottomSheetVisible(true);
@@ -449,7 +449,15 @@ const DetailsNavigator = () => {
               bottomSheetRef={extractorBottomSheetRef}
               scrollOffset={scrollOffset}
               contentHeight={contentHeight}
-              detailedItem={details || ({} as DetailedItem)}
+              detailedItem={
+                {
+                  ...details,
+                  media:
+                    details?.media.sort((a, b) =>
+                      a.number > b.number ? 1 : -1,
+                    ) || [],
+                } as DetailedItem
+              }
               index={mediaIndex}
             />
           )}

@@ -27,11 +27,14 @@ class JWPlayerExtractor implements Extractor {
         return [];
       }
       const sourceRegex =
-        /window\|(.*?)\|true\|.*?\|(.*?)\|playerNonce\|(.*?)\|(.*?)\|(.*?)\|(.*?)\|(.*?)\|(.*?)\|ajaxUrl\|(.*?)\|/;
+        /window\|(.*?)\|true\|.*?\|(.*?)\|playerNonce\|(.*?)\|(.*?)\|(.*?)\|(.*?)\|(.*?)\|(.*?)\|ajaxUrl\|(.*?)\|video_id/;
       const sourceComponents = response.match(sourceRegex)!;
       const formData = new FormData();
       formData.append('action', 'get_player_data');
-      formData.append('video_id', sourceComponents[9]);
+      formData.append(
+        'video_id',
+        sourceComponents[9].split('|').reverse().join('+'),
+      );
       formData.append('player_nonce', sourceComponents[2]);
       var sourceResponse = await fetch(
         `${sourceComponents[8]}://${sourceComponents[7]}.${sourceComponents[6]}/${sourceComponents[5]}-${sourceComponents[1]}/${sourceComponents[1]}-${sourceComponents[4]}.${sourceComponents[3]}`,
