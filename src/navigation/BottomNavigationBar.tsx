@@ -25,9 +25,7 @@ import {useFocusEffect, useNavigation} from '@react-navigation/native';
 import SearchNavigator from '../features/search/SearchNavigator';
 import {useBottomNavigationBarState} from './useBottomNavigationBarState';
 import {useEffect, useState} from 'react';
-import {checkManagePermission} from 'manage-external-storage';
 import {usePluginStore} from '../features/plugins/presentation/state/usePluginStore';
-import {useGrantPermissionDialogStore} from '../features/plugins/presentation/state/useGrantPermissionDialogStore';
 import HomeNavigator from '../features/home/HomeNavigator';
 import LibraryNavigator from '../features/library/LibraryNavigator';
 import {SvgUri} from 'react-native-svg';
@@ -248,71 +246,6 @@ const BottomNavigationBar = () => {
   const isLandScape = width > height;
 
   const theme = useTheme();
-
-  const {
-    setTitle,
-    setReason,
-    setOnConfirm: setGrantOnConfirm,
-    setVisible: setGrantVisible,
-  } = useGrantPermissionDialogStore(state => state);
-
-  const {permissionsGranted, onPermissionsGranted} = usePluginStore(
-    state => state,
-  );
-
-  const [isVisible, setIsVisible] = useState(false);
-  const [requested, setRequested] = useState(false);
-
-  useFocusEffect(() => {
-    let appStateSubscription;
-
-    const checkVisibility = (nextAppState: string) => {
-      if (nextAppState === 'active') {
-        setIsVisible(true);
-      } else {
-        setIsVisible(false);
-      }
-    };
-
-    appStateSubscription = AppState.addEventListener('change', checkVisibility);
-
-    checkVisibility(AppState.currentState);
-
-    return () => {
-      appStateSubscription.remove();
-    };
-  });
-
-  useEffect(() => {
-    const requestPermission = async () => {
-      try {
-        const granted = await checkManagePermission();
-        if (granted) {
-          onPermissionsGranted();
-        } else {
-          setTitle('Manage External Storage');
-          setReason(
-            'To install plugins and save data from this app to your device.',
-          );
-          setGrantOnConfirm(() => setGrantVisible(false));
-          setGrantVisible(true);
-          setIsVisible(true);
-        }
-      } catch (err) {
-        console.warn(err);
-      }
-    };
-    if (
-      Platform.OS === 'android' &&
-      isVisible &&
-      !requested &&
-      !permissionsGranted
-    ) {
-      requestPermission().then(() => {
-        setRequested(true);
-      });
-    }
-  }, [isVisible]);
 
   const {visible} = useBottomNavigationBarState();
 

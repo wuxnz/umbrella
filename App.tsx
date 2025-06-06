@@ -21,17 +21,7 @@ import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
 import {navigationRef, isReadyRef} from './RootNavigation';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
-import GrantPermissionDialog from './src/core/shared/components/dialogs/GrantPermissionDialog';
-
-import nodejs from 'nodejs-mobile-react-native';
-import {useBottomNavigationBarState} from './src/navigation/useBottomNavigationBarState';
-import {PluginViewModel} from './src/features/plugins/presentation/viewmodels/PluginsViewModel';
-import {usePluginStore} from './src/features/plugins/presentation/state/usePluginStore';
-import {GestureHandlerRootView} from 'react-native-gesture-handler';
-import {checkManagePermission} from 'manage-external-storage';
-import {useGrantPermissionDialogStore} from './src/features/plugins/presentation/state/useGrantPermissionDialogStore';
 import InstallPluginDialog from './src/core/shared/components/dialogs/InstallPluginDialog';
-import {useInstallPluginDialogStore} from './src/features/plugins/presentation/state/useInstallPluginDialogStore';
 import constants from './src/core/utils/constants';
 import SplashScreen from 'react-native-splash-screen';
 import DetailsNavigator from './src/features/details/DetailsNavigator';
@@ -42,6 +32,13 @@ import PluginListView from './src/features/plugins/presentation/views/PluginList
 import {ExtractorService} from './src/data/services/extractor/data/datasource/ExtractorService';
 import MediaType from './src/features/plugins/data/model/media/MediaType';
 import ExtractorVideo from './src/features/plugins/data/model/media/ExtractorVideo';
+
+import nodejs from 'nodejs-mobile-react-native';
+import {useBottomNavigationBarState} from './src/navigation/useBottomNavigationBarState';
+import {PluginViewModel} from './src/features/plugins/presentation/viewmodels/PluginsViewModel';
+import {usePluginStore} from './src/features/plugins/presentation/state/usePluginStore';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import {useInstallPluginDialogStore} from './src/features/plugins/presentation/state/useInstallPluginDialogStore';
 
 const Stack = createNativeStackNavigator();
 
@@ -144,27 +141,38 @@ export default function App() {
               setWaitingForPlugins(false);
               setInstallVisible(true);
               setInstallOnConfirm(async () => {
-                await pluginViewModel.fetchPlugin(result.data).then(result => {
-                  switch (result.status) {
-                    case 'success': {
-                      Alert.alert(
-                        'Installation successful',
-                        `Plugin ${result.data.name} installed successfully`,
-                      );
-                      pluginViewModel.loadAllPluginsFromStorage();
-                      break;
+                await pluginViewModel
+                  .fetchPlugin(result.data)
+                  .then(result => {
+                    switch (result.status) {
+                      case 'success': {
+                        Alert.alert(
+                          'Installation successful',
+                          `Plugin ${result.data.name} installed successfully`,
+                        );
+                        pluginViewModel.loadAllPluginsFromStorage();
+                        break;
+                      }
+                      case 'error': {
+                        Alert.alert(
+                          'Installation failed',
+                          `Plugin installation failed\n${result.error}`,
+                        );
+                        break;
+                      }
+                      default:
+                        break;
                     }
-                    case 'error': {
-                      Alert.alert(
-                        'Installation failed',
-                        `Plugin installation failed`,
-                      );
-                      break;
-                    }
-                    default:
-                      break;
-                  }
-                });
+                  })
+                  .catch(error => {
+                    console.error('Error fetching plugin:', error);
+                    Alert.alert(
+                      'Installation failed',
+                      `An unexpected error occurred during plugin fetch: ${
+                        error.message || error
+                      }`,
+                    );
+                  });
               });
               break;
             }
@@ -185,21 +193,21 @@ export default function App() {
   const {profiles, activeProfile} = useProfileStore(state => state);
 
   return (
-    <GestureHandlerRootView>
-      <SafeAreaProvider>
-        <SafeAreaView
-          style={{
-            flex: 0,
-          }}
-        />
-        <SafeAreaView
-          style={{
-            flex: 1,
-            backgroundColor:
-              colorScheme === 'dark'
-                ? DarkTheme.colors.background
-                : LightTheme.colors.background,
-          }}>
+    <SafeAreaProvider>
+      <SafeAreaView
+        style={{
+          flex: 0,
+        }}
+      />
+      <SafeAreaView
+        style={{
+          flex: 1,
+          backgroundColor:
+            colorScheme === 'dark'
+              ? DarkTheme.colors.background
+              : LightTheme.colors.background,
+        }}>
+        <GestureHandlerRootView style={{flex: 1}}>
           <PaperProvider
             theme={colorScheme === 'dark' ? DarkTheme : LightTheme}>
             <NavigationContainer
@@ -242,12 +250,11 @@ export default function App() {
                   }
                 />
               </View>
-              <GrantPermissionDialog />
               <InstallPluginDialog />
             </NavigationContainer>
           </PaperProvider>
-        </SafeAreaView>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+        </GestureHandlerRootView>
+      </SafeAreaView>
+    </SafeAreaProvider>
   );
 }

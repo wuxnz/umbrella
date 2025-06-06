@@ -1,5 +1,5 @@
 // Include ts-nocheck here if using modules that arent builtin to node
-// Also delete any imports from this file. Use require() instead
+// You should only import built-in nodejs modules in this file.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {

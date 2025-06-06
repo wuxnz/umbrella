@@ -21,6 +21,7 @@
     "nodejs-mobile-react-native": "^18.20.4",
     "react": "18.3.1",
     "react-native": "0.76.5",
+    "react-native-document-picker": "^9.3.1",
     "react-native-fast-image": "^8.6.3",
     "react-native-file-viewer": "^2.1.5",
     "react-native-fs": "^2.20.0",
@@ -63,5 +64,8 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "resolutions": {
+    "react-native-folder-picker/react-native": "0.76.5"
   }
 }

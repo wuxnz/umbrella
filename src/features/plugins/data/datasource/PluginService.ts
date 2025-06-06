@@ -17,40 +17,46 @@ import ExtractorAudio from '../model/media/ExtractorAudio';
 // Will be used by the plugin repository implementation
 export const PluginService = {
   async fetchManifest(manifestUrl: string): Promise<Status<Plugin>> {
-    const manifest = await fetch(manifestUrl);
-    const manifestJson = await manifest.json();
+    try {
+      const manifest = await fetch(manifestUrl);
+      const manifestJson = await manifest.json();
 
-    if (!manifest.ok) {
+      if (!manifest.ok) {
+        return {
+          status: 'error',
+          error: manifest.statusText,
+        };
+      }
+
+      const manifestPath =
+        RNFS.DownloadDirectoryPath +
+        `/${constants.APP_NAME}/` +
+        `${constants.PLUGIN_FOLDER_NAME}/${
+          manifestJson.author
+        }_${manifestJson.name.split(' ').join('_')}.json`;
+
+      if (
+        !(await RNFS.exists(manifestPath.split('/').slice(0, -1).join('/')))
+      ) {
+        await RNFS.mkdir(manifestPath.split('/').slice(0, -1).join('/'));
+      }
+
+      await RNFS.downloadFile({
+        fromUrl: manifestUrl,
+        toFile: manifestPath,
+      }).promise.then(result => {});
+
       return {
-        status: 'error',
-        error: manifest.statusText,
+        status: 'success',
+        data: {
+          ...manifestJson,
+          sourceType: toSourceType(manifestJson.sourceType),
+          manifestPath: manifestPath,
+        },
       };
+    } catch (error: any) {
+      throw error.message;
     }
-
-    const manifestPath =
-      RNFS.ExternalStorageDirectoryPath +
-      `/${constants.APP_NAME}/` +
-      `${constants.PLUGIN_FOLDER_NAME}/${
-        manifestJson.author
-      }_${manifestJson.name.split(' ').join('_')}.json`;
-
-    if (!(await RNFS.exists(manifestPath.split('/').slice(0, -1).join('/')))) {
-      await RNFS.mkdir(manifestPath.split('/').slice(0, -1).join('/'));
-    }
-
-    await RNFS.downloadFile({
-      fromUrl: manifestUrl,
-      toFile: manifestPath,
-    });
-
-    return {
-      status: 'success',
-      data: {
-        ...manifestJson,
-        sourceType: toSourceType(manifestJson.sourceType),
-        manifestPath: manifestPath,
-      },
-    };
   },
   async deletePlugin(manifest: Plugin): Promise<Status<void>> {
     if (!manifest.manifestPath || !manifest.pluginPath) {
@@ -83,45 +89,53 @@ export const PluginService = {
       };
     }
 
-    const pluginResponse = await fetch(manifest.pluginUrl);
-    const pluginJS = await pluginResponse.text();
+    try {
+      const pluginResponse = await fetch(manifest.pluginUrl);
+      const pluginJS = await pluginResponse.text();
 
-    if (!pluginResponse.ok) {
+      if (!pluginResponse.ok) {
+        return {
+          status: 'error',
+          error: pluginResponse.statusText,
+        };
+      }
+
+      const pluginPath =
+        RNFS.DownloadDirectoryPath +
+        `/${constants.APP_NAME}/` +
+        `${constants.PLUGIN_FOLDER_NAME}/${manifest.author}_${manifest.name
+          .split(' ')
+          .join('_')}.js`;
+
+      if (!(await RNFS.exists(pluginPath.split('/').slice(0, -1).join('/')))) {
+        await RNFS.mkdir(pluginPath.split('/').slice(0, -1).join('/'));
+      }
+
+      await RNFS.writeFile(pluginPath, await pluginJS, 'utf8');
+
+      const plugin: Plugin = {
+        ...manifest,
+        pluginPath: pluginPath,
+        pluginUrl: manifest.pluginUrl,
+      };
+
+      return {
+        status: 'success',
+        data: plugin,
+      };
+    } catch (error: any) {
       return {
         status: 'error',
-        error: pluginResponse.statusText,
+        error:
+          error.message || 'An unknown error occurred during plugin fetch.',
       };
     }
-
-    const pluginPath =
-      RNFS.ExternalStorageDirectoryPath +
-      `/${constants.APP_NAME}/` +
-      `${constants.PLUGIN_FOLDER_NAME}/${manifest.author}_${manifest.name
-        .split(' ')
-        .join('_')}.js`;
-
-    if (!(await RNFS.exists(pluginPath.split('/').slice(0, -1).join('/')))) {
-      await RNFS.mkdir(pluginPath.split('/').slice(0, -1).join('/'));
-    }
-
-    await RNFS.writeFile(pluginPath, await pluginJS, 'utf8');
-
-    const plugin: Plugin = {
-      ...manifest,
-      pluginPath: pluginPath,
-      pluginUrl: manifest.pluginUrl,
-    };
-
-    return {
-      status: 'success',
-      data: plugin,
-    };
   },
   async loadAllPluginsFromStorage(): Promise<Status<Plugin[]>> {
     var plugins: Plugin[] = [];
 
     const pluginFolderPath =
-      RNFS.ExternalStorageDirectoryPath +
+      RNFS.DownloadDirectoryPath +
       `/${constants.APP_NAME}/` +
       `${constants.PLUGIN_FOLDER_NAME}`;
 
@@ -201,7 +215,6 @@ export const PluginService = {
             reject(responseJson);
           }
         } catch (error) {
-          console.warn('Invalid message' + response);
           return;
         }
         resolve({status: responseJson.status, data: responseJson.data});
