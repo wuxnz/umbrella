@@ -45,8 +45,6 @@ export default defineConfig([
       'ios/**/*',
       '.ios/',
       '.github/',
-      "apps/bare-example/android/**/*",
-      "apps/bare-example/ios/**/*",
 
       // Build and Output
       'lib/',
