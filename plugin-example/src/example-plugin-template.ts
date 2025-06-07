@@ -1,5 +1,10 @@
-// Include ts-nocheck here if using modules that arent builtin to node
-// You should only import built-in nodejs modules in this file.
+// Include ts-nocheck here if using modules that arent builtin
+// to node and will live in the app's sandbox
+// Modules included in the sandbox:
+// - react-native-crypto-js (CryptoJS)
+// - react-native-cheerio (Cheerio)
+// You can use the modules above in this file via the name in parenthesis.
+// You should only import built-in nodejs modules in this file with "require".
 
 //This is an example plugin. Do not use in production.
 // Functions' return types are placeholders

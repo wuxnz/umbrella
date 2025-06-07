@@ -16,28 +16,46 @@ export class PluginLoader {
   }
 
   loadPlugin(): ContentService {
-    // Create a new sandbox
-    const sandbox = {
+    // Initialize React Native compatible modules with error handling
+    let CryptoJS: any = null;
+    let Cheerio: any = null;
+
+    try {
+      CryptoJS = require('react-native-crypto-js');
+      console.log('React Native CryptoJS loaded successfully');
+    } catch (err) {
+      console.error('Failed to load react-native-crypto-js:', err);
+    }
+
+    try {
+      Cheerio = require('react-native-cheerio');
+      console.log('React Native Cheerio loaded successfully');
+    } catch (err) {
+      console.error('Failed to load react-native-cheerio:', err);
+    }
+
+    // Create sandbox with React Native compatible modules
+    const sandbox: any = {
       console,
       fetch,
-      require,
-      external: true,
-      builtin: ['*'],
+      require, // Basic Node.js require for built-in modules like 'buffer'
+      Buffer: require('buffer').Buffer, // Add Buffer from Node.js buffer module
+      CryptoJS, // React Native compatible CryptoJS
+      Cheerio, // React Native compatible Cheerio
       exports: {},
       module: {exports: {}},
     };
 
     // Load and execute the plugin
-    if (!this.pluginPath) {
-      throw new Error('Invalid plugin: missing contentService.');
+    try {
+      const pluginCode = fs.readFileSync(this.pluginPath, 'utf-8');
+      const script = new vm.Script(pluginCode);
+      const context = vm.createContext(sandbox);
+      script.runInContext(context);
+    } catch (error) {
+      console.error('Error loading plugin:', error);
+      throw error;
     }
-
-    const pluginCode = fs.readFileSync(this.pluginPath, 'utf-8');
-
-    const script = new vm.Script(pluginCode);
-    const context = vm.createContext(sandbox);
-
-    script.runInContext(context);
 
     // Get the plugin instance
     const pluginInstance: any = sandbox.module.exports;
