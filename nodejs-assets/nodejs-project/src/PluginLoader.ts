@@ -16,33 +16,33 @@ export class PluginLoader {
   }
 
   loadPlugin(): ContentService {
-    // Initialize React Native compatible modules with error handling
+    // Initialize Node.js modules with error handling
     let CryptoJS: any = null;
     let Cheerio: any = null;
 
     try {
-      CryptoJS = require('react-native-crypto-js');
-      console.log('React Native CryptoJS loaded successfully');
+      CryptoJS = require('crypto-js');
+      console.log('CryptoJS loaded successfully');
     } catch (err) {
-      console.error('Failed to load react-native-crypto-js:', err);
+      console.error('Failed to load crypto-js:', err);
     }
 
     try {
-      Cheerio = require('react-native-cheerio');
-      console.log('React Native Cheerio loaded successfully');
+      Cheerio = require('cheerio');
+      console.log('Cheerio loaded successfully');
     } catch (err) {
-      console.error('Failed to load react-native-cheerio:', err);
+      console.error('Failed to load cheerio:', err);
     }
 
-    // Create sandbox with React Native compatible modules
+    // Create sandbox with Node.js modules
     const sandbox: any = {
       console,
       fetch,
       require, // Basic Node.js require for built-in modules like 'buffer'
-      Buffer: require('buffer').Buffer, // Add Buffer from Node.js buffer module
-      CryptoJS, // React Native compatible CryptoJS
-      Cheerio, // React Native compatible Cheerio
+      CryptoJS, // Regular CryptoJS
+      Cheerio, // Regular Cheerio
       exports: {},
+      builtin: ['*'],
       module: {exports: {}},
     };
 

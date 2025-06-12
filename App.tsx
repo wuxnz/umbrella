@@ -69,6 +69,16 @@ export default function App() {
   useEffect(() => {
     SplashScreen.hide();
     nodejs.start('main.js');
+    const extract = async () => {
+      const result = await ExtractorService.extract({
+        type: MediaType.ExtractorVideo,
+        url: 'https://rapid-cloud.co/embed-2/v2/e-1/BkTL6NB5UnB0?z=&autoPlay=1&oa=0',
+        name: 'RapidCloud',
+        iconUrl: 'https://www.svgrepo.com/show/433942/gear.svg',
+      } as ExtractorVideo);
+      console.log(result);
+    };
+    extract();
     // nodejs.channel.addListener('message', message => {
     //   Alert.alert('From NodeJS', message);
     // });
