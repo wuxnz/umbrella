@@ -1,8 +1,4 @@
-import {type CheerioAPI, load} from 'cheerio';
-// Original code by 2004durgesh: https://github.com/2004durgesh
-// Credit for the original code: https://github.com/2004durgesh/react-native-consumet
-// Original Code : https://github.com/2004durgesh/react-native-consumet/blob/main/src/extractors/rapidcloud.ts
-
+import {load} from 'cheerio';
 import CryptoJS from 'crypto-js';
 
 import ExtractorAudio from '../../../../../../../features/plugins/data/model/media/ExtractorAudio';
@@ -26,6 +22,11 @@ const substringBefore = (str: string, delimiter: string): string => {
   return index === -1 ? str : str.substring(0, index);
 };
 
+interface Intro {
+  start: number;
+  end: number;
+}
+
 class RapidCloud implements Extractor {
   name = 'RapidCloud';
 
@@ -35,10 +36,18 @@ class RapidCloud implements Extractor {
   execute = async (
     data: ExtractorVideo | ExtractorAudio,
   ): Promise<RawVideo[] | RawAudio[]> => {
-    const sources: RawVideo[] = [];
-    const videoUrl = parseURL(data.url);
+    const result: {
+      sources: RawVideo[];
+      subtitles: Subtitle[];
+      intro?: Intro;
+      outro?: Intro;
+    } = {
+      sources: [],
+      subtitles: [],
+    };
 
     try {
+      const videoUrl = parseURL(data.url);
       const id = data.url.split('/').pop()?.split('?')[0];
       const options = {
         headers: {
@@ -46,15 +55,14 @@ class RapidCloud implements Extractor {
         },
       };
 
-      let res = null;
-
-      res = await axiosClient.get(
-        `https://${videoUrl.hostname}/embed-2/ajax/e-1/getSources?id=${id}`,
+      const res = await axiosClient.get(
+        `https://${videoUrl.hostname}/embed-2/v2/e-1/getSources?id=${id}`,
         options,
       );
+      console.log(res.data);
 
       let {
-        data: {sources: sourcesData, tracks, intro, outro, encrypted},
+        data: {sources, tracks, intro, outro, encrypted},
       } = res;
 
       let decryptKey = await (
@@ -75,12 +83,13 @@ class RapidCloud implements Extractor {
           )
         ).data;
       }
+      console.log(decryptKey);
 
       if (!decryptKey) decryptKey = this.fallbackKey;
 
       try {
         if (encrypted) {
-          const sourcesArray = sourcesData.split('');
+          const sourcesArray = sources.split('');
 
           let extractedKey = '';
           let currentIndex = 0;
@@ -95,26 +104,33 @@ class RapidCloud implements Extractor {
           }
 
           decryptKey = extractedKey;
-          sourcesData = sourcesArray.join('');
+          sources = sourcesArray.join('');
 
-          const decrypt = CryptoJS.AES.decrypt(sourcesData, decryptKey);
-          sourcesData = JSON.parse(decrypt.toString(CryptoJS.enc.Utf8));
+          const decrypt = CryptoJS.AES.decrypt(sources, decryptKey);
+          console.log(decrypt.toString(CryptoJS.enc.Utf8));
+          console.log(decrypt.toString(CryptoJS.enc.Utf8));
+          sources = JSON.parse(decrypt.toString(CryptoJS.enc.Utf8));
+          console.log(sources);
         }
       } catch (err) {
         throw new Error('Cannot decrypt sources. Perhaps the key is invalid.');
       }
 
-      sourcesData?.forEach((s: any) => {
-        sources.push({
+      // Map sources to RawVideo format
+      const sourcesData =
+        sources?.map((s: any) => ({
           url: s.file,
           isM3U8: s.file.includes('.m3u8'),
           name: this.name,
           type: MediaType.RawVideo,
-        });
-      });
+        })) || [];
 
+      result.sources.push(...sourcesData);
+
+      // Handle M3U8 quality variants if from rapid-cloud domain
       if (data.url.includes(parseURL(this.host).hostname)) {
-        for (const source of sourcesData) {
+        result.sources = [];
+        for (const source of sources) {
           const {data: m3u8Data} = await axiosClient.get(source.file, options);
           const m3u8Lines = m3u8Data
             .split('\n')
@@ -135,28 +151,39 @@ class RapidCloud implements Extractor {
 
             return [f1, f2];
           });
+
           for (const [f1, f2] of TdArray) {
-            sources.push({
+            result.sources.push({
               url: `${source.file?.split('master.m3u8')[0]}${f2.replace(
                 'iframes',
                 'index',
               )}`,
               isM3U8: f2.includes('.m3u8'),
-              name: this.name,
+              name: `${this.name} ${f1.split('x')[1]}p`,
               type: MediaType.RawVideo,
             });
           }
         }
       }
 
-      sources.push({
-        url: sourcesData[0].file,
-        isM3U8: sourcesData[0].file.includes('.m3u8'),
-        name: this.name,
-        type: MediaType.RawVideo,
-      });
+      // Add intro/outro information
+      result.intro =
+        intro?.end > 1 ? {start: intro.start, end: intro.end} : undefined;
+      result.outro =
+        outro?.end > 1 ? {start: outro.start, end: outro.end} : undefined;
 
-      const subtitles: Subtitle[] = tracks
+      // Add auto quality source
+      if (sources && sources.length > 0) {
+        result.sources.push({
+          url: sources[0].file,
+          isM3U8: sources[0].file.includes('.m3u8'),
+          name: `${this.name} Auto`,
+          type: MediaType.RawVideo,
+        });
+      }
+
+      // Map subtitles
+      result.subtitles = tracks
         .map((s: any) =>
           s.file
             ? {
@@ -167,7 +194,7 @@ class RapidCloud implements Extractor {
         )
         .filter((s: any) => s);
 
-      return sources;
+      return result.sources;
     } catch (err) {
       throw new Error((err as Error).message);
     }

@@ -39,6 +39,7 @@ import {PluginViewModel} from './src/features/plugins/presentation/viewmodels/Pl
 import {usePluginStore} from './src/features/plugins/presentation/state/usePluginStore';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useInstallPluginDialogStore} from './src/features/plugins/presentation/state/useInstallPluginDialogStore';
+import React from 'react';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,23 +67,24 @@ export default function App() {
   //   extractorServiceExtract();
   // }, []);
   // Start nodejs
-  useEffect(() => {
-    SplashScreen.hide();
-    nodejs.start('main.js');
-    const extract = async () => {
-      const result = await ExtractorService.extract({
-        type: MediaType.ExtractorVideo,
-        url: 'https://rapid-cloud.co/embed-2/v2/e-1/BkTL6NB5UnB0?z=&autoPlay=1&oa=0',
-        name: 'RapidCloud',
-        iconUrl: 'https://www.svgrepo.com/show/433942/gear.svg',
-      } as ExtractorVideo);
-      console.log(result);
-    };
-    extract();
-    // nodejs.channel.addListener('message', message => {
-    //   Alert.alert('From NodeJS', message);
-    // });
-  }, []);
+  // useEffect(() => {
+  //   SplashScreen.hide();
+  //   nodejs.start('main.js');
+  // Extractor Tests
+  //   const extract = async () => {
+  //     const result = await ExtractorService.extract({
+  //       type: MediaType.ExtractorVideo,
+  //       url: 'https://s3taku.one/watch?play=125',
+  //       name: 'GogoCdn',
+  //       iconUrl: 'https://www.svgrepo.com/show/433942/gear.svg',
+  //     } as ExtractorVideo);
+  //     console.log(result);
+  //   };
+  //   extract();
+  // nodejs.channel.addListener('message', message => {
+  //   Alert.alert('From NodeJS', message);
+  // });
+  // }, []);
 
   // Dark mode handling
   const colorScheme = useColorScheme();

@@ -63,21 +63,22 @@ class AsianLoad implements Extractor {
       });
     });
 
-    decryptedData.source_bk.forEach((source: any) => {
-      this.sources.push({
-        url: source.file,
-        isM3U8: source.file.includes('.m3u8'),
-        name: this.name,
-        type: MediaType.RawVideo,
-      });
-    });
-
     const subtitles = decryptedData.track?.tracks?.map(
       (track: any): Subtitle => ({
         url: track.file,
         language: track.kind === 'thumbnails' ? 'Default (maybe)' : track.kind,
       }),
     );
+
+    decryptedData.source_bk.forEach((source: any) => {
+      this.sources.push({
+        url: source.file,
+        isM3U8: source.file.includes('.m3u8'),
+        name: this.name,
+        type: MediaType.RawVideo,
+        subtitles: subtitles,
+      });
+    });
 
     return this.sources;
   };
