@@ -16,28 +16,46 @@ export class PluginLoader {
   }
 
   loadPlugin(): ContentService {
-    // Create a new sandbox
-    const sandbox = {
+    // Initialize Node.js modules with error handling
+    let CryptoJS: any = null;
+    let Cheerio: any = null;
+
+    try {
+      CryptoJS = require('crypto-js');
+      console.log('CryptoJS loaded successfully');
+    } catch (err) {
+      console.error('Failed to load crypto-js:', err);
+    }
+
+    try {
+      Cheerio = require('cheerio');
+      console.log('Cheerio loaded successfully');
+    } catch (err) {
+      console.error('Failed to load cheerio:', err);
+    }
+
+    // Create sandbox with Node.js modules
+    const sandbox: any = {
       console,
       fetch,
-      require,
-      external: true,
-      builtin: ['*'],
+      require, // Basic Node.js require for built-in modules like 'buffer'
+      CryptoJS, // Regular CryptoJS
+      Cheerio, // Regular Cheerio
       exports: {},
+      builtin: ['*'],
       module: {exports: {}},
     };
 
     // Load and execute the plugin
-    if (!this.pluginPath) {
-      throw new Error('Invalid plugin: missing contentService.');
+    try {
+      const pluginCode = fs.readFileSync(this.pluginPath, 'utf-8');
+      const script = new vm.Script(pluginCode);
+      const context = vm.createContext(sandbox);
+      script.runInContext(context);
+    } catch (error) {
+      console.error('Error loading plugin:', error);
+      throw error;
     }
-
-    const pluginCode = fs.readFileSync(this.pluginPath, 'utf-8');
-
-    const script = new vm.Script(pluginCode);
-    const context = vm.createContext(sandbox);
-
-    script.runInContext(context);
 
     // Get the plugin instance
     const pluginInstance: any = sandbox.module.exports;

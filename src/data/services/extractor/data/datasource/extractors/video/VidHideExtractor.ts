@@ -69,6 +69,7 @@ class VidHideExtractor implements Extractor {
         {
           url: videoUrl,
           name: this.name,
+          type: MediaType.RawVideo,
           iconUrl: data.iconUrl,
           headers: data.headers,
         },

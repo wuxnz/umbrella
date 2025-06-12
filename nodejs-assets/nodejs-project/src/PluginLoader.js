@@ -11,24 +11,45 @@ class PluginLoader {
         this.pluginPath = pluginPath;
     }
     loadPlugin() {
-        // Create a new sandbox
+        // Initialize Node.js modules with error handling
+        let CryptoJS = null;
+        let Cheerio = null;
+        try {
+            CryptoJS = require('crypto-js');
+            console.log('CryptoJS loaded successfully');
+        }
+        catch (err) {
+            console.error('Failed to load crypto-js:', err);
+        }
+        try {
+            Cheerio = require('cheerio');
+            console.log('Cheerio loaded successfully');
+        }
+        catch (err) {
+            console.error('Failed to load cheerio:', err);
+        }
+        // Create sandbox with Node.js modules
         const sandbox = {
             console,
             fetch,
-            require,
-            external: true,
-            builtin: ['*'],
+            require, // Basic Node.js require for built-in modules like 'buffer'
+            CryptoJS, // Regular CryptoJS
+            Cheerio, // Regular Cheerio
             exports: {},
+            builtin: ['*'],
             module: { exports: {} },
         };
         // Load and execute the plugin
-        if (!this.pluginPath) {
-            throw new Error('Invalid plugin: missing contentService.');
+        try {
+            const pluginCode = fs_1.default.readFileSync(this.pluginPath, 'utf-8');
+            const script = new vm_1.default.Script(pluginCode);
+            const context = vm_1.default.createContext(sandbox);
+            script.runInContext(context);
         }
-        const pluginCode = fs_1.default.readFileSync(this.pluginPath, 'utf-8');
-        const script = new vm_1.default.Script(pluginCode);
-        const context = vm_1.default.createContext(sandbox);
-        script.runInContext(context);
+        catch (error) {
+            console.error('Error loading plugin:', error);
+            throw error;
+        }
         // Get the plugin instance
         const pluginInstance = sandbox.module.exports;
         // Create the content service

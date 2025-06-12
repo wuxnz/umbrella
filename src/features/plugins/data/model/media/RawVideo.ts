@@ -1,4 +1,5 @@
 import MediaType from './MediaType';
+import {Subtitle} from './Subtitle';
 
 interface RawVideo {
   type: MediaType.RawVideo;
@@ -10,6 +11,8 @@ interface RawVideo {
   size?: number;
   fileType?: string;
   headers?: Record<string, string>;
+  subtitles?: Subtitle[];
+  isM3U8?: boolean;
 }
 
 export default RawVideo;

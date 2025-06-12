@@ -1,4 +1,3 @@
-import {useReducedMotion} from 'react-native-reanimated';
 import ExtractorAudio from '../../../../../../../features/plugins/data/model/media/ExtractorAudio';
 import ExtractorVideo from '../../../../../../../features/plugins/data/model/media/ExtractorVideo';
 import MediaType from '../../../../../../../features/plugins/data/model/media/MediaType';
@@ -7,7 +6,7 @@ import RawVideo from '../../../../../../../features/plugins/data/model/media/Raw
 import {Extractor} from '../../../../domain/entities/Extractor';
 import {ExtractorInfo} from '../../../../domain/entities/ExtractorInfo';
 
-class JWPlayerExtractor implements Extractor {
+class JWPlayer implements Extractor {
   name: string = 'JWPlayer';
   async execute(
     data: ExtractorVideo | ExtractorAudio,
@@ -54,6 +53,7 @@ class JWPlayerExtractor implements Extractor {
             return {
               url: sourceData['file'],
               name: `${this.name} - ${index + 1}`,
+              type: MediaType.RawVideo,
               iconUrl:
                 'https://s3taku.one/wp-content/uploads/2025/01/cropped-favicon-32x32.jpg',
               headers: {
@@ -62,16 +62,21 @@ class JWPlayerExtractor implements Extractor {
                 Host: sourceData['file'].split(/\/_v.\//)[0],
                 Referer: data.url,
               },
-              // subtitles: sourceResponse['subtitles'].map(
-              //   (subtitleData: any, index: number) => {
-              //     if (subtitleData['kind'] === 'captions') {
-              //       return {
-              //         url: subtitleData['file'],
-              //         language: subtitleData['label'],
-              //       };
-              //     }
-              //   },
-              // ),
+              subtitles: sourceResponse['subtitles'].map(
+                (subtitleData: any, index: number) => {
+                  if (subtitleData['kind'] === 'captions') {
+                    return {
+                      url: subtitleData['file'],
+                      language: subtitleData['label'],
+                    };
+                  } else if (subtitleData['kind'] === 'thumbnails') {
+                    return {
+                      url: subtitleData['file'],
+                      language: 'thumbnail',
+                    };
+                  }
+                },
+              ),
               // thumbnail: sourceResponse['subtitles'].map(
               //   (subtitleData: any, index: number) => {
               //     if (subtitleData['kind'] === 'thumbnails') {
@@ -97,7 +102,7 @@ class JWPlayerInfo implements ExtractorInfo {
   id: string = 'jw-player';
   patterns: RegExp[] = [/s3taku\.one/];
   extractorMediaType: MediaType = MediaType.ExtractorVideo;
-  extractors: Extractor[] = [new JWPlayerExtractor()];
+  extractors: Extractor[] = [new JWPlayer()];
 }
 
 export default JWPlayerInfo;
