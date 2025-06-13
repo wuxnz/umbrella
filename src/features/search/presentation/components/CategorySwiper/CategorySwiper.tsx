@@ -8,11 +8,11 @@ import {Plugin} from '../../../../plugins/domain/entities/Plugin';
 
 const CategorySwiper = ({
   category,
-  bottomSheetRef,
+  // bottomSheetRef,
   plugin,
 }: {
   category: Category;
-  bottomSheetRef: any;
+  // bottomSheetRef: any;
   plugin: Plugin;
 }) => {
   const theme = useTheme();
@@ -36,7 +36,7 @@ const CategorySwiper = ({
             if (!category.source) return;
             setBottomSheetActivePlugin(category.source);
             setBottomSheetVisible(true);
-            bottomSheetRef.current?.snapToIndex(1);
+            // bottomSheetRef.current?.snapToIndex(1);
           }}
         />
       </View>

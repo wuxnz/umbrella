@@ -43,7 +43,7 @@ const HomeNavigator = () => {
     ],
   };
 
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  // const bottomSheetRef = useRef<BottomSheet>(null);
 
   const theme = useTheme();
 
@@ -66,7 +66,7 @@ const HomeNavigator = () => {
               <CategorySwiper
                 key={index}
                 category={mockCategory}
-                bottomSheetRef={bottomSheetRef}
+                // bottomSheetRef={bottomSheetRef}
                 plugin={{} as Plugin}
               />
             ))}

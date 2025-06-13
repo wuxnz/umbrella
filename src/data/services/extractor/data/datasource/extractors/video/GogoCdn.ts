@@ -195,7 +195,7 @@ class GogoCDN implements Extractor {
 
 class GogoCDNInfo implements ExtractorInfo {
   id: string = 'gogocdn';
-  patterns: RegExp[] = [/goload\./, /gogohd\./, /gogocdn\./];
+  patterns: RegExp[] = [/goload\./, /gogohd\./, /gogocdn\./, /gogoanime\./];
   extractorMediaType: MediaType = MediaType.ExtractorVideo;
   extractors: Extractor[] = [new GogoCDN()];
 }

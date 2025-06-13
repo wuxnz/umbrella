@@ -82,7 +82,7 @@ class VidHideExtractor implements Extractor {
 
 class VidHideExtractorInfo implements ExtractorInfo {
   id: string = 'vid-hide';
-  patterns: RegExp[] = [/alions\.pro/];
+  patterns: RegExp[] = [/[a-z]lions\./, /smoothpre\./];
   extractorMediaType: MediaType = MediaType.ExtractorVideo;
   extractors: Extractor[] = [new VidHideExtractor()];
 }

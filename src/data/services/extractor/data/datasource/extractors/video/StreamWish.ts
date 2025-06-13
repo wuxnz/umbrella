@@ -145,7 +145,7 @@ class StreamWish implements Extractor {
 
 class StreamWishInfo implements ExtractorInfo {
   id: string = 'streamwish';
-  patterns: RegExp[] = [/streamwish\./];
+  patterns: RegExp[] = [/streamwish\./, /dhcplay\./];
   extractorMediaType: MediaType = MediaType.ExtractorVideo;
   extractors: Extractor[] = [new StreamWish()];
 }

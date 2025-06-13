@@ -1,11 +1,9 @@
 import {
   View,
   StyleSheet,
-  BackHandler,
   ImageBackground,
   ScrollView,
   Dimensions,
-  Image,
   Alert,
   Linking,
 } from 'react-native';
@@ -27,19 +25,12 @@ import {
 import {DetailsViewModel} from './presentation/viewmodels/DetailsViewModel';
 import DetailedItem from '../plugins/data/model/item/DetailedItem';
 import LinearGradient from 'react-native-linear-gradient';
-import SendIntentAndroid from 'react-native-send-intent';
 import LazyImage from '../../core/shared/components/LazyImage';
-import {LibraryViewModel} from '../library/presentation/viewmodels/LibraryViewModel';
 import {useLibraryPageDataStore} from '../library/presentation/state/useLibraryPageDataStore';
 import {useFavoriteStore} from './presentation/state/useFavoriteStore';
 import BottomSheet from '@gorhom/bottom-sheet';
-import FavoriteBottomSheet from './presentation/components/FavoriteBottomSheet';
 import {Favorite} from '../library/domain/entities/Favorite';
-import ExtractorNavigator from '../../data/services/extractor/ExtractorNavigator';
 import {useExtractorServiceStore} from '../../data/services/extractor/presentation/state/ExtractorServiceStore';
-import RawAudio from '../plugins/data/model/media/RawAudio';
-import RawVideo from '../plugins/data/model/media/RawVideo';
-import ExtractorSourcesBottomSheet from '../../data/services/extractor/presentation/components/ExtractSourcesBottomSheet';
 
 type DetailsNavigatorParams = {
   item: Item;
@@ -85,13 +76,18 @@ const DetailsNavigator = () => {
   const {currentProfile} = useLibraryPageDataStore(state => state);
 
   const {
+    setItem: setFavoriteItem,
     isFavorited,
     setIsFavorited,
-    visible,
-    setVisible,
+    visible: favoriteBottomSheetVisible,
+    setVisible: setFavoriteBottomSheetVisible,
     removeFavorite,
     updateFavorite,
   } = useFavoriteStore(state => state);
+
+  useEffect(() => {
+    setFavoriteItem(item);
+  }, [item]);
 
   const bottomSheetRef = React.useRef<BottomSheet>(null);
 
@@ -133,14 +129,17 @@ const DetailsNavigator = () => {
   }, [setIsFavorited, currentProfile?.favorites]);
 
   const {
+    setDetailedItem,
+    mediaIndex,
+    setMediaIndex,
     rawSources,
-    setExtracting,
-    bottomSheetVisible,
     setBottomSheetVisible: setExtractorBottomSheetVisible,
     setRawSources,
   } = useExtractorServiceStore(state => state);
 
-  const [mediaIndex, setMediaIndex] = useState(0);
+  useEffect(() => {
+    setDetailedItem(details!);
+  }, [details]);
 
   useEffect(() => {
     const getRawSources = async (index: number) => {
@@ -150,6 +149,7 @@ const DetailsNavigator = () => {
           item.source!,
         ),
       );
+      console.log(rawSources);
     };
 
     getRawSources(mediaIndex);
@@ -173,7 +173,7 @@ const DetailsNavigator = () => {
               if (isFavorited) {
                 removeFavorite(itemInFavorites!.id);
               } else {
-                setVisible(true);
+                setFavoriteBottomSheetVisible(true);
                 bottomSheetRef.current?.snapToIndex(1);
               }
             }}
@@ -218,14 +218,6 @@ const DetailsNavigator = () => {
           }}>
           <ActivityIndicator size={'large'} />
         </ScrollView>
-        {visible && (
-          <FavoriteBottomSheet
-            item={item}
-            bottomSheetRef={bottomSheetRef}
-            scrollOffset={scrollOffset}
-            contentHeight={contentHeight}
-          />
-        )}
       </View>
     );
   }
@@ -247,7 +239,7 @@ const DetailsNavigator = () => {
             if (isFavorited) {
               removeFavorite(itemInFavorites!.id);
             } else {
-              setVisible(true);
+              setFavoriteBottomSheetVisible(true);
               bottomSheetRef.current?.snapToIndex(1);
             }
           }}
@@ -390,7 +382,6 @@ const DetailsNavigator = () => {
             </Card>
             <DataTable>
               <DataTable.Header>
-                {/* <DataTable.Title>Seasons</DataTable.Title> */}
                 <DataTable.Title>Episodes</DataTable.Title>
                 <DataTable.Title numeric>Open</DataTable.Title>
               </DataTable.Header>
@@ -407,7 +398,6 @@ const DetailsNavigator = () => {
                       setExtractorBottomSheetVisible(true);
                     }}>
                     <DataTable.Row key={index}>
-                      {/* <DataTable.Cell>{media.season}</DataTable.Cell> */}
                       <DataTable.Cell>{media.name}</DataTable.Cell>
                       <DataTable.Cell numeric>
                         <IconButton icon="play" size={20} />
@@ -436,31 +426,6 @@ const DetailsNavigator = () => {
               />
             </DataTable>
           </View>
-          {visible && (
-            <FavoriteBottomSheet
-              item={item}
-              bottomSheetRef={bottomSheetRef}
-              scrollOffset={scrollOffset}
-              contentHeight={contentHeight}
-            />
-          )}
-          {bottomSheetVisible && (
-            <ExtractorSourcesBottomSheet
-              bottomSheetRef={extractorBottomSheetRef}
-              scrollOffset={scrollOffset}
-              contentHeight={contentHeight}
-              detailedItem={
-                {
-                  ...details,
-                  media:
-                    details?.media.sort((a, b) =>
-                      a.number > b.number ? 1 : -1,
-                    ) || [],
-                } as DetailedItem
-              }
-              index={mediaIndex}
-            />
-          )}
         </ScrollView>
       </View>
     </View>

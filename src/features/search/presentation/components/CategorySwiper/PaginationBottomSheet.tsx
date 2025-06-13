@@ -7,20 +7,23 @@ import CategorySwiperItem from './CategorySwiperItem';
 import {Plugin} from '../../../../plugins/domain/entities/Plugin';
 import {useSearchPageDataStore} from '../../state/useSearchPageDataStore';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
+import {SearchViewModel} from '../../viewmodels/SearchViewModel';
 
 const PaginationBottomSheet = ({
-  getNextPage,
-  page,
+  // getNextPage,
+  // page,
   bottomSheetRef,
-  scrollOffset,
-  contentHeight,
-}: {
-  getNextPage: (page: number, plugin: Plugin) => Promise<void>;
-  page: number;
+}: // scrollOffset,
+// contentHeight,
+{
+  // getNextPage: (page: number) => Promise<void>;
+  // page: number;
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
-  scrollOffset: number;
-  contentHeight: number;
+  // scrollOffset: number;
+  // contentHeight: number;
 }) => {
+  const searchViewModel = new SearchViewModel();
+
   const {
     bottomSheetActivePlugin,
     bottomSheetItems,
@@ -32,11 +35,11 @@ const PaginationBottomSheet = ({
     setBottomSheetItems([]);
     (async () => {
       if (!bottomSheetActivePlugin) return;
-      await getNextPage(page, bottomSheetActivePlugin);
+      await searchViewModel.getNextPage(1, bottomSheetActivePlugin);
     })();
   }, []);
 
-  const [nextPageNumber, setNextPageNumber] = useState(page + 1);
+  const [nextPageNumber, setNextPageNumber] = useState(2);
 
   const [isAtBottom, setIsAtBottom] = useState(false);
 
@@ -57,7 +60,10 @@ const PaginationBottomSheet = ({
   const onMomentumScrollEnd = () => {
     if (isAtBottom) {
       (async () => {
-        await getNextPage(nextPageNumber, bottomSheetActivePlugin!);
+        await searchViewModel.getNextPage(
+          nextPageNumber,
+          bottomSheetActivePlugin!,
+        );
         setNextPageNumber(nextPageNumber + 1);
       })();
     }
@@ -65,64 +71,66 @@ const PaginationBottomSheet = ({
 
   const theme = useTheme();
 
-  const paddingToAddBottomSheet =
-    contentHeight -
-    scrollOffset -
-    Dimensions.get('screen').height +
-    (Dimensions.get('screen').height - Dimensions.get('window').height) +
-    (StatusBar.currentHeight || 24) +
-    160;
+  // const paddingToAddBottomSheet =
+  //   contentHeight -
+  //   scrollOffset -
+  //   Dimensions.get('screen').height +
+  //   (Dimensions.get('screen').height - Dimensions.get('window').height) +
+  //   (StatusBar.currentHeight || 24) +
+  //   160;
 
   return (
-    <GestureHandlerRootView
-      style={{
-        flex: 1,
-        backgroundColor: 'transparent',
-        position: 'absolute',
-        top: scrollOffset,
-        left: 0,
-        right: 0,
-        bottom: paddingToAddBottomSheet,
-        zIndex: 10,
+    // <GestureHandlerRootView
+    //   style={{
+    //     flex: 1,
+    //     // backgroundColor: 'transparent',
+    //     // position: 'absolute',
+    //     // top: scrollOffset,
+    //     // left: 0,
+    //     // right: 0,
+    //     // bottom: paddingToAddBottomSheet,
+    //     // zIndex: 10,
+    //   }}>
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={0}
+      snapPoints={['25%', '50%', '75%']}
+      handleStyle={{backgroundColor: theme.colors.surface}}
+      enablePanDownToClose={true}
+      enableDynamicSizing={true}
+      onClose={() => {
+        setBottomSheetVisible(false);
+      }}
+      // style={{
+      //   ...styles.bottomSheetWrapper,
+      //   backgroundColor: theme.colors.surface,
+      // }}
+      backgroundStyle={{
+        backgroundColor: theme.colors.surface,
       }}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={['25%', '50%', '75%']}
-        handleStyle={{backgroundColor: theme.colors.surface}}
-        enablePanDownToClose={true}
-        enableDynamicSizing={true}
-        onClose={() => {
-          setBottomSheetVisible(false);
-        }}
+      <BottomSheetScrollView
+        onScroll={onScrollToBottom}
+        onMomentumScrollEnd={onMomentumScrollEnd}
+        showsVerticalScrollIndicator={false}
         style={{
-          ...styles.bottomSheetWrapper,
-          backgroundColor: theme.colors.surface,
+          flex: 1,
         }}>
-        <BottomSheetScrollView
-          onScroll={onScrollToBottom}
-          onMomentumScrollEnd={onMomentumScrollEnd}
-          showsVerticalScrollIndicator={false}
+        <View
           style={{
-            backgroundColor: theme.colors.background,
-            flex: 1,
+            ...styles.container,
+            backgroundColor: theme.colors.surface,
           }}>
-          <View
-            style={{
-              ...styles.container,
-              backgroundColor: theme.colors.surface,
-            }}>
-            {bottomSheetItems.map((item, index) => (
-              <View key={index} style={styles.cardWrapper}>
-                <CategorySwiperItem
-                  item={{...item, source: bottomSheetActivePlugin}}
-                />
-              </View>
-            ))}
-          </View>
-        </BottomSheetScrollView>
-      </BottomSheet>
-    </GestureHandlerRootView>
+          {bottomSheetItems.map((item, index) => (
+            <View key={index} style={styles.cardWrapper}>
+              <CategorySwiperItem
+                item={{...item, source: bottomSheetActivePlugin}}
+              />
+            </View>
+          ))}
+        </View>
+      </BottomSheetScrollView>
+    </BottomSheet>
+    // </GestureHandlerRootView>
   );
 };
 

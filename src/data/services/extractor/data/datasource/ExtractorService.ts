@@ -22,20 +22,22 @@ export const ExtractorService = {
     data: ExtractorVideo | ExtractorAudio,
   ): Promise<RawAudio[] | RawVideo[]> {
     const extractors = this.getExtractorsByType(data.type);
-    const extractor = extractors.filter(
+    const matchedExtractors = extractors.filter(
       (e: ExtractorInfo) =>
         e.patterns.some(p => data.url.match(p)) &&
         e.extractorMediaType === data.type,
-    )[0];
-    if (!extractor) {
+    );
+    if (!matchedExtractors.length) {
       throw new Error('Extractor not found');
     }
     var sources: any[] = [];
     var index = 0;
-    for (var e in extractor.extractors) {
+    for (var e in matchedExtractors) {
       sources = [
         ...sources,
-        ...(await extractor.extractors[index].execute(data)),
+        ...(await matchedExtractors[index].extractors.map(e =>
+          e.execute(data),
+        )),
       ];
     }
     if (data.type === MediaType.ExtractorAudio) {

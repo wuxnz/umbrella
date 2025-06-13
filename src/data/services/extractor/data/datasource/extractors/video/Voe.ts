@@ -87,7 +87,7 @@ class Voe implements Extractor {
 
 class VoeInfo implements ExtractorInfo {
   id: string = 'voe';
-  patterns: RegExp[] = [/voe\.sx/];
+  patterns: RegExp[] = [/voe\./];
   extractorMediaType: MediaType = MediaType.ExtractorVideo;
   extractors: Extractor[] = [new Voe()];
 }

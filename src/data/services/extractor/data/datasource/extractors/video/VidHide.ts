@@ -86,7 +86,7 @@ class VidHide implements Extractor {
 
 class VidHideInfo implements ExtractorInfo {
   id: string = 'vidhide';
-  patterns: RegExp[] = [/vidhide\./, /geonode\./];
+  patterns: RegExp[] = [/[a-z]lions\./, /smoothpre\./];
   extractorMediaType: MediaType = MediaType.ExtractorVideo;
   extractors: Extractor[] = [new VidHide()];
 }

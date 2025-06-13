@@ -3,8 +3,13 @@ import RawAudio from '../../../../../features/plugins/data/model/media/RawAudio'
 import RawVideo from '../../../../../features/plugins/data/model/media/RawVideo';
 import ExtractorAudio from '../../../../../features/plugins/data/model/media/ExtractorAudio';
 import ExtractorVideo from '../../../../../features/plugins/data/model/media/ExtractorVideo';
+import DetailedItem from '../../../../../features/plugins/data/model/item/DetailedItem';
 
 interface ExtractorServiceState {
+  detailedItem: DetailedItem;
+  setDetailedItem: (item: DetailedItem) => void;
+  mediaIndex: number;
+  setMediaIndex: (index: number) => void;
   extracting: boolean;
   setExtracting: (value: boolean) => void;
   bottomSheetVisible: boolean;
@@ -19,6 +24,18 @@ interface ExtractorServiceState {
 
 export const useExtractorServiceStore = create<ExtractorServiceState>()(
   set => ({
+    detailedItem: {} as DetailedItem,
+    setDetailedItem: (item: DetailedItem) => {
+      set({
+        detailedItem: item,
+      });
+    },
+    mediaIndex: 0,
+    setMediaIndex: (index: number) => {
+      set({
+        mediaIndex: index,
+      });
+    },
     extracting: false,
     setExtracting: value =>
       set(() => {

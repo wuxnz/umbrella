@@ -16,79 +16,56 @@ import Item from '../../../plugins/data/model/item/Item';
 import uuid from 'react-native-uuid';
 
 const FavoriteBottomSheet = ({
-  item,
   bottomSheetRef,
-  scrollOffset,
-  contentHeight,
 }: {
-  item: Item;
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
-  scrollOffset: number;
-  contentHeight: number;
 }) => {
-  const {addFavorite, setVisible} = useFavoriteStore(state => state);
+  const {item, addFavorite, setVisible} = useFavoriteStore(state => state);
 
   const theme = useTheme();
-
-  const paddingToAddBottomSheet =
-    contentHeight -
-    scrollOffset -
-    Dimensions.get('screen').height +
-    (Dimensions.get('screen').height - Dimensions.get('window').height) +
-    (StatusBar.currentHeight || 24);
 
   const favoriteCategories = Object.values(FavoriteCategoryType);
 
   return (
-    <GestureHandlerRootView
-      style={{
-        flex: 1,
-        backgroundColor: 'transparent',
-        position: 'absolute',
-        top: scrollOffset,
-        left: 0,
-        right: 0,
-        bottom: paddingToAddBottomSheet,
-        zIndex: 10,
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={0}
+      snapPoints={['50%']}
+      handleStyle={{backgroundColor: theme.colors.surface}}
+      enablePanDownToClose={true}
+      enableDynamicSizing={true}
+      onClose={() => {
+        setVisible(false);
+      }}
+      backgroundStyle={{
+        backgroundColor: theme.colors.surface,
       }}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={['50%']}
-        handleStyle={{backgroundColor: theme.colors.surface}}
-        enablePanDownToClose={true}
-        enableDynamicSizing={true}
-        onClose={() => {
-          setVisible(false);
-        }}
-        style={styles.bottomSheetWrapper}>
-        <BottomSheetView
-          style={{
-            ...styles.bottomSheetOptions,
-            backgroundColor: theme.colors.surface,
-          }}>
-          {favoriteCategories.map((category, index: number) => (
-            <List.Item
-              key={index}
-              title={category
-                .split('_')
-                .map(word => word[0].toUpperCase() + word.slice(1))
-                .join(' ')}
-              onPress={() => {
-                addFavorite({
-                  id: uuid.v4(),
-                  category: category,
-                  item: item,
-                  timestamp: new Date(Date.now()),
-                  type: item.type,
-                } as Favorite);
-                setVisible(false);
-              }}
-            />
-          ))}
-        </BottomSheetView>
-      </BottomSheet>
-    </GestureHandlerRootView>
+      <BottomSheetView
+        style={{
+          ...styles.bottomSheetOptions,
+          backgroundColor: theme.colors.surface,
+        }}>
+        {favoriteCategories.map((category, index: number) => (
+          <List.Item
+            key={index}
+            title={category
+              .split('_')
+              .map(word => word[0].toUpperCase() + word.slice(1))
+              .join(' ')}
+            onPress={() => {
+              addFavorite({
+                id: uuid.v4(),
+                category: category,
+                item: item,
+                timestamp: new Date(Date.now()),
+                type: item.type,
+              } as Favorite);
+              setVisible(false);
+            }}
+          />
+        ))}
+      </BottomSheetView>
+    </BottomSheet>
   );
 };
 

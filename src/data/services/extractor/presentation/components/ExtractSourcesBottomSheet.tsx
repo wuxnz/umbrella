@@ -1,27 +1,9 @@
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Alert,
-  Linking,
-  StatusBar,
-  Image,
-} from 'react-native';
-import React, {useEffect, useRef, useState} from 'react';
-import {GestureHandlerRootView, ScrollView} from 'react-native-gesture-handler';
-import {
-  ActivityIndicator,
-  List,
-  useTheme,
-  Text,
-  Icon,
-} from 'react-native-paper';
-import BottomSheet, {
-  BottomSheetScrollView,
-  BottomSheetView,
-} from '@gorhom/bottom-sheet';
+import {View, StyleSheet, Alert, Linking, Image} from 'react-native';
+import React, {useEffect, useMemo, useState} from 'react';
+import {ScrollView} from 'react-native-gesture-handler';
+import {ActivityIndicator, List, useTheme, Text} from 'react-native-paper';
+import BottomSheet, {BottomSheetView} from '@gorhom/bottom-sheet';
 import {BottomSheetMethods} from '@gorhom/bottom-sheet/lib/typescript/types';
-import uuid from 'react-native-uuid';
 import RawAudio from '../../../../../features/plugins/data/model/media/RawAudio';
 import RawVideo from '../../../../../features/plugins/data/model/media/RawVideo';
 import ExtractorAudio from '../../../../../features/plugins/data/model/media/ExtractorAudio';
@@ -35,27 +17,14 @@ import LazyImage from '../../../../../core/shared/components/LazyImage';
 
 const ExtractorSourcesBottomSheet = ({
   bottomSheetRef,
-  scrollOffset,
-  contentHeight,
-  detailedItem,
-  index,
 }: {
   bottomSheetRef: React.RefObject<BottomSheetMethods>;
-  scrollOffset: number;
-  contentHeight: number;
-  detailedItem: DetailedItem;
-  index: number;
 }) => {
   const theme = useTheme();
 
-  const paddingToAddBottomSheet =
-    contentHeight -
-    scrollOffset -
-    Dimensions.get('screen').height +
-    (Dimensions.get('screen').height - Dimensions.get('window').height) +
-    (StatusBar.currentHeight || 24);
-
   const {
+    detailedItem,
+    mediaIndex,
     extracting,
     setExtracting,
     setBottomSheetVisible: setVisible,
@@ -129,7 +98,6 @@ const ExtractorSourcesBottomSheet = ({
     mediaPlayerToOpen: 'mxplayer' | 'webvideocast' = 'webvideocast',
   ): Promise<void> => {
     if (mediaPlayerToOpen === 'mxplayer') {
-      // Open MX Player
       await SendIntentAndroid.isAppInstalled('com.mxtech.videoplayer.ad').then(
         async isInstalled => {
           if (isInstalled) {
@@ -166,7 +134,6 @@ const ExtractorSourcesBottomSheet = ({
         },
       );
     } else {
-      // Web Video Cast
       await SendIntentAndroid.isAppInstalled(
         'com.instantbits.cast.webvideo',
       ).then(async isInstalled => {
@@ -206,95 +173,72 @@ const ExtractorSourcesBottomSheet = ({
   };
 
   return (
-    <GestureHandlerRootView
-      style={{
-        flex: 1,
-        backgroundColor: 'transparent',
-        position: 'absolute',
-        top: scrollOffset,
-        left: 0,
-        right: 0,
-        bottom: paddingToAddBottomSheet,
-        zIndex: 10,
+    <BottomSheet
+      ref={bottomSheetRef}
+      index={0}
+      snapPoints={useMemo(() => ['50%'], [])}
+      handleStyle={{backgroundColor: theme.colors.surface}}
+      enablePanDownToClose={true}
+      enableDynamicSizing={true}
+      backgroundStyle={{
+        backgroundColor: theme.colors.surface,
+      }}
+      onClose={() => {
+        setVisible(false);
+        setExtracting(false);
+        setNoSources(false);
+        setRawSources([]);
+        setSources([]);
       }}>
-      <BottomSheet
-        ref={bottomSheetRef}
-        index={0}
-        snapPoints={['50%']}
-        handleStyle={{backgroundColor: theme.colors.surface}}
-        enablePanDownToClose={true}
-        enableDynamicSizing={true}
-        onClose={() => {
-          setVisible(false);
-          setExtracting(false);
-          setNoSources(false);
-          setRawSources([]);
-          setSources([]);
-        }}
-        style={styles.bottomSheetWrapper}>
-        <BottomSheetView
-          style={{
-            ...styles.bottomSheetOptions,
-            backgroundColor: theme.colors.surface,
-          }}>
-          {sources.length < 1 ? (
-            noSources ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <Text>No Sources Found</Text>
-              </View>
-            ) : (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                }}>
-                <ActivityIndicator size="large" />
-              </View>
-            )
+      <BottomSheetView
+        style={{
+          ...styles.bottomSheetOptions,
+        }}>
+        {sources.length < 1 ? (
+          noSources ? (
+            <Text>No Sources Found</Text>
           ) : (
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              contentContainerStyle={{flexGrow: 1}}>
-              {sources.map((source, sourceIndex) => (
-                <List.Item
-                  key={sourceIndex}
-                  title={source.name}
-                  left={(props: any) =>
-                    source.iconUrl ? (
-                      <Image source={{uri: source.iconUrl}} {...props} />
-                    ) : (
-                      <LazyImage
-                        placeholderSource="square"
-                        style={{borderRadius: 4}}
-                      />
-                    )
-                  }
-                  onPress={() => {
-                    openMedia(source, detailedItem, index);
-                  }}
-                />
-              ))}
-            </ScrollView>
-          )}
-        </BottomSheetView>
-      </BottomSheet>
-    </GestureHandlerRootView>
+            <ActivityIndicator size="large" />
+          )
+        ) : (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              flexGrow: 1,
+            }}>
+            {sources.map((source, sourceIndex) => (
+              <List.Item
+                key={sourceIndex}
+                title={source.name}
+                left={(props: any) =>
+                  source.iconUrl ? (
+                    <Image source={{uri: source.iconUrl}} {...props} />
+                  ) : (
+                    <LazyImage
+                      placeholderSource="square"
+                      style={{borderRadius: 4}}
+                    />
+                  )
+                }
+                onPress={() => {
+                  openMedia(source, detailedItem, mediaIndex);
+                }}
+              />
+            ))}
+          </ScrollView>
+        )}
+      </BottomSheetView>
+    </BottomSheet>
   );
 };
 
 export default ExtractorSourcesBottomSheet;
 
 const styles = StyleSheet.create({
-  bottomSheetWrapper: {},
   bottomSheetOptions: {
     flex: 1,
     flexDirection: 'column',
+    padding: 16,
   },
   container: {
     flex: 1,

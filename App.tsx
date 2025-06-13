@@ -2,22 +2,13 @@ if (__DEV__) {
   require('./ReactotronConfig');
 }
 import './gesture-handler';
-import {
-  useColorScheme,
-  StatusBar,
-  Alert,
-  Platform,
-  AppState,
-  Linking,
-  View,
-  Text,
-} from 'react-native';
-import {PaperProvider, useTheme} from 'react-native-paper';
+import {useColorScheme, StatusBar, Alert, Linking, View} from 'react-native';
+import {PaperProvider} from 'react-native-paper';
 
 import {DarkTheme, LightTheme} from './src/core/theme/theme';
-import {useEffect, useState} from 'react';
+import {useEffect} from 'react';
 import BottomNavigationBar from './src/navigation/BottomNavigationBar';
-import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
+import {NavigationContainer} from '@react-navigation/native';
 import {navigationRef, isReadyRef} from './RootNavigation';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
@@ -28,18 +19,22 @@ import DetailsNavigator from './src/features/details/DetailsNavigator';
 import {useProfileStore} from './src/features/profile/presentation/state/useProfileStore';
 import ProfileNavigator from './src/features/profile/ProfileNavigator';
 import PluginInfoView from './src/features/plugins/presentation/views/PluginInfoView';
-import PluginListView from './src/features/plugins/presentation/views/PluginListView';
 import {ExtractorService} from './src/data/services/extractor/data/datasource/ExtractorService';
 import MediaType from './src/features/plugins/data/model/media/MediaType';
 import ExtractorVideo from './src/features/plugins/data/model/media/ExtractorVideo';
 
 import nodejs from 'nodejs-mobile-react-native';
-import {useBottomNavigationBarState} from './src/navigation/useBottomNavigationBarState';
 import {PluginViewModel} from './src/features/plugins/presentation/viewmodels/PluginsViewModel';
-import {usePluginStore} from './src/features/plugins/presentation/state/usePluginStore';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {useInstallPluginDialogStore} from './src/features/plugins/presentation/state/useInstallPluginDialogStore';
 import React from 'react';
+import ExtractorSourcesBottomSheet from './src/data/services/extractor/presentation/components/ExtractSourcesBottomSheet';
+import {useExtractorServiceStore} from './src/data/services/extractor/presentation/state/ExtractorServiceStore';
+import BottomSheet from '@gorhom/bottom-sheet';
+import {useSearchPageDataStore} from './src/features/search/presentation/state/useSearchPageDataStore';
+import PaginationBottomSheet from './src/features/search/presentation/components/CategorySwiper/PaginationBottomSheet';
+import {useFavoriteStore} from './src/features/details/presentation/state/useFavoriteStore';
+import FavoriteBottomSheet from './src/features/details/presentation/components/FavoriteBottomSheet';
 
 const Stack = createNativeStackNavigator();
 
@@ -66,45 +61,37 @@ export default function App() {
   //   console.log('running');
   //   extractorServiceExtract();
   // }, []);
-  // Start nodejs
-  // useEffect(() => {
-  //   SplashScreen.hide();
-  //   nodejs.start('main.js');
-  // Extractor Tests
-  //   const extract = async () => {
-  //     const result = await ExtractorService.extract({
-  //       type: MediaType.ExtractorVideo,
-  //       url: 'https://s3taku.one/watch?play=125',
-  //       name: 'GogoCdn',
-  //       iconUrl: 'https://www.svgrepo.com/show/433942/gear.svg',
-  //     } as ExtractorVideo);
-  //     console.log(result);
-  //   };
-  //   extract();
-  // nodejs.channel.addListener('message', message => {
-  //   Alert.alert('From NodeJS', message);
-  // });
-  // }, []);
 
-  // Dark mode handling
+  useEffect(() => {
+    SplashScreen.hide();
+    nodejs.start('main.js');
+    // const extract = async () => {
+    //   const result = await ExtractorService.extract({
+    //     type: MediaType.ExtractorVideo,
+    //     url: 'https://s3taku.one/watch?play=125',
+    //     name: 'GogoCdn',
+    //     iconUrl: 'https://www.svgrepo.com/show/433942/gear.svg',
+    //   } as ExtractorVideo);
+    //   console.log(result);
+    // };
+    // extract();
+    // nodejs.channel.addListener('message', message => {
+    //   Alert.alert('From NodeJS', message);
+    // });
+  }, []);
+
   const colorScheme = useColorScheme();
 
   useEffect(() => {}, [colorScheme]);
 
-  // Check if app & navigation is ready
   useEffect(() => {
     return () => {
       isReadyRef.current = false;
     };
   }, []);
 
-  const theme = useTheme();
-
-  const {setPlugins} = usePluginStore(state => state);
-
   const pluginViewModel = new PluginViewModel();
 
-  // Load all plugins from disk on app start
   useEffect(() => {
     const loadPlugins = async () => {
       await pluginViewModel.loadAllPluginsFromStorage();
@@ -123,7 +110,6 @@ export default function App() {
     setWaitingForPlugins,
   } = useInstallPluginDialogStore(state => state);
 
-  // If install dialog closes, load all plugins
   useEffect(() => {
     if (installVisible) return;
     const loadPlugins = async () => {
@@ -132,7 +118,6 @@ export default function App() {
     loadPlugins();
   }, [installVisible]);
 
-  // Listen for deep links to plugins and prompt for install
   useEffect(() => {
     Linking.addEventListener('url', async ({url}) => {
       if (loading) {
@@ -204,6 +189,41 @@ export default function App() {
 
   const {profiles, activeProfile} = useProfileStore(state => state);
 
+  const extractorBottomSheetRef = React.useRef<BottomSheet>(null);
+
+  const {bottomSheetVisible: extractorBottomSheetVisible} =
+    useExtractorServiceStore(state => state);
+
+  useEffect(() => {
+    if (extractorBottomSheetVisible) {
+      extractorBottomSheetRef.current?.expand();
+    }
+  }, [extractorBottomSheetVisible]);
+
+  const {bottomSheetVisible: searchBottomSheetVisible} = useSearchPageDataStore(
+    state => state,
+  );
+
+  const searchBottomSheetRef = React.useRef<BottomSheet>(null);
+
+  useEffect(() => {
+    if (searchBottomSheetVisible) {
+      searchBottomSheetRef.current?.expand();
+    }
+  }, [searchBottomSheetVisible]);
+
+  const {visible: favoriteBottomSheetVisible} = useFavoriteStore(
+    state => state,
+  );
+
+  const favoriteBottomSheetRef = React.useRef<BottomSheet>(null);
+
+  useEffect(() => {
+    if (favoriteBottomSheetVisible) {
+      favoriteBottomSheetRef.current?.expand();
+    }
+  }, [favoriteBottomSheetVisible]);
+
   return (
     <SafeAreaProvider>
       <SafeAreaView
@@ -219,14 +239,13 @@ export default function App() {
               ? DarkTheme.colors.background
               : LightTheme.colors.background,
         }}>
-        <GestureHandlerRootView style={{flex: 1}}>
-          <PaperProvider
-            theme={colorScheme === 'dark' ? DarkTheme : LightTheme}>
-            <NavigationContainer
-              ref={navigationRef}
-              onReady={() => {
-                isReadyRef.current = true;
-              }}>
+        <PaperProvider theme={colorScheme === 'dark' ? DarkTheme : LightTheme}>
+          <NavigationContainer
+            ref={navigationRef}
+            onReady={() => {
+              isReadyRef.current = true;
+            }}>
+            <GestureHandlerRootView style={{flex: 1}}>
               <Stack.Navigator
                 screenOptions={{
                   headerShown: false,
@@ -238,7 +257,6 @@ export default function App() {
                   },
                 }}
                 initialRouteName={
-                  // 'root'
                   activeProfile === undefined || profiles.length === 0
                     ? 'profile'
                     : 'root'
@@ -263,9 +281,22 @@ export default function App() {
                 />
               </View>
               <InstallPluginDialog />
-            </NavigationContainer>
-          </PaperProvider>
-        </GestureHandlerRootView>
+              {extractorBottomSheetVisible && (
+                <ExtractorSourcesBottomSheet
+                  bottomSheetRef={extractorBottomSheetRef}
+                />
+              )}
+
+              {searchBottomSheetVisible && (
+                <PaginationBottomSheet bottomSheetRef={searchBottomSheetRef} />
+              )}
+
+              {favoriteBottomSheetVisible && (
+                <FavoriteBottomSheet bottomSheetRef={favoriteBottomSheetRef} />
+              )}
+            </GestureHandlerRootView>
+          </NavigationContainer>
+        </PaperProvider>
       </SafeAreaView>
     </SafeAreaProvider>
   );

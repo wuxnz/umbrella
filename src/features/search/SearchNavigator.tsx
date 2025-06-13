@@ -13,12 +13,7 @@ import BottomSheet from '@gorhom/bottom-sheet';
 const SearchNavigator = () => {
   const theme = useTheme();
 
-  const {
-    results,
-    bottomSheetActivePlugin,
-    bottomSheetVisible,
-    pluginsToSearch,
-  } = useSearchPageDataStore(state => state);
+  const {results, pluginsToSearch} = useSearchPageDataStore(state => state);
 
   const searchViewModel = new SearchViewModel();
 
@@ -59,17 +54,6 @@ const SearchNavigator = () => {
             />
           </View>
         ))}
-        {bottomSheetVisible && bottomSheetActivePlugin && (
-          <PaginationBottomSheet
-            getNextPage={(page: number, plugin: Plugin) =>
-              searchViewModel.getNextPage(page, plugin)
-            }
-            page={1}
-            bottomSheetRef={bottomSheetRef}
-            scrollOffset={scrollOffset}
-            contentHeight={contentHeight}
-          />
-        )}
       </ScrollView>
     </View>
   );
