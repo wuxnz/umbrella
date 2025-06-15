@@ -149,11 +149,12 @@ const DetailsNavigator = () => {
           item.source!,
         ),
       );
-      console.log(rawSources);
     };
 
     getRawSources(mediaIndex);
   }, [mediaIndex]);
+
+  console.log(rawSources);
 
   if (fetchingDetails) {
     return (
@@ -392,7 +393,14 @@ const DetailsNavigator = () => {
                   <TouchableRipple
                     key={index}
                     onPress={async () => {
-                      setMediaIndex((page - 1) * 10 + index);
+                      setMediaIndex(details!.media.indexOf(media));
+                      // console.log(media);
+                      // setRawSources(
+                      //   await detailsViewModel.getItemMedia(
+                      //     details!.media[index].id,
+                      //     item.source!,
+                      //   ),
+                      // );
                       extractorBottomSheetRef.current?.expand();
                       extractorBottomSheetRef.current?.snapToIndex(0);
                       setExtractorBottomSheetVisible(true);

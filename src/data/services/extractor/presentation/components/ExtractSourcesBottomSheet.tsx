@@ -38,6 +38,10 @@ const ExtractorSourcesBottomSheet = ({
 
   const [noSources, setNoSources] = useState<boolean>(false);
 
+  console.log(mediaIndex);
+
+  console.log(rawSources);
+
   useEffect(() => {
     const doExtraction = async () => {
       var sourcesToBeExtracted: (
@@ -171,6 +175,8 @@ const ExtractorSourcesBottomSheet = ({
       });
     }
   };
+
+  console.log(rawSources);
 
   return (
     <BottomSheet

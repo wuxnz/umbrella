@@ -21,6 +21,7 @@ export const ExtractorService = {
   async extract(
     data: ExtractorVideo | ExtractorAudio,
   ): Promise<RawAudio[] | RawVideo[]> {
+    console.log(data);
     const extractors = this.getExtractorsByType(data.type);
     const matchedExtractors = extractors.filter(
       (e: ExtractorInfo) =>
@@ -32,6 +33,7 @@ export const ExtractorService = {
     }
     var sources: any[] = [];
     var index = 0;
+    console.log('matchedExtractors', matchedExtractors);
     for (var e in matchedExtractors) {
       sources = [
         ...sources,
@@ -40,9 +42,11 @@ export const ExtractorService = {
         )),
       ];
     }
+    console.log('sources', sources);
     if (data.type === MediaType.ExtractorAudio) {
       return sources as RawAudio[];
     }
+    console.log('sources', sources);
     return sources as RawVideo[];
   },
 };

@@ -24,11 +24,15 @@ export const DetailsService = {
     id: string,
     plugin: Plugin,
   ): Promise<(RawAudio | ExtractorAudio | RawVideo | ExtractorVideo)[]> => {
+    console.log('id', id);
+    console.log('plugin path', plugin.pluginPath);
     const result = (await PluginService.runPluginMethodInSandbox(
       plugin.pluginPath!,
       'getItemMedia',
       [id],
     )) as Status<(RawAudio | ExtractorAudio | RawVideo | ExtractorVideo)[]>;
+
+    console.log('result', result);
 
     if (result.status === 'error') {
       throw new Error(result.error);

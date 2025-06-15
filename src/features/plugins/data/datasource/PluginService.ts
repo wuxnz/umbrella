@@ -211,6 +211,7 @@ export const PluginService = {
         var responseJson;
         try {
           responseJson = JSON.parse(response);
+          console.log('responseJson', responseJson);
           if (responseJson.status === 'error' || responseJson.data === null) {
             reject(responseJson);
           }
@@ -230,6 +231,7 @@ export const PluginService = {
         case 'getItemDetails':
           return value as Status<DetailedItem>;
         case 'getItemMedia':
+          console.log('value', value);
           return value as Status<
             (RawAudio | ExtractorAudio | RawVideo | ExtractorVideo)[]
           >;

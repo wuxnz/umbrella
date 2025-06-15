@@ -4,6 +4,7 @@ import {Card, Text, useTheme} from 'react-native-paper';
 import Item from '../../../../plugins/data/model/item/Item';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/core';
+import {useSearchPageDataStore} from '../../state/useSearchPageDataStore';
 
 type DetailsScreenProps = {
   details: {
@@ -19,11 +20,16 @@ const CategorySwiperItem = ({item}: {item: Item}) => {
 
   const theme = useTheme();
 
+  const {setBottomSheetVisible} = useSearchPageDataStore();
+
   return (
     <Card
       style={{...styles.card, backgroundColor: theme.colors.surface}}
       mode="contained"
-      onPress={() => navigation.navigate('details', {item: item})}>
+      onPress={() => {
+        setBottomSheetVisible(false);
+        navigation.navigate('details', {item: item});
+      }}>
       <Card.Cover
         source={
           showPlaceholder
