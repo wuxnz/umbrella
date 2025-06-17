@@ -288,7 +288,8 @@ const DetailsNavigator = () => {
             style={styles.banner}>
             <LinearGradient
               colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.85)']}
-              style={{flex: 1}}></LinearGradient>
+              style={{flex: 1}}
+            />
           </ImageBackground>
           <View style={styles.detailsWrapper}>
             <View style={styles.imageAndTitle}>
@@ -299,7 +300,8 @@ const DetailsNavigator = () => {
                   width: 125,
                   aspectRatio: 2 / 3,
                   borderRadius: 8,
-                }}></LazyImage>
+                }}
+              />
               <View style={styles.headlineInfo}>
                 <Text
                   variant="headlineMedium"
