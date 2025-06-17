@@ -116,7 +116,8 @@ const PluginInfoView = () => {
               style={styles.banner}>
               <LinearGradient
                 colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.85)']}
-                style={{flex: 1}}></LinearGradient>
+                style={{flex: 1}}
+              />
             </ImageBackground>
           </>
         ) : (
