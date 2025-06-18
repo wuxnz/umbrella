@@ -14,7 +14,8 @@ type RootStackParamList = {
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
-interface CardListProps extends Omit<CardProps, 'onPress' | 'style'> {
+interface CardListProps
+  extends Omit<CardProps, 'onPress' | 'style' | 'children'> {
   item: Favorite | Item;
   navigation: NavigationProp;
   onPress?: () => void;

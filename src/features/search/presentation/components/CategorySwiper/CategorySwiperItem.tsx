@@ -1,6 +1,6 @@
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet} from 'react-native';
 import React from 'react';
-import {Card, Text, useTheme} from 'react-native-paper';
+import {useTheme} from 'react-native-paper';
 import Item from '../../../../plugins/data/model/item/Item';
 import {NativeStackNavigationProp} from '@react-navigation/native-stack';
 import {useNavigation} from '@react-navigation/core';
@@ -21,12 +21,18 @@ const CategorySwiperItem = ({item}: {item: Item}) => {
 
   const {setBottomSheetVisible} = useSearchPageDataStore();
 
-  return <CardList item={item} navigation={navigation} style={{...styles.card, backgroundColor: theme.colors.surface}}
+  return (
+    <CardList
+      item={item}
+      navigation={navigation}
+      style={{...styles.card, backgroundColor: theme.colors.surface}}
       mode="contained"
       onPress={() => {
         setBottomSheetVisible(false);
         navigation.navigate('details', {item: item});
-      }}/>;
+      }}
+    />
+  );
 };
 
 export default CategorySwiperItem;
