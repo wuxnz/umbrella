@@ -21,6 +21,6 @@ module.exports = {
     'subject-min-length': [2, 'always', 10],
     'subject-full-stop': [2, 'never', '.'],
     'body-leading-blank': [2, 'always'],
-    'body-max-line-length': [2, 'always', 100],
+    'body-max-line-length': [2, 'always',100],
   },
 };
