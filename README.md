@@ -6,6 +6,10 @@ This project is designed for **extensibility, security, and scalability**, makin
 
 ---
 
+## ⚠️ Now Archived: Project moved to [new-umbrella/umbrella](https://github.com/new-umbrella/umbrella) ⚠️
+
+---
+
 ## 🔥 Features
 
 - **Plugin System** 🧩: Dynamically download and execute JavaScript plugins through the package [nodejs-mobile-react-native](https://github.com/nodejs-mobile/nodejs-mobile-react-native) and through the package [vm2](<[https://github.com/nodejs-mobile/nodejs-mobile-react-native](https://github.com/patriksimek/vm2)>).
