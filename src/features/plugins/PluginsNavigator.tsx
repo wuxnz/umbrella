@@ -1,13 +1,11 @@
+import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import PluginListView from './presentation/views/PluginListView';
-import PluginInfoView from './presentation/views/PluginInfoView';
-import {useColorScheme, View} from 'react-native';
-import {useTheme} from 'react-native-paper';
+import {View} from 'react-native';
+import {
+  useTheme,
+} from 'react-native-paper';
 import {useNavigation} from '@react-navigation/native';
-import {useEffect, useState} from 'react';
-import {Plugin} from './domain/entities/Plugin';
-import {usePluginStore} from './presentation/state/usePluginStore';
-
 const Stack = createNativeStackNavigator();
 
 // PluginsNavigator
@@ -18,7 +16,7 @@ const PluginsNavigator = () => {
   const theme = useTheme();
 
   return (
-    <View style={{flex: 1}}>
+    <View style={{flex: 1, width: '100%'}}>
       <PluginListView />
     </View>
   );
