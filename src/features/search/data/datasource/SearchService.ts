@@ -1,15 +1,9 @@
 import {PluginService} from '../../../plugins/data/datasource/PluginService';
-import ContentService from '../../../plugins/data/model/ContentService';
 import Category from '../../../plugins/data/model/item/Category';
-import SourceType from '../../../plugins/data/model/source/SourceType';
 import {Plugin} from '../../../plugins/domain/entities/Plugin';
 import {usePluginStore} from '../../../plugins/presentation/state/usePluginStore';
 
-import nodejs from 'nodejs-mobile-react-native';
 import {useSearchPageDataStore} from '../../presentation/state/useSearchPageDataStore';
-import {get} from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
-import {AppRegistry} from 'react-native';
-import uuid from 'react-native-uuid';
 
 // Search service
 // This is the service that gets the data for the search
@@ -17,112 +11,117 @@ import uuid from 'react-native-uuid';
 // We use state here so we can display the data in the UI
 // in a more reactive way
 export const SearchService = {
-  async initSearch(): Promise<void> {
-    const {query, setResults, pluginsToSearch, getResults} =
-      useSearchPageDataStore.getState();
-    const SEARCH_TIMEOUT = 5000; // 5 seconds timeout for each search
+  async _runPluginSearch(plugin: Plugin, query: string): Promise<void> {
+    if (!plugin.pluginPath) {
+      console.warn(`Skipping plugin ${plugin.name}: no pluginPath.`);
+      return;
+    }
 
-    for (const plugin of pluginsToSearch) {
-      if (!plugin.pluginPath) continue;
+    try {
+      const category = (await PluginService.runPluginMethodInSandbox(
+        plugin.pluginPath,
+        'search',
+        [query],
+      ).then(res => res.data)) as Category;
+      
+      if (category) {
+        category.source = plugin; // Attach the plugin as the source to the category
 
-      try {
-        // Function to fetch search results
-        const searchPromise = PluginService.runPluginMethodInSandbox(
-          plugin.pluginPath,
-          'search',
-          [query],
-        ).then(res => res.data) as Promise<Category>;
-
-        // Timeout Promise
-        const timeoutPromise = new Promise<null>(resolve =>
-          setTimeout(() => resolve(null), SEARCH_TIMEOUT),
-        );
-
-        // Run the search with timeout protection
-        const category = await Promise.race([searchPromise, timeoutPromise]);
-
-        if (category) {
-          category.source = plugin;
-
-          // Fetch the latest results
-          const {results} = useSearchPageDataStore.getState();
-
-          // Avoid duplicate categories by checking the source name
-          if (!results.some(c => c.source?.name === plugin.name)) {
-            setResults([...results, category]); // Directly update the state with the new array
+        useSearchPageDataStore.setState(state => {
+          if (!state.results.some(c => c.source?.name === plugin.name)) {
+            return {results: [...state.results, category]};
           }
-        } else {
-          console.warn(`Search timed out for plugin: ${plugin.name}`);
-        }
-      } catch (error) {
-        console.error(`Error searching with plugin ${plugin.name}:`, error);
+          return {};
+        });
       }
+    } catch (error) {
+      console.error(`Error searching with plugin ${plugin.name}:`, error);
     }
   },
   async search(): Promise<Category[]> {
     const {
-      getResults,
-      setAlreadyStarted,
       setResults,
       setPluginsToSearch,
       sourceTypesToSearch,
+      query,
     } = useSearchPageDataStore.getState();
     const plugins = usePluginStore.getState().plugins;
     setResults([]);
 
-    if (
-      sourceTypesToSearch?.length !== 0 &&
-      sourceTypesToSearch !== undefined
-    ) {
-      setPluginsToSearch(
-        plugins.filter(plugin =>
-          sourceTypesToSearch?.includes(plugin.sourceType),
-        ),
+    let pluginsToSearch: Plugin[];
+    if (sourceTypesToSearch && sourceTypesToSearch.length > 0) {
+      pluginsToSearch = plugins.filter(plugin =>
+        sourceTypesToSearch.includes(plugin.sourceType),
       );
     } else {
-      setPluginsToSearch(plugins);
+      pluginsToSearch = plugins;
+    }
+    setPluginsToSearch(pluginsToSearch);
+
+    // If no plugins are selected for search, return an empty array immediately
+    if (pluginsToSearch.length === 0) {
+      console.log('No plugins to search.');
+      return [];
     }
 
-    setAlreadyStarted(true);
-    await this.initSearch();
+    const searchPromises: Promise<void>[] = [];
+    // Start all plugin searches concurrently without awaiting each one immediately
+    for (const plugin of pluginsToSearch) {
+      searchPromises.push(this._runPluginSearch(plugin, query));
+    }
 
-    const timeout = 15;
-    var seconds = 0;
-    return new Promise(resolve => {
-      const interval = setInterval(() => {
-        const {results, alreadyStarted, pluginsToSearch, setAlreadyStarted} =
-          useSearchPageDataStore.getState();
-        if (
-          (results.length === pluginsToSearch.length && alreadyStarted) ||
-          seconds === timeout
-        ) {
-          clearInterval(interval);
-          resolve(getResults());
-          setAlreadyStarted(false);
-        } else {
-          seconds += 1;
-        }
-      }, 1000);
-    });
+    // Wait for all initiated search promises to settle (resolve or reject).
+    // This allows the `search()` function to return only when all background
+    // search operations it launched are complete. The UI, however, updates
+    // reactively via `_runPluginSearch`'s setState calls.
+    await Promise.allSettled(searchPromises);
+
+    // After all individual plugin searches have concluded, return the current state of results.
+    return useSearchPageDataStore.getState().results;
   },
   async getNextPage(page: number, plugin: Plugin): Promise<void> {
-    const {query, bottomSheetItems, setBottomSheetItems} =
-      useSearchPageDataStore.getState();
+    const {query} = useSearchPageDataStore.getState(); // Get the current query from the store
 
     if (plugin.pluginPath === undefined) {
+      console.warn(
+        `Cannot get next page for plugin ${plugin.name}: no pluginPath.`,
+      );
       return;
     }
 
-    const category = (await PluginService.runPluginMethodInSandbox(
-      plugin.pluginPath,
-      'search',
-      [query, page],
-    ).then(res => res.data)) as Category;
+    try {
+      const category = (await PluginService.runPluginMethodInSandbox(
+        plugin.pluginPath,
+        'search', // Assuming 'search' method also handles pagination via a second argument
+        [query, page],
+      ).then(res => res.data)) as Category;
 
-    category.source = plugin;
+      // Ensure a valid category and items are returned
+      if (category && category.items && category.items.length > 0) {
+        category.source = plugin; // Attach the source plugin
 
-    if (bottomSheetItems.every(item => item.id !== category.items[0].id)) {
-      setBottomSheetItems([...bottomSheetItems, ...category.items]);
+        // Use functional setState to safely append new items to bottomSheetItems
+        useSearchPageDataStore.setState(state => {
+          // Filter out any duplicate items if they already exist in bottomSheetItems
+          const newItems = category.items.filter(newItem =>
+            state.bottomSheetItems.every(
+              existingItem => existingItem.id !== newItem.id,
+            ),
+          );
+          return {
+            bottomSheetItems: [...state.bottomSheetItems, ...newItems],
+          };
+        });
+      } else {
+        console.warn(
+          `No new items or invalid category returned for plugin ${plugin.name}, page ${page}`,
+        );
+      }
+    } catch (error) {
+      console.error(
+        `Error fetching next page for plugin ${plugin.name}:`,
+        error,
+      );
     }
   },
 };
